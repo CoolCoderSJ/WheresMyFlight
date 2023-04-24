@@ -1,0 +1,31 @@
+{
+  "cwd": "C:\\Users\\shuch\\WheresMyFlight",
+  "type": [
+    "pwa",
+    "cordova"
+  ],
+  "name": "WheresMyFlight",
+  "framework": "core",
+  "template": "single-view",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": true,
+    "color": "#007aff",
+    "darkMode": true,
+    "iconFonts": true
+  },
+  "customBuild": false,
+  "pkg": "dev.shuchir.wheresmyflight",
+  "cordova": {
+    "folder": "cordova",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": [
+      "cordova-plugin-keyboard",
+      "cordova-plugin-splashscreen"
+    ]
+  }
+}

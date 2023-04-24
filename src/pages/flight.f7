@@ -1,0 +1,233 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Back</span>
+          </a>
+        </div>
+        <div class="title">Flight ${$f7route.path.replace("/flight/", "")}</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block block-strong" style="z-index: 9999; height: 300px;">
+        <div id="map" style="height: 300px;"></div>
+      </div>
+
+      <p class="block-title">General Info</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Aircraft</p><p id="aircraft"></p></div>
+        <div class="row"><p class="block-title">Airline Name</p><p id="airline"></p></div>
+      </div>
+
+      <p class="block-title">Start</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Timezome</p><p id="origtz"></p></div>
+        <div class="row"><p class="block-title">Airport</p><p id="origairport"></p></div>
+        <div class="row"><p class="block-title">City</p><p id="origcity"></p></div>
+      </div>
+
+      <p class="block-title">Destination</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Timezome</p><p id="desttz"></p></div>
+        <div class="row"><p class="block-title">Airport</p><p id="destairport"></p></div>
+        <div class="row"><p class="block-title">City</p><p id="destcity"></p></div>
+      </div>
+
+      <p class="block-title">Flight Data</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Actual Distance</p><p id="actualdist"></p></div>
+        <div class="row"><p class="block-title">Planned Distance</p><p id="plandist"></p></div>
+        <div class="row"><p class="block-title">Taken Distance</p><p id="takendist"></p></div>
+        <div class="row"><p class="block-title">Speed</p><p id="speed"></p></div>
+        <div class="row"><p class="block-title">Altitude</p><p id="altitude"></p></div>
+        <div class="row"><p class="block-title">Fuel Burned</p><p id="fuel"></p></div>
+        <div class="row"><p class="block-title">Status</p><p id="status"></p></div>
+      </div>
+
+      <p class="block-title">Departure</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Scheduled Time</p><p id="scheddeptime"></p></div>
+        <div class="row"><p class="block-title">Estimated Time</p><p id="estdeptime"></p></div>
+        <div class="row"><p class="block-title">Actual Time</p><p id="actualdeptime"></p></div>
+        <div class="row"><p class="block-title">Gate</p><p id="origgate"></p></div>
+        <div class="row"><p class="block-title">Terminal</p><p id="origterm"></p></div>
+        </div>
+
+    <p class="block-title">Arrival</p>
+      <div class="block block-strong">
+        <div class="row"><p class="block-title">Scheduled Time</p><p id="schedarrtime"></p></div>
+        <div class="row"><p class="block-title">Estimated Time</p><p id="estarrtime"></p></div>
+        <div class="row"><p class="block-title">Actual Time</p><p id="actualarrtime"></p></div>
+        <div class="row"><p class="block-title">Gate</p><p id="destgate"></p></div>
+        <div class="row"><p class="block-title">Terminal</p><p id="destterm"></p></div>
+      </div>
+    
+      <div class="block block-strong">
+        <a class="button button-fill delete-flight color-red" href="#">Delete Flight</a>
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+  p {
+    margin: 10px 0;
+  }
+</style>
+<script>
+  const { Client, Databases, ID, Query } = Appwrite;
+  const client = new Client();
+  client
+    .setEndpoint('https://appwrite.shuchir.dev/v1')
+    .setProject('wheresmyflight');
+  const databases = new Databases(client);
+
+  export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+    $on('pageInit', () => {
+      $f7.dialog.preloader('Getting flight data...');
+      let flightId = $f7route.path.replace("/flight/", "")
+      console.log(flightId)
+
+      $('.delete-flight').on('click', function () {
+        $f7.dialog.confirm('Are you sure you want to delete this flight?', function () {
+          const promise = databases.listDocuments('data', 'flights', [Query.equal('flightId', flightId)]);
+          promise.then((resp) => {
+            const promise = databases.deleteDocument('data', 'flights', resp.documents[0]['$id']);
+
+            promise.then(function (response) {
+              $f7.dialog.alert('Flight deleted successfully!', function () {
+                $f7.views.main.router.navigate('/');
+              });
+            }, function (error) {
+              console.log(error);
+            });
+          })
+        });
+      });
+
+      const promise = databases.listDocuments('data', 'flights', [Query.equal('flightId', flightId)]);
+
+      promise.then(function (response) {
+          let flight = response.documents[0].fullData;
+          document.getElementById("aircraft").innerHTML = flight[0];
+          document.getElementById("airline").innerHTML = flight[1];
+
+          document.getElementById("origtz").innerHTML = flight[2];
+          document.getElementById("origairport").innerHTML = flight[3];
+          document.getElementById("origcity").innerHTML = flight[4];
+          document.getElementById("origgate").innerHTML = flight[5];
+          document.getElementById("origterm").innerHTML = flight[6];
+
+          document.getElementById("desttz").innerHTML = flight[7];
+          document.getElementById("destairport").innerHTML = flight[8];
+          document.getElementById("destcity").innerHTML = flight[9];
+          document.getElementById("destgate").innerHTML = flight[10];
+          document.getElementById("destterm").innerHTML = flight[11];
+
+          document.getElementById("actualdist").innerHTML = flight[12];
+          document.getElementById("plandist").innerHTML = flight[13];
+          document.getElementById("takendist").innerHTML = flight[14];
+
+          document.getElementById("speed").innerHTML = flight[15];
+          document.getElementById("altitude").innerHTML = flight[16];
+          document.getElementById("fuel").innerHTML = flight[17]
+          document.getElementById("status").innerHTML = flight[18];
+
+          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+
+          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+
+          function initMap() {
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 4,
+            center: {
+              lat: 41.871314,
+              lng: -99.869580
+            },
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+          });
+
+          var Lat = [];
+          var Lng = [];
+          let coords = JSON.parse(response.documents[0].coordinates);
+          for (var i = 0; i < coords.length; i++) {
+            Lng.push(coords[i][0]);
+            Lat.push(coords[i][1]);
+          }
+          console.log(Lat, Lng)
+          var lineSymbol = {
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+          };
+
+          var Poly = new Array();
+          for (var i = 0; i < Lat.length; i++) {
+            var pos = new google.maps.LatLng(Lat[i], Lng[i]);
+            Poly.push(pos);
+          }
+          var flowline = new google.maps.Polyline({
+            path: Poly,
+            geodesic: false,
+            strokeColor: "#DC143C",
+            strokeOpacity: .8,
+            strokeWeight: 2,
+            map: map
+          });
+
+          flowline.setMap(map);
+          }
+          initMap();
+
+          $f7.dialog.close();
+      }, function (error) {
+          console.log(error); // Failure
+      });
+    });
+
+    // Lifecycle
+    $onBeforeMount(() => {
+      console.log('onBeforeMount');
+    });
+    $onMounted(() => {
+      console.log('onMounted');
+    });
+    $onBeforeUnmount(() => {
+      console.log('onBeforeUnmount');
+    });
+    $onUnmounted(() => {
+      console.log('onUnmounted');
+    });
+
+    // Page Events
+    $on('pageMounted', (e, page) => {
+      console.log('pageMounted', page);
+    });
+    $on('pageInit', (e, page) => {
+      console.log('pageInit', page);
+    });
+    $on('pageBeforeIn', (e, page) => {
+      console.log('pageBeforeIn', page);
+    });
+    $on('pageAfterIn', (e, page) => {
+      console.log('pageAfterIn', page);
+    });
+    $on('pageBeforeOut', (e, page) => {
+      console.log('pageBeforeOut', page);
+    });
+    $on('pageAfterOut', (e, page) => {
+      console.log('pageAfterOut', page);
+    });
+    $on('pageBeforeRemove', (e, page) => {
+      console.log('pageBeforeRemove', page);
+    });
+
+    // Return render function
+    return $render;
+  }
+</script>

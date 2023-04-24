@@ -1,0 +1,69 @@
+<template>
+  <div class="page" data-name="home">
+    <!-- Top Navbar -->
+    <div class="navbar navbar-large">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="title sliding">WheresMyFlight</div>
+        <div class="title-large">
+          <div class="title-large-text">WheresMyFlight</div>
+        </div>
+      </div>
+    </div>
+    <!-- Scrollable page content-->
+    <div class="page-content">
+      <div class="block">
+        <a href="/add-flight" class="button button-fill">Add Flight</a>
+      </div>
+
+      <div class="block-title">Flights</div>
+        <div id="flightslist">
+        </div>
+        <br></br>
+    </div>
+  </div>
+</template>
+<script>
+  const { Client, Databases, ID } = Appwrite;
+  const client = new Client();
+  client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+  const databases = new Databases(client);
+  
+  export default () => {
+    const promise = databases.listDocuments('data', 'flights');
+
+    promise.then(function (response) {
+        let docs = response.documents;
+        let flightslist = document.getElementById('flightslist');
+        for (let i=0; i<docs.length; i++) {
+          flightslist.innerHTML += `
+              <div class="card demo-card-header-pic">
+                <a href="/flight/${docs[i].flightId}">
+                <div style="background-image:url(https://flightaware.com/images/airline_logos/90p/${docs[i]['iata-code']}.png)"
+                  valign="bottom" class="card-header hasimage"></div>
+                <div class="card-content card-content-padding">
+                  <div class="card-header">${docs[i].flightId}</div>
+                  <div class="card-row">
+                    <p>${docs[i].location[0]}</p>
+                    <p>${docs[i].location[1]}</p>
+                  </div>
+                  <div class="card-row">
+                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")}</p></div>
+                    <div class="airportrow"><p class="kindofbig">${new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")}</p><p class="big">${docs[i].airport[1]}</p></div>
+                  </div>
+                  <div class="card-row">
+                      <p class="mt-0 mb-0">Gate ${docs[i].gate[0]}</p>
+                      <p class="mt-0 mb-0">Gate ${docs[i].gate[1]}</p>
+                  </div>
+                </div>
+              </a>
+              </div>`;
+        }
+    }, function (error) {
+        console.log(error); // Failure
+    });
+    return $render;
+  }
+</script>

@@ -1,0 +1,90 @@
+/* iOS Cordova Tweak */
+.device-cordova.device-ios {
+  height: 100vh;
+}
+
+.demo-card-header-pic .card-header {
+  height: 15vh;
+  background-size: cover;
+  background-position: center;
+  color: #fff
+}
+
+.md .demo-card-header-pic .card-header {
+  margin: 0 8px 8px;
+  border-radius: 16px;
+  position: relative;
+  top: 16px
+}
+
+.demo-card-header-pic .card-content-padding .date {
+  color: #8e8e93
+}
+
+.card-content .card-header {
+  margin: 0 !important;
+  height: auto;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+}
+
+.card a {
+  display: block;
+  height: auto;
+}
+
+.big {
+  font-size: var(--f7-card-header-font-size);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.card-content .card-row p {
+  margin-bottom: 0;
+}
+
+.kindofbig {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.airportrow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+#flightslist li {
+  margin-bottom: 10px;
+}
+
+.hasimage {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row p {
+  margin-bottom: auto;
+  margin-top: auto;
+}

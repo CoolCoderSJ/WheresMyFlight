@@ -1,0 +1,185 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Back</span>
+          </a>
+        </div>
+        <div class="title">Add Flight</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block block-strong inset">
+        <form id="form">
+          <div class="list">
+            <ul>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title item-floating-label">Flight Number</div>
+                  <div class="item-input-wrap">
+                    <input type="text" name="flightnum" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </form>
+        <div class="block block-strong">
+          <a class="button button-fill convert-form-to-data" href="#">Get Data</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+  p {
+    margin: 10px 0;
+  }
+</style>
+<script>
+  const { Client, Databases, ID } = Appwrite;
+  const client = new Client();
+  client
+    .setEndpoint('https://appwrite.shuchir.dev/v1')
+    .setProject('wheresmyflight');
+  const databases = new Databases(client);
+
+  export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+    $on('pageInit', () => {
+      $('.convert-form-to-data').on('click', function () {
+        var formData = $f7.form.convertToData('#form');
+        $f7.dialog.preloader('Getting flight data...');
+        axios({
+          method: 'get',
+          url: `https://api.allorigins.win/get?url=${encodeURIComponent('https://flightaware.com/live/flight/' + formData.flightnum)}`,
+        })
+          .then(function (response) {
+            let htmlData = response.data.contents;
+            let flightData = htmlData.split('trackpollBootstrap = ')[1].split("\x3C/script>")[0].replace("}}};", "}}}");
+            flightData = JSON.parse(flightData);
+            console.log(flightData);
+            let key = Object.keys(flightData.flights)[0];
+            let flight = flightData.flights[key];
+            let airport = [flight.origin.iata, flight.destination.iata];
+            let location = [flight.origin.friendlyLocation, flight.destination.friendlyLocation];
+            let time = [new Date(Number(String(flight.gateDepartureTimes.estimated) + "000")-14400000), new Date(Number(String(flight.gateArrivalTimes.estimated) + "000")-14400000)];
+            let scheduledTime = [new Date(Number(String(flight.gateDepartureTimes.scheduled) + "000")-14400000), new Date(Number(String(flight.gateArrivalTimes.scheduled) + "000")-14400000)];
+            let iataCode = flight.airline.icao;
+            let gate = [flight.origin.gate, flight.destination.gate];
+
+            let aircraft = flight.aircraft.friendlyType;
+            let airline = flight.airline.fullName;
+
+            let originTZ = flight.origin.TZ;
+            let originAirport = flight.origin.iata + " (" + flight.origin.friendlyName + ")";
+            let originCity = flight.origin.friendlyLocation;
+            let originGate = flight.origin.gate;
+            let originTerminal = flight.origin.terminal;
+
+            let destinationTZ = flight.destination.TZ;
+            let destinationAirport = flight.destination.iata + " (" + flight.destination.friendlyName + ")";
+            let destinationCity = flight.destination.friendlyLocation;
+            let destinationGate = flight.destination.gate;
+            let destinationTerminal = flight.destination.terminal;
+
+            let actualDist = Math.round(flight.distance.actual * 1.151) + "mi";
+            let plannedDist = Math.round(flight.flightPlan.plannedDistance * 1.151) + "mi";
+            let takenDist = Math.round(flight.distance.elapsed * 1.151) + "mi";
+
+            let speed = Math.round(flight.flightPlan.speed * 1.151) + "mph";
+            let altitude = Math.round(flight.flightPlan.altitude * 100) + "ft";
+            let fuel = Math.round(flight.flightPlan.fuelBurn.gallons) + "gal";
+
+            let status = flight.flightStatus;
+
+            let scheduledDepartureTime = new Date(Number(String(flight.gateDepartureTimes.scheduled) + "000")-14400000);
+            let estimatedDepartureTime = new Date(Number(String(flight.gateDepartureTimes.estimated) + "000")-14400000);
+            let actualDepartureTime = new Date(Number(String(flight.gateDepartureTimes.actual) + "000")-14400000);
+
+            let scheduledArrivalTime = new Date(Number(String(flight.gateArrivalTimes.scheduled) + "000")-14400000);
+            let estimatedArrivalTime = new Date(Number(String(flight.gateArrivalTimes.estimated) + "000")-14400000);
+            let actualArrivalTime = new Date(Number(String(flight.gateArrivalTimes.actual) + "000")-14400000);
+
+            let coordinates = [];
+            if (flight.track) {
+            for (let i=0; i<flight.track.length;i++) {
+              let coord = flight.track[i].coord;
+              coordinates.push(coord)
+            }
+            }
+            coordinates = JSON.stringify(coordinates);
+
+            console.log(airport, location, time, iataCode, gate);
+            const promise = databases.createDocument(
+              'data',
+              'flights',
+              ID.unique(),
+              {
+                flightId: formData.flightnum,
+                airport: airport,
+                location: location,
+                time: time,
+                "iata-code": iataCode,
+                gate: gate,
+                scheduledTime: scheduledTime,
+                fullData: [aircraft, airline, originTZ, originAirport, originCity, originGate, originTerminal, destinationTZ, destinationAirport, destinationCity, destinationGate, destinationTerminal, actualDist, plannedDist, takenDist, speed, altitude, fuel, status, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, scheduledArrivalTime, estimatedArrivalTime, actualArrivalTime],
+                coordinates: coordinates
+              },
+            );
+
+            promise.then(function (response) {
+              console.log(response);
+              $f7.views.main.router.navigate('/flight/'+formData.flightnum);
+            }, function (error) {
+              console.log(error);
+            });
+          });
+      });
+    });
+
+    // Lifecycle
+    $onBeforeMount(() => {
+      console.log('onBeforeMount');
+    });
+    $onMounted(() => {
+      console.log('onMounted');
+    });
+    $onBeforeUnmount(() => {
+      console.log('onBeforeUnmount');
+    });
+    $onUnmounted(() => {
+      console.log('onUnmounted');
+    });
+
+    // Page Events
+    $on('pageMounted', (e, page) => {
+      console.log('pageMounted', page);
+    });
+    $on('pageInit', (e, page) => {
+      console.log('pageInit', page);
+    });
+    $on('pageBeforeIn', (e, page) => {
+      console.log('pageBeforeIn', page);
+    });
+    $on('pageAfterIn', (e, page) => {
+      console.log('pageAfterIn', page);
+    });
+    $on('pageBeforeOut', (e, page) => {
+      console.log('pageBeforeOut', page);
+    });
+    $on('pageAfterOut', (e, page) => {
+      console.log('pageAfterOut', page);
+    });
+    $on('pageBeforeRemove', (e, page) => {
+      console.log('pageBeforeRemove', page);
+    });
+
+    // Return render function
+    return $render;
+  }
+</script>

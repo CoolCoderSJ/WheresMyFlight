@@ -17,23 +17,23 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <title>WheresMyFlight</title>
-  
+  <% if (TARGET === 'web') { %>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" href="icons/favicon.png">
-  <link rel="manifest" href="./assets/manifest-847bf4dc.json">
+  <link rel="manifest" href="/manifest.json">
   <script src="https://cdn.jsdelivr.net/npm/appwrite@10.2.0" /></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBkLo1c_hacAFgLjiwyCFXh2T-eM9qfns"></script>
-  
+  <% } %>
   <!-- built styles file will be auto injected -->
-  <script type="module" crossorigin src="./assets/index-9345c5e7.js"></script>
-  <link rel="stylesheet" href="./assets/index-22b2991d.css">
 </head>
 <body>
   <div id="app"></div>
-  
-  
+  <% if (TARGET === 'cordova') { %>
+  <script src="cordova.js"></script>
+  <% } %>
+  <script type="module" src="./js/app.js"></script>
 </body>
 </html>
