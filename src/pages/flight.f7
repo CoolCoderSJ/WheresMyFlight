@@ -87,7 +87,6 @@
 
   export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
-      $f7.dialog.preloader('Getting flight data...');
       let flightId = $f7route.path.replace("/flight/", "")
       console.log(flightId)
 
@@ -112,38 +111,6 @@
 
       promise.then(function (response) {
           let flight = response.documents[0].fullData;
-          document.getElementById("aircraft").innerHTML = flight[0];
-          document.getElementById("airline").innerHTML = flight[1];
-
-          document.getElementById("origtz").innerHTML = flight[2];
-          document.getElementById("origairport").innerHTML = flight[3];
-          document.getElementById("origcity").innerHTML = flight[4];
-          document.getElementById("origgate").innerHTML = flight[5];
-          document.getElementById("origterm").innerHTML = flight[6];
-
-          document.getElementById("desttz").innerHTML = flight[7];
-          document.getElementById("destairport").innerHTML = flight[8];
-          document.getElementById("destcity").innerHTML = flight[9];
-          document.getElementById("destgate").innerHTML = flight[10];
-          document.getElementById("destterm").innerHTML = flight[11];
-
-          document.getElementById("actualdist").innerHTML = flight[12];
-          document.getElementById("plandist").innerHTML = flight[13];
-          document.getElementById("takendist").innerHTML = flight[14];
-
-          document.getElementById("speed").innerHTML = flight[15];
-          document.getElementById("altitude").innerHTML = flight[16];
-          document.getElementById("fuel").innerHTML = flight[17]
-          document.getElementById("status").innerHTML = flight[18];
-
-          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-
-          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-
           function initMap() {
           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -184,7 +151,36 @@
           }
           initMap();
 
-          $f7.dialog.close();
+          document.getElementById("aircraft").innerHTML = flight[0];
+          document.getElementById("airline").innerHTML = flight[1];
+
+          document.getElementById("origtz").innerHTML = flight[2].replace(":", "");
+          document.getElementById("origairport").innerHTML = flight[3];
+          document.getElementById("origcity").innerHTML = flight[4];
+          document.getElementById("origgate").innerHTML = flight[5];
+          document.getElementById("origterm").innerHTML = flight[6];
+
+          document.getElementById("desttz").innerHTML = flight[7].replace(":", "");
+          document.getElementById("destairport").innerHTML = flight[8];
+          document.getElementById("destcity").innerHTML = flight[9];
+          document.getElementById("destgate").innerHTML = flight[10];
+          document.getElementById("destterm").innerHTML = flight[11];
+
+          document.getElementById("actualdist").innerHTML = flight[12];
+          document.getElementById("plandist").innerHTML = flight[13];
+          document.getElementById("takendist").innerHTML = flight[14];
+
+          document.getElementById("speed").innerHTML = flight[15];
+          document.getElementById("altitude").innerHTML = flight[16];
+          document.getElementById("fuel").innerHTML = flight[17]
+          document.getElementById("status").innerHTML = flight[18];
+
+          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
       }, function (error) {
           console.log(error); // Failure
       });

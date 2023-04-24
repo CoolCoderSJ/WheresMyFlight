@@ -38,6 +38,62 @@
         let docs = response.documents;
         let flightslist = document.getElementById('flightslist');
         for (let i=0; i<docs.length; i++) {
+          let dep = new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
+          let schedDep = new Date(Date.parse(docs[i].fullData[19].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
+          let arr = new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
+          let schedArr = new Date(Date.parse(docs[i].fullData[22].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
+
+          let depDiffNum = (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date(Date.parse(docs[i].fullData[19].replace("+00:00", "-04:00"))).getTime()) / 60000;
+          let depDiffText = ""
+          if (depDiffNum < 0) {
+            depDiffNum *= -1;
+            depDiffText = "early"
+          }
+          else {
+            depDiffText = "late"
+          }
+          let depDiff = depDiffNum%60 + "min";
+          if (Math.floor(depDiffNum/60) > 0) {
+            depDiff = Math.floor(depDiffNum/60) + "hr " + depDiff
+          }
+          if (depDiffNum == 0) {
+            depDiff = "on time"
+            depDiffText = ""
+          }
+
+          let arrDiffNum = (new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date(Date.parse(docs[i].fullData[22].replace("+00:00", "-04:00"))).getTime()) / 60000;
+          let arrDiffText = ""
+          if (arrDiffNum < 0) {
+            arrDiffNum *= -1;
+            arrDiffText = "early"
+          }
+          else {
+            arrDiffText = "late"
+          }
+          let arrDiff = arrDiffNum%60 + "min";
+          if (Math.floor(arrDiffNum/60) > 0) {
+            arrDiff = Math.floor(arrDiffNum/60) + "hr " + arrDiff
+          }
+          if (arrDiffNum == 0) {
+            arrDiff = "on time"
+            arrDiffText = ""
+          }
+          let timeLeft = ""
+          if (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() < 0 && new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() > 0) {
+            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000 / 60)
+            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000 % 60)
+            timeLeft = minsleft + "min left"
+            if (hrsleft > 0) {
+              timeLeft = hrsleft + "hr " + timeLeft
+            }
+          }
+          else if (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() > 0) {
+            timeLeft = "Departing in " + Math.floor((new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000) + "min"
+          }
+          else {
+            timeLeft = "Arrived"
+          }
+
           flightslist.innerHTML += `
               <div class="card demo-card-header-pic">
                 <a href="/flight/${docs[i].flightId}">
@@ -50,12 +106,13 @@
                     <p>${docs[i].location[1]}</p>
                   </div>
                   <div class="card-row">
-                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")}</p></div>
-                    <div class="airportrow"><p class="kindofbig">${new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")}</p><p class="big">${docs[i].airport[1]}</p></div>
+                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep}</p></div>
+                    <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
+                    <div class="airportrow"><p class="kindofbig">${arr}</p><p class="big">${docs[i].airport[1]}</p></div>
                   </div>
                   <div class="card-row">
-                      <p class="mt-0 mb-0">Gate ${docs[i].gate[0]}</p>
-                      <p class="mt-0 mb-0">Gate ${docs[i].gate[1]}</p>
+                      <div class="airportrow"><p class="mt-0 mb-0">Gate ${docs[i].gate[0]}</p><span class="badge color-${depDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${depDiff} ${depDiffText}</span></div>
+                      <div class="airportrow"><span class="badge color-${arrDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${arrDiff} ${arrDiffText}</span><p class="mt-0 mb-0">Gate ${docs[i].gate[1]}</p></div>
                   </div>
                 </div>
               </a>
