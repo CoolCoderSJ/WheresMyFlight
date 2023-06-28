@@ -127,14 +127,14 @@
             })
             
             console.log(actualDist, plannedDist, takenDist)
-
+            let speed, altitude
             if (flight.positional.flexTrack.positions.length > 0) {
-            let speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
-            let altitude = Math.round(flight.positional.flexTrack.positions[0].altitudeFt) + "ft";
+             speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
+             altitude = Math.round(flight.positional.flexTrack.positions[0].altitudeFt) + "ft";
             }
             else {
-              let speed = "--";
-              let altitude = "--";
+               speed = "--";
+               altitude = "--";
             }
             let fuel = "--";
 
