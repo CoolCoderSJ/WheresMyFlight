@@ -128,7 +128,7 @@
             
             console.log(actualDist, plannedDist, takenDist)
 
-            if (flight.positional.flexTrack.positions) {
+            if (flight.positional.flexTrack.positions.length > 0) {
             let speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
             let altitude = Math.round(flight.positional.flexTrack.positions[0].altitudeFt) + "ft";
             }
