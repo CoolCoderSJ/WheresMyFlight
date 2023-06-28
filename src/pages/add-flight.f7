@@ -128,9 +128,15 @@
             
             console.log(actualDist, plannedDist, takenDist)
 
+            if (flight.positional.flexTrack.positions) {
             let speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
             let altitude = Math.round(flight.positional.flexTrack.positions[0].altitudeFt) + "ft";
-            let fuel = "Unknown";
+            }
+            else {
+              let speed = "--";
+              let altitude = "--";
+            }
+            let fuel = "--";
 
             let status = flight.flightState;
 
