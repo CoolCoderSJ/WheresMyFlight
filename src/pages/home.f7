@@ -42,11 +42,11 @@
         for (let i=0; i<docs.length; i++) {
           console.log(docs[i].time)
           let dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          let schedDep = new Date(Date.parse(docs[i].fullData[19])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          let schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
           let arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          let schedArr = new Date(Date.parse(docs[i].fullData[22])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          let schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
 
-          let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].fullData[19])).getTime()) / 60000;
+          let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].scheduledTime[0])).getTime()) / 60000;
           let depDiffText = ""
           if (depDiffNum < 0) {
             depDiffNum *= -1;
@@ -64,7 +64,7 @@
             depDiffText = ""
           }
 
-          let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].fullData[22])).getTime()) / 60000;
+          let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].scheduledTime[1])).getTime()) / 60000;
           let arrDiffText = ""
           if (arrDiffNum < 0) {
             arrDiffNum *= -1;

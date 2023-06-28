@@ -117,7 +117,7 @@
 
             axios({
               method: 'get',
-              url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/1197011935?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&limit=${yr}-${month}-${day}&rqid=5zddfm823lq`)}`,
+              url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flight.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&limit=${yr}-${month}-${day}&rqid=5zddfm823lq`)}`,
             }).then(resp => {
               let data = JSON.parse(resp.data.contents).data;
               actualDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
