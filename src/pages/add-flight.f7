@@ -176,6 +176,7 @@
             );
 
             promise.then(function (response) {
+              $f7.dialog.close();
               console.log(response);
               $f7.views.main.router.navigate('/flight/'+formData.flightnum);
             }, function (error) {
