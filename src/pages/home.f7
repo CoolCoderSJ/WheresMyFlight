@@ -113,7 +113,7 @@
           flightslist.innerHTML += `
               <div class="card demo-card-header-pic">
                 <a href="/flight/${docs[i].flightId}">
-                <div style="background-image:url(https://daisycon.io/images/airline/?iata=${docs[i]['iata-code']}.png)"
+                <div style="background-image:url(https://daisycon.io/images/airline/?iata=${docs[i]['iata-code']})"
                   valign="bottom" class="card-header hasimage"></div>
                 <div class="card-content card-content-padding">
                   <div class="card-header">${docs[i].flightId}</div>
