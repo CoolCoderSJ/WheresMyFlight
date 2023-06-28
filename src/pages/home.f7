@@ -82,16 +82,22 @@
             arrDiffText = ""
           }
           let timeLeft = ""
-          let promise = functions.createExecution('timebycity', "&city=" + docs[i].fullData[4]);
+          let promise = functions.createExecution('timebycity', docs[i].fullData[4]);
 
           promise.then(function (response) {
               console.log(response)
               let data = JSON.parse(response.response)
               console.log(data)
-              let time = new Date(data.datetime+"Z")
-              if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() < 0 && new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime() > 0) {
-            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime()) / 60000 / 60)
-            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime()) / 60000 % 60)
+              let time = new Date(data['datetime']+"Z")
+
+              setTimeout(() => {
+                functions.createExecution('timebycity', docs[i].fullData[9]).then(resp => {
+                let time2 = new Date(JSON.parse(resp.response)['datetime']+"Z");
+                console.log(time, time2)
+
+                if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() < 0 && new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime() > 0) {
+            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime()) / 60000 / 60)
+            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime()) / 60000 % 60)
             timeLeft = minsleft + "min left"
             if (hrsleft > 0) {
               timeLeft = hrsleft + "hr " + timeLeft
@@ -127,7 +133,8 @@
                 </div>
               </a>
               </div>`;
-
+              })
+              }, 1000)
           }, function (error) {
               console.log(error); // Failure
           });
