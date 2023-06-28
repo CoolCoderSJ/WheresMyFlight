@@ -157,7 +157,7 @@
               'flights',
               ID.unique(),
               {
-                flightId: formData.flightnum,
+                flightId: formData.aircode + formData.flightnum,
                 airport: airport,
                 location: location,
                 time: time,
