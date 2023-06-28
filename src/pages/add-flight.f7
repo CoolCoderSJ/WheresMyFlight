@@ -164,7 +164,7 @@
                 "iata-code": iataCode,
                 gate: gate,
                 scheduledTime: scheduledTime,
-                fullData: [aircraft, airline, originTZ, originAirport, originCity, originGate, originTerminal, destinationTZ, destinationAirport, destinationCity, destinationGate, destinationTerminal, actualDist, plannedDist, takenDist, speed, altitude, fuel, status, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, scheduledArrivalTime, estimatedArrivalTime, actualArrivalTime],
+                fullData: [aircraft, airline, originTZ, originAirport, originCity, originGate, originTerminal, destinationTZ, destinationAirport, destinationCity, destinationGate, destinationTerminal, actualDist, plannedDist, takenDist, speed, altitude, fuel, status, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, scheduledArrivalTime, estimatedArrivalTime, actualArrivalTime, aircode, flightnum, date],
                 coordinates: coordinates
               },
             );
