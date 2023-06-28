@@ -24,12 +24,14 @@
   </div>
 </template>
 <script>
-  const { Client, Databases, ID } = Appwrite;
+  const { Client, Databases, ID, Functions } = Appwrite;
   const client = new Client();
   client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
       .setProject('wheresmyflight');
   const databases = new Databases(client);
+  const functions = new Functions(client);
+
   
   export default () => {
     const promise = databases.listDocuments('data', 'flights');
@@ -38,12 +40,13 @@
         let docs = response.documents;
         let flightslist = document.getElementById('flightslist');
         for (let i=0; i<docs.length; i++) {
-          let dep = new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
-          let schedDep = new Date(Date.parse(docs[i].fullData[19].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
-          let arr = new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
-          let schedArr = new Date(Date.parse(docs[i].fullData[22].replace("+00:00", "-04:00"))).toLocaleTimeString().replace(":00", "")
+          console.log(docs[i].time)
+          let dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          let schedDep = new Date(Date.parse(docs[i].fullData[19])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          let arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          let schedArr = new Date(Date.parse(docs[i].fullData[22])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
 
-          let depDiffNum = (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date(Date.parse(docs[i].fullData[19].replace("+00:00", "-04:00"))).getTime()) / 60000;
+          let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].fullData[19])).getTime()) / 60000;
           let depDiffText = ""
           if (depDiffNum < 0) {
             depDiffNum *= -1;
@@ -61,7 +64,7 @@
             depDiffText = ""
           }
 
-          let arrDiffNum = (new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date(Date.parse(docs[i].fullData[22].replace("+00:00", "-04:00"))).getTime()) / 60000;
+          let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].fullData[22])).getTime()) / 60000;
           let arrDiffText = ""
           if (arrDiffNum < 0) {
             arrDiffNum *= -1;
@@ -79,16 +82,23 @@
             arrDiffText = ""
           }
           let timeLeft = ""
-          if (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() < 0 && new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() > 0) {
-            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000 / 60)
-            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000 % 60)
+          let promise = functions.createExecution('timebycity', "&city=" + docs[i].fullData[4]);
+
+          promise.then(function (response) {
+              console.log(response)
+              let data = JSON.parse(response.response)
+              console.log(data)
+              let time = new Date(data.datetime+"Z")
+              if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() < 0 && new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime() > 0) {
+            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime()) / 60000 / 60)
+            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time.getTime()) / 60000 % 60)
             timeLeft = minsleft + "min left"
             if (hrsleft > 0) {
               timeLeft = hrsleft + "hr " + timeLeft
             }
           }
-          else if (new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime() > 0) {
-            timeLeft = "Departing in " + Math.floor((new Date(Date.parse(docs[i].time[0].replace("+00:00", "-04:00"))).getTime() - new Date().getTime()) / 60000) + "min"
+          else if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() > 0) {
+            timeLeft = "Departing in " + Math.floor((new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime()) / 60000) + "min"
           }
           else {
             timeLeft = "Arrived"
@@ -106,17 +116,21 @@
                     <p>${docs[i].location[1]}</p>
                   </div>
                   <div class="card-row">
-                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep}</p></div>
+                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep} ${docs[i].fullData[2]}</p></div>
                     <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
-                    <div class="airportrow"><p class="kindofbig">${arr}</p><p class="big">${docs[i].airport[1]}</p></div>
+                    <div class="airportrow"><p class="kindofbig">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
                   </div>
                   <div class="card-row">
-                      <div class="airportrow"><p class="mt-0 mb-0">Gate ${docs[i].gate[0]}</p><span class="badge color-${depDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${depDiff} ${depDiffText}</span></div>
-                      <div class="airportrow"><span class="badge color-${arrDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${arrDiff} ${arrDiffText}</span><p class="mt-0 mb-0">Gate ${docs[i].gate[1]}</p></div>
+                      <div class="airportrow"><p class="mt-0 mb-0">Terminal ${docs[i].fullData[6]} Gate ${docs[i].gate[0]}</p><span class="badge color-${depDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${depDiff} ${depDiffText}</span></div>
+                      <div class="airportrow"><span class="badge color-${arrDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${arrDiff} ${arrDiffText}</span><p class="mt-0 mb-0">Terminal ${docs[i].fullData[11]} Gate ${docs[i].gate[1]}</p></div>
                   </div>
                 </div>
               </a>
               </div>`;
+
+          }, function (error) {
+              console.log(error); // Failure
+          });
         }
     }, function (error) {
         console.log(error); // Failure

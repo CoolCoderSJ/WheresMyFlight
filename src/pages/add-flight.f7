@@ -17,11 +17,31 @@
         <form id="form">
           <div class="list">
             <ul>
+              <div class="grid grid-cols-2">
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title item-floating-label">Airline Code</div>
+                  <div class="item-input-wrap">
+                    <input type="text" name="aircode" maxlength="3" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
               <li class="item-content item-input item-input-outline">
                 <div class="item-inner">
                   <div class="item-title item-floating-label">Flight Number</div>
                   <div class="item-input-wrap">
-                    <input type="text" name="flightnum" />
+                    <input type="text" name="flightnum" maxlength="4" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              </div>
+              <li class="item-content item-input item-input-outline">
+                <div class="item-inner">
+                  <div class="item-title item-floating-label">Flight Date</div>
+                  <div class="item-input-wrap">
+                    <input type="text" placeholder="Flight Date" id="date" name="date" />
                     <span class="input-clear-button"></span>
                   </div>
                 </div>
@@ -51,64 +71,81 @@
 
   export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
+      let date = $f7.calendar.create({
+        inputEl: '#date',
+      });
+
       $('.convert-form-to-data').on('click', function () {
-        var formData = $f7.form.convertToData('#form');
+        var formData = $f7.form.convertToData('#form'); 
         $f7.dialog.preloader('Getting flight data...');
+        let aircode = formData.aircode;
+        let flightnum = formData.flightnum;
+        let date = formData.date;
+        console.log(formData)
+        let yr = date.split("/")[2];
+        let month = date.split("/")[0];
+        let day = date.split("/")[1];
         axios({
           method: 'get',
-          url: `https://api.allorigins.win/get?url=${encodeURIComponent('https://flightaware.com/live/flight/' + formData.flightnum)}`,
+          url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/`)}`,
         })
           .then(function (response) {
-            let htmlData = response.data.contents;
-            let flightData = htmlData.split('trackpollBootstrap = ')[1].split("\x3C/script>")[0].replace("}}};", "}}}");
-            flightData = JSON.parse(flightData);
-            console.log(flightData);
-            let key = Object.keys(flightData.flights)[0];
-            let flight = flightData.flights[key];
-            let airport = [flight.origin.iata, flight.destination.iata];
-            let location = [flight.origin.friendlyLocation, flight.destination.friendlyLocation];
-            let time = [new Date(Number(String(flight.gateDepartureTimes.estimated) + "000")-14400000), new Date(Number(String(flight.gateArrivalTimes.estimated) + "000")-14400000)];
-            let scheduledTime = [new Date(Number(String(flight.gateDepartureTimes.scheduled) + "000")-14400000), new Date(Number(String(flight.gateArrivalTimes.scheduled) + "000")-14400000)];
-            let iataCode = flight.airline.icao;
-            let gate = [flight.origin.gate, flight.destination.gate];
+            let flight = JSON.parse(response.data.contents).data;
+            let airport = [flight.departureAirport.iata, flight.arrivalAirport.iata];
+            let location = [flight.departureAirport.name, flight.arrivalAirport.name];
+            let time = [new Date(flight.schedule.estimatedActualDeparture+"Z"), new Date(flight.schedule.estimatedActualArrival+"Z")];
+            let scheduledTime = [new Date(flight.departureAirport.date+"Z"), new Date(flight.arrivalAirport.date+"Z")];
+            let iataCode = flight.ticketHeader.carrier.fs;
+            let gate = [flight.departureAirport.gate, flight.arrivalAirport.gate];
 
-            let aircraft = flight.aircraft.friendlyType;
-            let airline = flight.airline.fullName;
+            let aircraft = flight.additionalFlightInfo.equipment.name;
+            let airline = flight.ticketHeader.carrier.name;
 
-            let originTZ = flight.origin.TZ;
-            let originAirport = flight.origin.iata + " (" + flight.origin.friendlyName + ")";
-            let originCity = flight.origin.friendlyLocation;
-            let originGate = flight.origin.gate;
-            let originTerminal = flight.origin.terminal;
+            let originTZ = flight.departureAirport.times.scheduled.timezone;
+            let originAirport = airport[0] + " (" + flight.departureAirport.name + ")";
+            let originCity = flight.departureAirport.city;
+            let originGate = flight.departureAirport.gate;
+            let originTerminal = flight.departureAirport.terminal;
 
-            let destinationTZ = flight.destination.TZ;
-            let destinationAirport = flight.destination.iata + " (" + flight.destination.friendlyName + ")";
-            let destinationCity = flight.destination.friendlyLocation;
-            let destinationGate = flight.destination.gate;
-            let destinationTerminal = flight.destination.terminal;
+            let destinationTZ = flight.arrivalAirport.times.scheduled.timezone;
+            let destinationAirport = airport[1] + " (" + flight.arrivalAirport.name + ")";
+            let destinationCity = flight.arrivalAirport.city;
+            let destinationGate = flight.arrivalAirport.gate;
+            let destinationTerminal = flight.arrivalAirport.terminal;
 
-            let actualDist = Math.round(flight.distance.actual * 1.151) + "mi";
-            let plannedDist = Math.round(flight.flightPlan.plannedDistance * 1.151) + "mi";
-            let takenDist = Math.round(flight.distance.elapsed * 1.151) + "mi";
+            let actualDist, plannedDist, takenDist;
 
-            let speed = Math.round(flight.flightPlan.speed * 1.151) + "mph";
-            let altitude = Math.round(flight.flightPlan.altitude * 100) + "ft";
-            let fuel = Math.round(flight.flightPlan.fuelBurn.gallons) + "gal";
+            axios({
+              method: 'get',
+              url: `https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/1197011935?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&limit=${yr}-${month}-${day}&rqid=5zddfm823lq`)}`,
+            }).then(resp => {
+              let data = JSON.parse(resp.data.contents).data;
+              actualDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
+              plannedDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
+              takenDist = Math.round(data.miniTracker.kilometersFromDeparture * 1.151) + "mi";
+              console.log(actualDist, plannedDist, takenDist)
+            })
+            
+            console.log(actualDist, plannedDist, takenDist)
 
-            let status = flight.flightStatus;
+            let speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
+            let altitude = Math.round(flight.positional.flexTrack.positions[0].altitudeFt) + "ft";
+            let fuel = "Unknown";
 
-            let scheduledDepartureTime = new Date(Number(String(flight.gateDepartureTimes.scheduled) + "000")-14400000);
-            let estimatedDepartureTime = new Date(Number(String(flight.gateDepartureTimes.estimated) + "000")-14400000);
-            let actualDepartureTime = new Date(Number(String(flight.gateDepartureTimes.actual) + "000")-14400000);
+            let status = flight.flightState;
 
-            let scheduledArrivalTime = new Date(Number(String(flight.gateArrivalTimes.scheduled) + "000")-14400000);
-            let estimatedArrivalTime = new Date(Number(String(flight.gateArrivalTimes.estimated) + "000")-14400000);
-            let actualArrivalTime = new Date(Number(String(flight.gateArrivalTimes.actual) + "000")-14400000);
+            let scheduledDepartureTime = new Date(flight.schedule.scheduledDeparture +"Z");
+            let estimatedDepartureTime = new Date(flight.schedule.estimatedActualDeparture +"Z");
+            let actualDepartureTime = new Date(flight.schedule.estimatedActualDeparture +"Z");
+
+            let scheduledArrivalTime = new Date(flight.schedule.scheduledArrival +"Z");
+            let estimatedArrivalTime = new Date(flight.schedule.estimatedActualArrival +"Z");
+            let actualArrivalTime = new Date(flight.schedule.estimatedActualArrival +"Z");
 
             let coordinates = [];
-            if (flight.track) {
-            for (let i=0; i<flight.track.length;i++) {
-              let coord = flight.track[i].coord;
+            if (flight.positional.flexTrack.positions) {
+            for (let i=0; i<flight.positional.flexTrack.positions.length;i++) {
+              let coord = [flight.positional.flexTrack.positions[i].lat, flight.positional.flexTrack.positions[i].lon];
               coordinates.push(coord)
             }
             }

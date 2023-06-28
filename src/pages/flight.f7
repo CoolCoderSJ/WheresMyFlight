@@ -125,8 +125,8 @@
           var Lng = [];
           let coords = JSON.parse(response.documents[0].coordinates);
           for (var i = 0; i < coords.length; i++) {
-            Lng.push(coords[i][0]);
-            Lat.push(coords[i][1]);
+            Lng.push(coords[i][1]);
+            Lat.push(coords[i][0]);
           }
           console.log(Lat, Lng)
           var lineSymbol = {
@@ -175,12 +175,12 @@
           document.getElementById("fuel").innerHTML = flight[17]
           document.getElementById("status").innerHTML = flight[18];
 
-          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
-          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24].replace("+00:00", "-04:00"))).toString().split(":00 GMT")[0];
+          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toUTCString().split(":00 GMT")[0];
+          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toUTCString().split(":00 GMT")[0];
+          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toUTCString().split(":00 GMT")[0];
+          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toUTCString().split(":00 GMT")[0];
+          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toUTCString().split(":00 GMT")[0];
+          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toUTCString().split(":00 GMT")[0];
       }, function (error) {
           console.log(error); // Failure
       });
