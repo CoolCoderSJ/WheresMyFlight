@@ -41,13 +41,20 @@
         let flightslist = document.getElementById('flightslist');
         for (let i=0; i<docs.length; i++) {
           console.log(docs[i].time)
-          let dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          let schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          let arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          let schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-
-          let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].scheduledTime[0])).getTime()) / 60000;
-          let depDiffText = ""
+          let dep, schedDep, arr, schedArr, depDiffNum, depDiffText, depDiff, arrDiffNum, arrDiffText, arrDiff
+          if (docs[i].time[0]) 
+          {
+            dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+            schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          }
+          if (docs[i].time[1]) {
+          arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+          }
+        
+          if (dep) {
+          depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].scheduledTime[0])).getTime()) / 60000;
+          depDiffText = ""
           if (depDiffNum < 0) {
             depDiffNum *= -1;
             depDiffText = "early"
@@ -55,7 +62,8 @@
           else {
             depDiffText = "late"
           }
-          let depDiff = depDiffNum%60 + "min";
+          
+          depDiff = depDiffNum%60 + "min";
           if (Math.floor(depDiffNum/60) > 0) {
             depDiff = Math.floor(depDiffNum/60) + "hr " + depDiff
           }
@@ -63,9 +71,15 @@
             depDiff = "on time"
             depDiffText = ""
           }
+        }
+        else {
+          depDiff = ""
+        }
 
-          let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].scheduledTime[1])).getTime()) / 60000;
-          let arrDiffText = ""
+        if (arr) {
+
+          arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].scheduledTime[1])).getTime()) / 60000;
+          arrDiffText = ""
           if (arrDiffNum < 0) {
             arrDiffNum *= -1;
             arrDiffText = "early"
@@ -73,7 +87,7 @@
           else {
             arrDiffText = "late"
           }
-          let arrDiff = arrDiffNum%60 + "min";
+          arrDiff = arrDiffNum%60 + "min";
           if (Math.floor(arrDiffNum/60) > 0) {
             arrDiff = Math.floor(arrDiffNum/60) + "hr " + arrDiff
           }
@@ -81,7 +95,14 @@
             arrDiff = "on time"
             arrDiffText = ""
           }
+        }
+        else {
+          arrDiff = ""
+        }
+
           let timeLeft = ""
+
+          if (dep && arr) { 
           let promise = functions.createExecution('timebycity', docs[i].fullData[4]);
 
           promise.then(function (response) {
@@ -135,9 +156,33 @@
               </div>`;
               })
               }, 1000)
-          }, function (error) {
-              console.log(error); // Failure
           });
+        }
+        else {
+          flightslist.innerHTML += `
+              <div class="card demo-card-header-pic">
+                <a href="/flight/${docs[i].flightId}">
+                <div style="background-image:url(https://daisycon.io/images/airline/?iata=${docs[i]['iata-code']})"
+                  valign="bottom" class="card-header hasimage"></div>
+                <div class="card-content card-content-padding">
+                  <div class="card-header">${docs[i].flightId}</div>
+                  <div class="card-row">
+                    <p>${docs[i].location[0]}</p>
+                    <p>${docs[i].location[1]}</p>
+                  </div>
+                  <div class="card-row">
+                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep} ${docs[i].fullData[2]}</p></div>
+                    <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
+                    <div class="airportrow"><p class="kindofbig">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
+                  </div>
+                  <div class="card-row">
+                      <div class="airportrow"><p class="mt-0 mb-0">Terminal ${docs[i].fullData[6]} Gate ${docs[i].gate[0]}</p><span class="badge color-${depDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${depDiff} ${depDiffText}</span></div>
+                      <div class="airportrow"><span class="badge color-${arrDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${arrDiff} ${arrDiffText}</span><p class="mt-0 mb-0">Terminal ${docs[i].fullData[11]} Gate ${docs[i].gate[1]}</p></div>
+                  </div>
+                </div>
+              </a>
+              </div>`;
+        }
         }
     }, function (error) {
         console.log(error); // Failure
