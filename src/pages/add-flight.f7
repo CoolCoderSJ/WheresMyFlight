@@ -90,7 +90,7 @@
           url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/`)}`,
         })
           .then(function (response) {
-            let flight = JSON.parse(response.data).data;
+            let flight = response.data.data;
             let airport = [flight.departureAirport.iata, flight.arrivalAirport.iata];
             let location = [flight.departureAirport.name, flight.arrivalAirport.name];
             let time = [new Date(flight.schedule.estimatedActualDeparture+"Z"), new Date(flight.schedule.estimatedActualArrival+"Z")];
@@ -119,7 +119,7 @@
               method: 'get',
               url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flight.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&limit=${yr}-${month}-${day}&rqid=5zddfm823lq`)}`,
             }).then(resp => {
-              let data = JSON.parse(resp.data).data;
+              let data = resp.data.data;
               actualDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
               plannedDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
               takenDist = Math.round(data.miniTracker.kilometersFromDeparture * 1.151) + "mi";
