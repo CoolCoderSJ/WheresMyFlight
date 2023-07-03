@@ -190,12 +190,37 @@
           document.getElementById("fuel").innerHTML = flight[17]
           document.getElementById("status").innerHTML = flight[18];
 
-          document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toUTCString().split(":00 GMT")[0];
-          document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toUTCString().split(":00 GMT")[0];
-          document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toUTCString().split(":00 GMT")[0];
-          document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toUTCString().split(":00 GMT")[0];
-          document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toUTCString().split(":00 GMT")[0];
-          document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toUTCString().split(":00 GMT")[0];
+          let sdt = flight[19]
+          let edt = flight[20]
+          let sat = flight[22]
+          let eat = flight[23]
+          let adt = flight[21]
+          let aat = flight[24]
+
+          if (sdt) if (sdt.includes("Z")) document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toString().split(":00")[0];
+          else document.getElementById("scheddeptime").innerHTML = "N/A";
+
+          if (edt) if (edt.includes("Z")) document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toString().split(":00")[0];
+          else document.getElementById("estdeptime").innerHTML = "N/A";
+
+          if (sat) if (sat.includes("Z")) document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toString().split(":00")[0];
+          else document.getElementById("schedarrtime").innerHTML = "N/A";
+
+          if (eat) if (eat.includes("Z")) document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toString().split(":00")[0];
+          else document.getElementById("estarrtime").innerHTML = "N/A";
+
+          if (adt) if (adt.includes("Z")) document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toString().split(":00")[0];
+           else document.getElementById("actualdeptime").innerHTML = "N/A";
+
+          if (aat) if (aat.includes("Z")) document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toUTCString().split(":00 GMT")[0];
+                   else document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toString().split(":00")[0];
+          else document.getElementById("actualarrtime").innerHTML = "N/A";
+          
       }, function (error) {
           console.log(error); // Failure
       });
