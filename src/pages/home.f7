@@ -159,11 +159,11 @@
                   <div class="card-header">${docs[i].flightId}</div>
                   <div class="card-row">
                     <p>${docs[i].location[0]}</p>
+                    <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
                     <p>${docs[i].location[1]}</p>
                   </div>
                   <div class="card-row">
                     <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep} ${docs[i].fullData[2]}</p></div>
-                    <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
                     <div class="airportrow"><p class="kindofbig">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
                   </div>
                   <div class="card-row">
