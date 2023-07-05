@@ -46,8 +46,10 @@
           schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
           if (docs[i].time[0]) dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
           if (docs[i].time[1]) arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          if (docs[i].scheduledTime[0] && !docs[i].time[0]) docs[i].time[0] = docs[i].scheduledTime[0]; dep = schedDep
-          if (docs[i].scheduledTime[1] && !docs[i].time[1]) docs[i].time[1] = docs[i].scheduledTime[1]; arr = schedArr
+          if (docs[i].scheduledTime[0] && !docs[i].time[0]) docs[i].time[0] = docs[i].scheduledTime[0]
+          if (docs[i].scheduledTime[0] && !docs[i].time[0]) dep = schedDep
+          if (docs[i].scheduledTime[1] && !docs[i].time[1]) docs[i].time[1] = docs[i].scheduledTime[1]
+          if (docs[i].scheduledTime[1] && !docs[i].time[1]) arr = schedArr
 
           function tConvert (time) {
             // Check correct time format and split into components
