@@ -63,10 +63,14 @@
             return time.join (''); // return adjusted time or original string
           }
 
-          dep = tConvert(dep)
-          arr = tConvert(arr)
-          schedDep = tConvert(schedDep)
-          schedArr = tConvert(schedArr)
+          try {dep = tConvert(dep)}
+          catch {console.log("could not get tz for dep")}
+          try {arr = tConvert(arr)}
+          catch {console.log("could not get tz for arr")} 
+          try {schedDep = tConvert(schedDep)}
+          catch {console.log("could not get tz for scheddep")}
+          try {schedArr = tConvert(schedArr)}
+          catch {console.log("could not get tz for schedarr")}
 
           console.log(docs[i])
         
