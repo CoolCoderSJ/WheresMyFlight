@@ -41,7 +41,7 @@
         let flightslist = document.getElementById('flightslist');
         for (let i=0; i<docs.length; i++) {
         const sleep = ms => new Promise(r => setTimeout(r, ms));
-        sleep(2000).then(() => {
+        sleep(500).then(() => {
           console.log(docs[i].time)
           let dep, schedDep, arr, schedArr
           schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
