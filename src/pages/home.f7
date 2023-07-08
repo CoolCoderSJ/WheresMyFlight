@@ -175,12 +175,12 @@
                     <p>${docs[i].location[1]}</p>
                   </div>
                   <div class="card-row">
-                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig">${dep} ${docs[i].fullData[2]}</p></div>
-                    <div class="airportrow"><p class="kindofbig">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
+                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig" style="color: ${depDiffText == 'late' ? 'red' : '#90EE90'}">${dep} ${docs[i].fullData[2]}</p></div>
+                    <div class="airportrow"><p class="kindofbig" style="color: ${arrDiffText == 'late' ? 'red' : '#90EE90'}">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
                   </div>
                   <div class="card-row">
-                      <div class="airportrow"><p class="mt-0 mb-0">${terminals[0]} ${gates[0]}</p><span class="badge color-${depDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${depDiff} ${depDiffText}</span></div>
-                      <div class="airportrow"><span class="badge color-${arrDiffText == 'late' ? 'red' : 'green'}" style="color: black;">${arrDiff} ${arrDiffText}</span><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
+                      <div class="airportrow"><p class="mt-0 mb-0">${terminals[0]} ${gates[0]}</p></div>
+                      <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
                   </div>
                 </div>
               </a>
