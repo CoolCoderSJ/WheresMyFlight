@@ -1,0 +1,138 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Flight ${$f7route.path.replace("/flight/", "").replace("/passes", "")} Boarding Passes</div>
+        </div>
+      </div>
+      <div class="page-content ptr-content" @ptr:refresh=${loadMore}>
+        <div class="ptr-preloader">
+          <div class="preloader"></div>
+          <div class="ptr-arrow"></div>
+        </div>
+        <div class="block block-strong">
+            <a href="/add-pass" class="button button-fill">Add Boarding Pass</a>
+        </div>
+        <div id="passes">
+        </div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Databases, ID, Query } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const databases = new Databases(client);
+  
+    export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on('pageInit', () => {
+        const colorThief = new ColorThief();
+        let flightId = $f7route.path.replace("/flight/", "").replace("/passes", "")
+        console.log(flightId)
+        let passes = localStorage.getItem("passes");
+        if (!passes) {
+            databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+            localStorage.setItem("passes", JSON.stringify(resp.documents))
+            console.log(resp)
+            }).then(() => loadPasses(localStorage.getItem("passes")))
+        }
+        else {
+            loadPasses(passes)
+            databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+            localStorage.setItem("passes", JSON.stringify(resp.documents))
+            console.log(resp)
+            })
+        }
+            function loadPasses (passes) {
+                passes = JSON.parse(passes)
+            for (let i=0; i < passes.length; i++) {
+                let data = bcbp.decode(passes[i].data)
+                console.log("data", data)
+                let depAir = data.data.legs[0].departureAirport
+                let arrAir = data.data.legs[0].arrivalAirport
+                let seat = data.data.legs[0].seatNumber
+                console.log("pass data ", data)
+                if (seat.startsWith("0")) seat = seat.substring(1)
+                let passName = data.data.passengerName
+
+                let localdata = JSON.parse(localStorage.getItem("data"))
+                let flight
+                for (let j=0; j<localdata.length; j++) {
+                    if (localdata[j].flightId == flightId) {
+                        flight = localdata[j]
+                        break
+                    }
+                }
+
+                console.log(flight)
+
+                let passesContainer = document.getElementById("passes")
+                passesContainer.innerHTML += `<div class="card demo-card-header-pic" id="${i}card">
+            <div class="card-content card-content-padding">
+                <br>
+                <div class="card-row">
+                  <div class="airportrow"><p class="mt-0 mb-0">${flight.location[0]}</p></div>
+                  <div class="airportrow"><p class="mt-0 mb-0">${flight.location[1]}</p></div>
+              </div>
+              <div class="card-row">
+                <div class="airportrow"><p class="big">${depAir}</p></div>
+                <div class="airportrow"><p class="big">${arrAir}</p></div>
+              </div>
+              <br>
+              <div class="card-row">
+                  <div class="airportrow"><p class="mt-0 mb-0">Passenger</p></div>
+                  <div class="airportrow"><p class="mt-0 mb-0">Seat</p></div>
+              </div>
+              <div class="card-row">
+                  <div class="airportrow"><p class="kindofbig">${passName}</p></div>
+                  <div class="airportrow"><p class="kindofbig">${seat}</p></div>
+              </div><br>
+              <div class="card-row" style="justify-content: center;">
+                  <canvas id="${i}canvas" style="padding: 10px; background: #fff; border-radius: 8px;"></canvas>
+              </div>
+            </div>
+          </div>`
+
+        setTimeout(() => {bwipjs.toCanvas(`${i}canvas`, {
+                bcid:        passes[i].format == "AZTEC" ? "azteccode" : passes[i].format,       // Barcode type
+                text:        passes[i].data,    // Text to encode
+                scale:       3,               // 3x scaling factor
+                includetext: true,            // Show human-readable text
+                textxalign:  'center',
+                backgroundcolor: "ffffff"
+            });
+        }, 1000)
+
+            }
+        }
+      });
+  
+      const loadMore = (e, done) => {     
+        let flightId = $f7route.path.replace("/flight/", "").replace("/passes", "")   
+        databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+        localStorage.setItem("passes", JSON.stringify(resp.documents))
+        console.log(resp)
+        }).then(() => {
+          location.reload()
+            $update();
+            done();
+        })
+    }
+      // Return render function
+      return $render;
+    }
+  </script>

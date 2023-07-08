@@ -16,7 +16,9 @@
       <div class="block block-strong" style="z-index: 9999; height: 300px;">
         <div id="map" style="height: 300px;"></div>
       </div>
-
+      <div class="block">
+        <a href="${$f7route.path + '/passes'}" class="button button-fill">Boarding Passes</a>
+      </div>
       <p class="block-title">General Info</p>
       <div class="block block-strong">
         <div class="row"><p class="block-title">Aircraft</p><p id="aircraft"></p></div>

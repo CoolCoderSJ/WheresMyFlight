@@ -1,0 +1,68 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Add Boarding Pass</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div id="reader" width="600px"></div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Databases, ID, Query } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const databases = new Databases(client);
+  
+    export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on('pageInit', () => {
+        function onScanSuccess(decodedText, decodedResult) {
+          // handle the scanned code as you like, for example:
+          console.log(`Code matched = ${decodedText}`, decodedResult);
+          let text = decodedText
+          let format = decodedResult.result.format.formatName
+          let data = bcbp.decode(text)
+          console.log(data)
+
+          databases.createDocument('data', 'passes', ID.unique(), {
+            flightId: data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber,
+            data: decodedText,
+            format: format
+          }).then(() => {
+            $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+          })
+        }
+
+        function onScanFailure(error) {
+          // handle scan failure, usually better to ignore and keep scanning.
+          // for example:
+          console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+          "reader",
+          { fps: 10, qrbox: {width: 250, height: 250} },
+          /* verbose= */ false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      });
+  
+      // Return render function
+      return $render;
+    }
+  </script>
