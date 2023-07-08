@@ -55,7 +55,10 @@
       })
     }
     function loadPage(data) {
+    window.addEventListener("load", () => {
     let docs = JSON.parse(data);
+    let flightslist = document.getElementById('flightslist');
+    flightslist.innerHTML = ""
     for (let i=0; i<docs.length; i++) {
       console.log(docs[i].time)
       let dep, schedDep, arr, schedArr
@@ -137,8 +140,6 @@
       if (!terminals[1]) terminals[1] = ""
       else terminals[1] = "Terminal " + terminals[1]
 
-      window.addEventListener("load", () => {
-      let flightslist = document.getElementById('flightslist');
       console.log(flightslist)
       flightslist.innerHTML += `
           <div class="card demo-card-header-pic" id="${docs[i].flightId}card">
@@ -202,26 +203,21 @@
             console.log(hexcolor)
             document.getElementById(docs[i].flightId+"card").setAttribute("style", "background-color: "+shadeColor(hexcolor, -0.9)+"8c !important;")
           })
-        })
+
       }  
+    })
     }
 
 
-    const loadMore = (e, done) => {
-        let fightslist = document.getElementById("flightslist")
-        flightslist.innerHTML = ""
+    const loadMore = (e, done) => {        
         databases.listDocuments('data', 'flights').then((resp) => {
         localStorage.setItem("data", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {
-          let data = localStorage.getItem("data")
-          loadPage(data)
+          location.reload()
+            $update();
+            done();
         })
-        // Update state to rerender
-        $update();
-
-        // When loading done, we need to reset it
-        done();
     }
     return $render;
   }
