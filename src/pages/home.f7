@@ -11,7 +11,11 @@
       </div>
     </div>
     <!-- Scrollable page content-->
-    <div class="page-content">
+    <div class="page-content ptr-content" @ptr:refresh=${loadMore}>
+      <div class="ptr-preloader">
+        <div class="preloader"></div>
+        <div class="ptr-arrow"></div>
+      </div>
       <div class="block">
         <a href="/add-flight" class="button button-fill">Add Flight</a>
       </div>
@@ -33,7 +37,7 @@
   const functions = new Functions(client);
 
   
-  export default () => {
+  export default (props, {$update}) => {
     const colorThief = new ColorThief();
 
     let data = localStorage.getItem("data");
@@ -200,6 +204,24 @@
           })
         })
       }  
+    }
+
+
+    const loadMore = (e, done) => {
+        let fightslist = document.getElementById("flightslist")
+        flightslist.innerHTML = ""
+        databases.listDocuments('data', 'flights').then((resp) => {
+        localStorage.setItem("data", JSON.stringify(resp.documents))
+        console.log(resp)
+        }).then(() => {
+          let data = localStorage.getItem("data")
+          loadPage(data)
+        })
+        // Update state to rerender
+        $update();
+
+        // When loading done, we need to reset it
+        done();
     }
     return $render;
   }
