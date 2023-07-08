@@ -166,11 +166,13 @@
           flightslist.innerHTML += `
               <div class="card demo-card-header-pic" id="${docs[i].flightId}card">
                 <a href="/flight/${docs[i].flightId}">
-                  <img style="display: none" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].flightId}img" crossorigin="anonymous">
-                <div style="background-image:url(https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg)"
-                  valign="bottom" class="card-header hasimage"></div>
                 <div class="card-content card-content-padding">
+                  <div class="card-row" style="margin-top: 20px; justify-content: inherit; gap: 20px; align-items: center">
+                    <div style="background: #fff;border-radius: 50%; width: 50px;height: 50px;">
+                  <img style="scale: 0.8; width: 100%; height: 100%; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].flightId}img" crossorigin="anonymous">
+                  </div>
                   <div class="card-header">${docs[i].flightId}</div>
+                    </div>
                   <div class="card-row">
                     <p>${docs[i].location[0]}</p>
                     <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
