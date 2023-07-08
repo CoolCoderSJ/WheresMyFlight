@@ -34,206 +34,173 @@
 
   
   export default () => {
-    const promise = databases.listDocuments('data', 'flights');
     const colorThief = new ColorThief();
 
-    promise.then(function (response) {
-        let docs = response.documents;
-        let flightslist = document.getElementById('flightslist');
-        for (let i=0; i<docs.length; i++) {
-        const sleep = ms => new Promise(r => setTimeout(r, ms));
-          console.log(docs[i].time)
-          let dep, schedDep, arr, schedArr
-          schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          if (docs[i].time[0]) dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          if (docs[i].time[1]) arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-          if (docs[i].scheduledTime[0] && !docs[i].time[0]) { docs[i].time[0] = docs[i].scheduledTime[0]; dep = schedDep }
-          if (docs[i].scheduledTime[1] && !docs[i].time[1]) { docs[i].time[1] = docs[i].scheduledTime[1]; arr = schedArr }
+    let data = localStorage.getItem("data");
+    if (!data) {
+      databases.listDocuments('data', 'flights').then((resp) => {
+      localStorage.setItem("data", JSON.stringify(resp.documents))
+      console.log(resp)
+      }).then(() => loadPage(localStorage.getItem("data")))
+    }
+    else {
+      loadPage(data)
+      databases.listDocuments('data', 'flights').then((resp) => {
+      localStorage.setItem("data", JSON.stringify(resp.documents))
+      console.log(resp)
+      })
+    }
+    function loadPage(data) {
+    let docs = JSON.parse(data);
+    for (let i=0; i<docs.length; i++) {
+      console.log(docs[i].time)
+      let dep, schedDep, arr, schedArr
+      schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+      schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+      if (docs[i].time[0]) dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+      if (docs[i].time[1]) arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+      if (docs[i].scheduledTime[0] && !docs[i].time[0]) { docs[i].time[0] = docs[i].scheduledTime[0]; dep = schedDep }
+      if (docs[i].scheduledTime[1] && !docs[i].time[1]) { docs[i].time[1] = docs[i].scheduledTime[1]; arr = schedArr }
 
-          function tConvert (time) {
-            // Check correct time format and split into components
-            time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+      function tConvert (time) {
+        // Check correct time format and split into components
+        time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-            if (time.length > 1) { // If time format correct
-              time = time.slice (1);  // Remove full string match value
-              time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
-              time[0] = +time[0] % 12 || 12; // Adjust hours
-            }
-            return time.join (''); // return adjusted time or original string
-          }
+        if (time.length > 1) { // If time format correct
+          time = time.slice (1);  // Remove full string match value
+          time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+          time[0] = +time[0] % 12 || 12; // Adjust hours
+        }
+        return time.join (''); // return adjusted time or original string
+      }
 
-          try {dep = tConvert(dep)}
-          catch {console.log("could not get tz for dep")}
-          try {arr = tConvert(arr)}
-          catch {console.log("could not get tz for arr")} 
-          try {schedDep = tConvert(schedDep)}
-          catch {console.log("could not get tz for scheddep")}
-          try {schedArr = tConvert(schedArr)}
-          catch {console.log("could not get tz for schedarr")}
+      try {dep = tConvert(dep)}
+      catch {console.log("could not get tz for dep")}
+      try {arr = tConvert(arr)}
+      catch {console.log("could not get tz for arr")} 
+      try {schedDep = tConvert(schedDep)}
+      catch {console.log("could not get tz for scheddep")}
+      try {schedArr = tConvert(schedArr)}
+      catch {console.log("could not get tz for schedarr")}
 
-          console.log(docs[i])
-        
-          let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].scheduledTime[0])).getTime()) / 60000;
-          let depDiffText = ""
-          if (depDiffNum < 0) {
-            depDiffNum *= -1;
-            depDiffText = "early"
-          }
-          else {
-            depDiffText = "late"
-          }
-          let depDiff = depDiffNum%60 + "min";
-          if (Math.floor(depDiffNum/60) > 0) {
-            depDiff = Math.floor(depDiffNum/60) + "hr " + depDiff
-          }
-          if (depDiffNum == 0) {
-            depDiff = "on time"
-            depDiffText = ""
-          }
+      console.log(docs[i])
+    
+      let depDiffNum = (new Date(Date.parse(docs[i].time[0])).getTime() - new Date(Date.parse(docs[i].scheduledTime[0])).getTime()) / 60000;
+      let depDiffText = ""
+      if (depDiffNum < 0) {
+        depDiffNum *= -1;
+        depDiffText = "early"
+      }
+      else {
+        depDiffText = "late"
+      }
+      let depDiff = depDiffNum%60 + "min";
+      if (Math.floor(depDiffNum/60) > 0) {
+        depDiff = Math.floor(depDiffNum/60) + "hr " + depDiff
+      }
+      if (depDiffNum == 0) {
+        depDiff = "on time"
+        depDiffText = ""
+      }
 
-          let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].scheduledTime[1])).getTime()) / 60000;
-          let arrDiffText = ""
-          if (arrDiffNum < 0) {
-            arrDiffNum *= -1;
-            arrDiffText = "early"
-          }
-          else {
-            arrDiffText = "late"
-          }
-          let arrDiff = arrDiffNum%60 + "min";
-          if (Math.floor(arrDiffNum/60) > 0) {
-            arrDiff = Math.floor(arrDiffNum/60) + "hr " + arrDiff
-          }
-          if (arrDiffNum == 0) {
-            arrDiff = "on time"
-            arrDiffText = ""
-          }
-          let timeLeft = ""
-          let promise = functions.createExecution('timebycity', docs[i].fullData[4]);
+      let arrDiffNum = (new Date(Date.parse(docs[i].time[1])).getTime() - new Date(Date.parse(docs[i].scheduledTime[1])).getTime()) / 60000;
+      let arrDiffText = ""
+      if (arrDiffNum < 0) {
+        arrDiffNum *= -1;
+        arrDiffText = "early"
+      }
+      else {
+        arrDiffText = "late"
+      }
+      let arrDiff = arrDiffNum%60 + "min";
+      if (Math.floor(arrDiffNum/60) > 0) {
+        arrDiff = Math.floor(arrDiffNum/60) + "hr " + arrDiff
+      }
+      if (arrDiffNum == 0) {
+        arrDiff = "on time"
+        arrDiffText = ""
+      }
 
-          fetch("https://api.api-ninjas.com/v1/worldtime?city="+docs[i].fullData[4], {
-            method: 'GET',
-            headers: { 'X-Api-Key': 'P8Cj+Lx5YZjKPbK2M3JMbQ==PlDfmIIRiB8pKMtD'},
-            contentType: 'application/json',
-          }).then(resp => resp.json())
-            .then(data => {
-              console.log(data)
-              let time = new Date(data['datetime']+"Z")
+      let gates = [docs[i].gate[0], docs[i].gate[1]]
+      let terminals = [docs[i].fullData[6], docs[i].fullData[11]]
 
-              fetch("https://api.api-ninjas.com/v1/worldtime?city="+docs[i].fullData[9], {
-              method: 'GET',
-              headers: { 'X-Api-Key': 'P8Cj+Lx5YZjKPbK2M3JMbQ==PlDfmIIRiB8pKMtD'},
-              contentType: 'application/json',
-            }).then(resp => resp.json())
-              .then(data => {
-                let time2 = new Date(data['datetime']+"Z");
-                console.log(time, time2)
+      if (!gates[0]) gates[0] = ""
+      else gates[0] = "Gate " + gates[0]
+      if (!gates[1]) gates[1] = ""
+      else gates[1] = "Gate " + gates[1]
+      if (!terminals[0]) terminals[0] = ""
+      else terminals[0] = "Terminal " + terminals[0]
+      if (!terminals[1]) terminals[1] = ""
+      else terminals[1] = "Terminal " + terminals[1]
 
-                if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() < 0 && new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime() > 0) {
-            let hrsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime()) / 60000 / 60)
-            let minsleft = Math.floor((new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime()) / 60000 % 60)
-            timeLeft = minsleft + "min left"
-            if (hrsleft > 0) {
-              timeLeft = hrsleft + "hr " + timeLeft
-            }
-          }
-          else if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() > 0) {
-            let hrstill = Math.floor((new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime()) / 60000 / 60)
-            let minstill = Math.floor((new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime()) / 60000 % 60)
-            let str = minstill + "min"
-            if (hrstill > 0) {
-              str = hrstill + "hr " + str
-            }
-            timeLeft = "Departing in " + str
-          }
-          else {
-            timeLeft = "Arrived"
-          }
-
-          let gates = [docs[i].gate[0], docs[i].gate[1]]
-          let terminals = [docs[i].fullData[6], docs[i].fullData[11]]
-
-          if (!gates[0]) gates[0] = ""
-          else gates[0] = "Gate " + gates[0]
-          if (!gates[1]) gates[1] = ""
-          else gates[1] = "Gate " + gates[1]
-          if (!terminals[0]) terminals[0] = ""
-          else terminals[0] = "Terminal " + terminals[0]
-          if (!terminals[1]) terminals[1] = ""
-          else terminals[1] = "Terminal " + terminals[1]
-
-          flightslist.innerHTML += `
-              <div class="card demo-card-header-pic" id="${docs[i].flightId}card">
-                <a href="/flight/${docs[i].flightId}">
-                <div class="card-content card-content-padding">
-                  <div class="card-row" style="margin-top: 20px; justify-content: inherit; gap: 20px; align-items: center">
-                    <div style="background: #fff;border-radius: 50%; width: 50px;height: 50px;">
-                  <img style="scale: 0.8; width: 100%; height: 100%; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].flightId}img" crossorigin="anonymous">
-                  </div>
-                  <div class="card-header">${docs[i].flightId}</div>
-                    </div>
-                  <div class="card-row">
-                    <p>${docs[i].location[0]}</p>
-                    <div class="item-after airportrow"><span class="badge color-blue" style="color: black;">${timeLeft}</span></div>
-                    <p>${docs[i].location[1]}</p>
-                  </div>
-                  <div class="card-row">
-                    <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig" style="color: ${depDiffText == 'late' ? 'red' : '#90EE90'}">${dep} ${docs[i].fullData[2]}</p></div>
-                    <div class="airportrow"><p class="kindofbig" style="color: ${arrDiffText == 'late' ? 'red' : '#90EE90'}">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
-                  </div>
-                  <div class="card-row">
-                      <div class="airportrow"><p class="mt-0 mb-0">${terminals[0]} ${gates[0]}</p></div>
-                      <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
-                  </div>
+      window.addEventListener("load", () => {
+      let flightslist = document.getElementById('flightslist');
+      console.log(flightslist)
+      flightslist.innerHTML += `
+          <div class="card demo-card-header-pic" id="${docs[i].flightId}card">
+            <a href="/flight/${docs[i].flightId}">
+            <div class="card-content card-content-padding">
+              <div class="card-row" style="margin-top: 20px; justify-content: inherit; gap: 20px; align-items: center">
+                <div style="background: #fff;border-radius: 50%; width: 50px;height: 50px;">
+              <img style="scale: 0.8; width: 100%; height: 100%; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].flightId}img" crossorigin="anonymous">
+              </div>
+              <div class="card-header">${docs[i].flightId}</div>
                 </div>
-              </a>
-              </div>`;
-              const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
-                const hex = x.toString(16)
-                return hex.length === 1 ? '0' + hex : hex
-              }).join('')
+              <div class="card-row">
+                <p>${docs[i].location[0]}</p>
+                <p>${docs[i].location[1]}</p>
+              </div>
+              <div class="card-row">
+                <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig" style="color: ${depDiffText == 'late' ? 'red' : '#90EE90'}">${dep} ${docs[i].fullData[2]}</p></div>
+                <div class="airportrow"><p class="kindofbig" style="color: ${arrDiffText == 'late' ? 'red' : '#90EE90'}">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
+              </div>
+              <div class="card-row">
+                  <div class="airportrow"><p class="mt-0 mb-0">${terminals[0]} ${gates[0]}</p></div>
+                  <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
+              </div>
+            </div>
+          </a>
+          </div>`;
+          const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
+            const hex = x.toString(16)
+            return hex.length === 1 ? '0' + hex : hex
+          }).join('')
 
-              function shadeColor(color, percent) {
+          function shadeColor(color, percent) {
 
-                var R = parseInt(color.substring(1,3),16);
-                var G = parseInt(color.substring(3,5),16);
-                var B = parseInt(color.substring(5,7),16);
+            var R = parseInt(color.substring(1,3),16);
+            var G = parseInt(color.substring(3,5),16);
+            var B = parseInt(color.substring(5,7),16);
 
-                R = parseInt(R * (100 + percent) / 100);
-                G = parseInt(G * (100 + percent) / 100);
-                B = parseInt(B * (100 + percent) / 100);
+            R = parseInt(R * (100 + percent) / 100);
+            G = parseInt(G * (100 + percent) / 100);
+            B = parseInt(B * (100 + percent) / 100);
 
-                R = (R<255)?R:255;  
-                G = (G<255)?G:255;  
-                B = (B<255)?B:255;  
+            R = (R<255)?R:255;  
+            G = (G<255)?G:255;  
+            B = (B<255)?B:255;  
 
-                R = Math.round(R)
-                G = Math.round(G)
-                B = Math.round(B)
+            R = Math.round(R)
+            G = Math.round(G)
+            B = Math.round(B)
 
-                var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-                var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-                var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+            var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+            var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+            var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
 
-                return "#"+RR+GG+BB;
-                }
+            return "#"+RR+GG+BB;
+            }
 
-              let img = document.getElementById(docs[i].flightId + "img")
-              img.addEventListener("load", ()=>{
-                let color = colorThief.getColor(img);
-                let hexcolor = rgbToHex(color[0], color[1], color[2])
-                console.log(hexcolor)
-                document.getElementById(docs[i].flightId+"card").setAttribute("style", "background-color: "+shadeColor(hexcolor, -0.9)+"8c !important;")
-              })
-              })
-          }, function (error) {
-              console.log(error); // Failure
-          });
-        }  
-    }, function (error) {
-        console.log(error); // Failure
-    });
+          let img = document.getElementById(docs[i].flightId + "img")
+          img.addEventListener("load", ()=>{
+            let color = colorThief.getColor(img);
+            let hexcolor = rgbToHex(color[0], color[1], color[2])
+            console.log(hexcolor)
+            document.getElementById(docs[i].flightId+"card").setAttribute("style", "background-color: "+shadeColor(hexcolor, -0.9)+"8c !important;")
+          })
+        })
+      }  
+    }
     return $render;
   }
 </script>

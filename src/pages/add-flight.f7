@@ -178,7 +178,11 @@
             promise.then(function (response) {
               $f7.dialog.close();
               console.log(response);
-              $f7.views.main.router.navigate('/flight/'+formData.flightnum);
+              databases.listDocuments('data', 'flights').then((resp) => {
+                localStorage.setItem("data", JSON.stringify(resp.documents))
+                console.log(resp)
+                })
+              $f7.views.main.router.navigate('/');
             }, function (error) {
               console.log(error);
             });

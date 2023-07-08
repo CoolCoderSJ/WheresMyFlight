@@ -98,6 +98,10 @@
 
             promise.then(function (response) {
               $f7.dialog.alert('Flight deleted successfully!', function () {
+                databases.listDocuments('data', 'flights').then((resp) => {
+              localStorage.setItem("data", JSON.stringify(resp.documents))
+              console.log(resp)
+              })
                 $f7.views.main.router.navigate('/');
               });
             }, function (error) {
