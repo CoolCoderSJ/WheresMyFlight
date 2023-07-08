@@ -41,7 +41,6 @@
         let flightslist = document.getElementById('flightslist');
         for (let i=0; i<docs.length; i++) {
         const sleep = ms => new Promise(r => setTimeout(r, ms));
-        sleep(500).then(() => {
           console.log(docs[i].time)
           let dep, schedDep, arr, schedArr
           schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
@@ -112,15 +111,22 @@
           let timeLeft = ""
           let promise = functions.createExecution('timebycity', docs[i].fullData[4]);
 
-          promise.then(function (response) {
-              console.log(response)
-              let data = JSON.parse(response.response)
+          fetch("https://api.api-ninjas.com/v1/worldtime?city="+docs[i].fullData[4], {
+            method: 'GET',
+            headers: { 'X-Api-Key': 'P8Cj+Lx5YZjKPbK2M3JMbQ==PlDfmIIRiB8pKMtD'},
+            contentType: 'application/json',
+          }).then(resp => resp.json())
+            .then(data => {
               console.log(data)
               let time = new Date(data['datetime']+"Z")
 
-              setTimeout(() => {
-                functions.createExecution('timebycity', docs[i].fullData[9]).then(resp => {
-                let time2 = new Date(JSON.parse(resp.response)['datetime']+"Z");
+              fetch("https://api.api-ninjas.com/v1/worldtime?city="+docs[i].fullData[9], {
+              method: 'GET',
+              headers: { 'X-Api-Key': 'P8Cj+Lx5YZjKPbK2M3JMbQ==PlDfmIIRiB8pKMtD'},
+              contentType: 'application/json',
+            }).then(resp => resp.json())
+              .then(data => {
+                let time2 = new Date(data['datetime']+"Z");
                 console.log(time, time2)
 
                 if (new Date(Date.parse(docs[i].time[0])).getTime() - time.getTime() < 0 && new Date(Date.parse(docs[i].time[1])).getTime() - time2.getTime() > 0) {
@@ -180,11 +186,9 @@
               </a>
               </div>`;
               })
-              }, 1000)
           }, function (error) {
               console.log(error); // Failure
           });
-        })
         }
     }, function (error) {
         console.log(error); // Failure
