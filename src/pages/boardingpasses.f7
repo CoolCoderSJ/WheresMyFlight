@@ -45,20 +45,26 @@
         console.log(flightId)
         let passes = localStorage.getItem("passes");
         if (!passes) {
-            databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+            databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
             localStorage.setItem("passes", JSON.stringify(resp.documents))
             console.log(resp)
             }).then(() => loadPasses(localStorage.getItem("passes")))
         }
         else {
             loadPasses(passes)
-            databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+            databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
             localStorage.setItem("passes", JSON.stringify(resp.documents))
             console.log(resp)
             })
         }
             function loadPasses (passes) {
-                passes = JSON.parse(passes)
+                let allpasses = JSON.parse(passes)
+                passes = []
+                for (let i=0; i<allpasses.length; i++) {
+                    if (allpasses[i].flightId == flightId) {
+                        passes.push(allpasses[i])
+                    }
+                }
             for (let i=0; i < passes.length; i++) {
                 let data = bcbp.decode(passes[i].data)
                 console.log("data", data)
@@ -123,7 +129,7 @@
   
       const loadMore = (e, done) => {     
         let flightId = $f7route.path.replace("/flight/", "").replace("/passes", "")   
-        databases.listDocuments('data', 'passes', [Query.equal('flightId', flightId)]).then((resp) => {
+        databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
         localStorage.setItem("passes", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {
