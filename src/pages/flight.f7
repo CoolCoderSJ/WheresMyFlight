@@ -42,8 +42,18 @@
         <div class="row"><p class="block-title">Actual Distance</p><p id="actualdist"></p></div>
         <div class="row"><p class="block-title">Planned Distance</p><p id="plandist"></p></div>
         <div class="row"><p class="block-title">Taken Distance</p><p id="takendist"></p></div>
-        <div class="row"><p class="block-title">Speed</p><p id="speed"></p></div>
-        <div class="row"><p class="block-title">Altitude</p><p id="altitude"></p></div>
+        </div>
+
+        <div class="block-title">Speed</div>
+        <div class="block block-strong block-outline">
+          <div class="area-chart area-chart-lines speed-chart"></div>
+        </div>
+        <div class="block-title">Altitude</div>
+        <div class="block block-strong block-outline">
+          <div class="area-chart area-chart-lines alt-chart"></div>
+        </div>
+
+      <div class="block block-strong">
         <div class="row"><p class="block-title">Fuel Burned</p><p id="fuel"></p></div>
         <div class="row"><p class="block-title">Status</p><p id="status"></p></div>
       </div>
@@ -170,6 +180,66 @@
           }
           initMap();
 
+          let speedPoints = JSON.parse(response.documents[0].speed);
+          let xaxisspeed = [];
+          let yaxisspeed = [];
+          for (var i = 0; i < speedPoints.length; i++) {
+            xaxisspeed.push(i);
+            yaxisspeed.push(speedPoints[i]);
+          }
+          $f7.areaChart.create({
+            el: '.speed-chart',
+            tooltip: true,
+            axis: false,
+            axisLabels: xaxisspeed,
+            legend: false,
+            toggleDatasets: false,
+            lineChart: true,
+            formatAxisLabel(date) {
+              return date;
+            },
+            formatTooltipAxisLabel(date) {
+              return date;
+            },
+            datasets: [
+              {
+                label: 'Speed (mph)',
+                color: '#f00',
+                values: yaxisspeed
+              },
+            ]
+          });
+
+          let altPoints = JSON.parse(response.documents[0].altitude);
+          let xaxisalt = [];
+          let yaxisalt = [];
+          for (var i = 0; i < altPoints.length; i++) {
+            xaxisalt.push(i);
+            yaxisalt.push(altPoints[i]);
+          }
+          $f7.areaChart.create({
+            el: '.alt-chart',
+            tooltip: true,
+            axis: false,
+            axisLabels: xaxisalt,
+            legend: false,
+            toggleDatasets: false,
+            lineChart: true,
+            formatAxisLabel(date) {
+              return date;
+            },
+            formatTooltipAxisLabel(date) {
+              return date;
+            },
+            datasets: [
+              {
+                label: 'altitude (mph)',
+                color: '#f00',
+                values: yaxisalt
+              },
+            ]
+          });
+
           document.getElementById("aircraft").innerHTML = flight[0];
           document.getElementById("airline").innerHTML = flight[1];
 
@@ -189,8 +259,6 @@
           document.getElementById("plandist").innerHTML = flight[13];
           document.getElementById("takendist").innerHTML = flight[14];
 
-          document.getElementById("speed").innerHTML = flight[15];
-          document.getElementById("altitude").innerHTML = flight[16];
           document.getElementById("fuel").innerHTML = flight[17]
           document.getElementById("status").innerHTML = flight[18];
 

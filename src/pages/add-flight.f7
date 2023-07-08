@@ -156,6 +156,26 @@
             }
             }
             coordinates = JSON.stringify(coordinates);
+            
+            let speedPoints = [];
+            if (flight.positional.flexTrack.positions) {
+              for (let i=0; i<flight.positional.flexTrack.positions.length;i++) {
+                let speedPoint = Math.round(flight.positional.flexTrack.positions[i].speedMph);
+                speedPoints.push(speedPoint)
+              }
+              }
+
+              speedPoints = JSON.stringify(speedPoints);
+
+            let altPoints = [];
+            if (flight.positional.flexTrack.positions) {
+              for (let i=0; i<flight.positional.flexTrack.positions.length;i++) {
+                let altPoint = Math.round(flight.positional.flexTrack.positions[i].altitudeFt);
+                altPoints.push(altPoint)
+              }
+              }
+
+              altPoints = JSON.stringify(altPoints);
 
             console.log(airport, location, time, iataCode, gate);
             const promise = databases.createDocument(
@@ -171,7 +191,9 @@
                 gate: gate,
                 scheduledTime: scheduledTime,
                 fullData: [aircraft, airline, originTZ, originAirport, originCity, originGate, originTerminal, destinationTZ, destinationAirport, destinationCity, destinationGate, destinationTerminal, actualDist, plannedDist, takenDist, speed, altitude, fuel, status, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, scheduledArrivalTime, estimatedArrivalTime, actualArrivalTime, aircode, flightnum, date],
-                coordinates: coordinates
+                coordinates: coordinates,
+                speed: speedPoints,
+                altitude: altPoints,
               },
             );
 
