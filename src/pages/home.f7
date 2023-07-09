@@ -57,6 +57,7 @@
     function loadPage(data) {
     window.addEventListener("load", () => {
     let docs = JSON.parse(data);
+    docs.reverse()
     let flightslist = document.getElementById('flightslist');
     flightslist.innerHTML = ""
     for (let i=0; i<docs.length; i++) {
