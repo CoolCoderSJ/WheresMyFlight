@@ -88,3 +88,9 @@
   margin-bottom: auto;
   margin-top: auto;
 }
+
+.block {
+  margin-left: 15px; 
+  margin-right: 15px; 
+  border-radius: 6px;
+}

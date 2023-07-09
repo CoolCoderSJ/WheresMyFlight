@@ -17,8 +17,9 @@
           <div class="preloader"></div>
           <div class="ptr-arrow"></div>
         </div>
+        <a href="/add-pass" class="button button-fill" style="margin: 20px;">Add Boarding Pass</a>
         <div class="block block-strong">
-            <a href="/add-pass" class="button button-fill">Add Boarding Pass</a>
+            <div class="row"><p class="block-title">Confirmation Number</p><p id="conf"></p></div>
         </div>
         <div id="passes">
         </div>
@@ -85,7 +86,7 @@
                 }
 
                 console.log(flight)
-
+                document.getElementById("conf").innerHTML = data.data.legs[0].operatingCarrierPNR
                 let passesContainer = document.getElementById("passes")
                 passesContainer.innerHTML += `<div class="card demo-card-header-pic" id="${i}card">
             <div class="card-content card-content-padding">
