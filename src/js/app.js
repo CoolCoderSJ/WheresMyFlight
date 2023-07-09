@@ -21,7 +21,7 @@ import App from '../app.f7';
 var device = getDevice();
 var app = new Framework7({
   name: 'WheresMyFlight', // App name
-  theme: 'auto', // Automatic theme detection
+  theme: 'md', // Automatic theme detection
   colors: {
     primary: '#007aff',
   },
