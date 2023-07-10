@@ -17,7 +17,7 @@
           <div class="preloader"></div>
           <div class="ptr-arrow"></div>
         </div>
-        <a href="/add-pass" class="button button-fill" style="margin: 20px;">Add Boarding Pass</a>
+        <a href="/add-pass" class="button button-fill" style="margin: 20px;" onclick="navigator.vibrate(50);">Add Boarding Pass</a>
         <div class="block block-strong">
             <div class="row"><p class="block-title">Confirmation Number</p><p id="conf"></p></div>
         </div>

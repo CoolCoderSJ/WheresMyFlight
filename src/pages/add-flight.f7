@@ -50,7 +50,7 @@
           </div>
         </form>
         <div class="block block-strong">
-          <a class="button button-fill convert-form-to-data" href="#">Get Data</a>
+          <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Get Data</a>
         </div>
       </div>
     </div>

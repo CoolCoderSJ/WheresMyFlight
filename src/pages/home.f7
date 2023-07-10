@@ -17,7 +17,7 @@
         <div class="ptr-arrow"></div>
       </div>
       <div class="block">
-        <a href="/add-flight" class="button button-fill">Add Flight</a>
+        <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
       </div>
 
       <div class="block-title">Flights</div>
@@ -143,7 +143,7 @@
 
       console.log(flightslist)
       flightslist.innerHTML += `
-          <div class="card demo-card-header-pic" id="${docs[i].flightId}card">
+          <div class="card demo-card-header-pic" id="${docs[i].flightId}card" onclick="navigator.vibrate(25);">
             <a href="/flight/${docs[i].flightId}">
             <div class="card-content card-content-padding">
               <div class="card-row" style="margin-top: 20px; justify-content: inherit; gap: 20px; align-items: center">

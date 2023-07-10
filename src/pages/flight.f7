@@ -17,7 +17,7 @@
         <div id="map" style="height: 300px;"></div>
       </div>
       <div class="block">
-        <a href="${$f7route.path + '/passes'}" class="button button-fill">Boarding Passes</a>
+        <a href="${$f7route.path + '/passes'}" class="button button-fill" onclick="navigator.vibrate(25);">Boarding Passes</a>
       </div>
       <p class="block-title">General Info</p>
       <div class="block block-strong">
