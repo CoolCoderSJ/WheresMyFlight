@@ -69,9 +69,12 @@
             for (let i=0; i < passes.length; i++) {
                 let data = bcbp.decode(passes[i].data)
                 console.log("data", data)
-                let depAir = data.data.legs[0].departureAirport
-                let arrAir = data.data.legs[0].arrivalAirport
-                let seat = data.data.legs[0].seatNumber
+                let legs = data.data.legs
+                for (let k=0; k<legs.length; k++) {
+                if (legs[k].operatingCarrierDesignator + parseInt(legs[k].flightNumber) != flightId) continue
+                let depAir = legs[k].departureAirport
+                let arrAir = legs[k].arrivalAirport
+                let seat = legs[k].seatNumber
                 console.log("pass data ", data)
                 if (seat.startsWith("0")) seat = seat.substring(1)
                 let passName = data.data.passengerName
@@ -87,7 +90,7 @@
                
 
                 console.log(flight)
-                document.getElementById("conf").innerHTML = data.data.legs[0].operatingCarrierPNR
+                document.getElementById("conf").innerHTML = legs[k].operatingCarrierPNR
                 let passesContainer = document.getElementById("passes")
                 passesContainer.innerHTML += `<div class="card demo-card-header-pic" id="${i}card">
             <div class="card-content card-content-padding">
@@ -124,6 +127,7 @@
                 backgroundcolor: "ffffff"
             });
         }, 1000)
+        }
 }
             
         }
