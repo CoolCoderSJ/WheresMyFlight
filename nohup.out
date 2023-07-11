@@ -1,0 +1,359 @@
+
+> wheresmyflight@1.0.0 start
+> npm run dev
+
+
+> wheresmyflight@1.0.0 dev
+> cross-env NODE_ENV=development vite
+
+
+  VITE v4.3.1  ready in 1049 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://10.0.0.160:5173/
+  ➜  Network: http://172.18.0.1:5173/
+  ➜  Network: http://172.19.0.1:5173/
+  ➜  Network: http://172.17.0.1:5173/
+  ➜  Network: http://172.23.0.1:5173/
+  ➜  Network: http://172.22.0.1:5173/
+  ➜  Network: http://172.20.0.1:5173/
+
+> wheresmyflight@1.0.0 start
+> npm run dev
+
+
+> wheresmyflight@1.0.0 dev
+> cross-env NODE_ENV=development vite
+
+
+  VITE v4.3.1  ready in 1098 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://10.0.0.160:5173/
+  ➜  Network: http://172.18.0.1:5173/
+  ➜  Network: http://172.19.0.1:5173/
+  ➜  Network: http://172.17.0.1:5173/
+  ➜  Network: http://172.23.0.1:5173/
+  ➜  Network: http://172.22.0.1:5173/
+  ➜  Network: http://172.20.0.1:5173/
+
+> wheresmyflight@1.0.0 start
+> npm run dev
+
+
+> wheresmyflight@1.0.0 dev
+> cross-env NODE_ENV=development vite
+
+
+  VITE v4.3.1  ready in 742 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://10.0.0.160:5173/
+  ➜  Network: http://172.18.0.1:5173/
+  ➜  Network: http://172.19.0.1:5173/
+  ➜  Network: http://172.17.0.1:5173/
+  ➜  Network: http://172.23.0.1:5173/
+  ➜  Network: http://172.22.0.1:5173/
+  ➜  Network: http://172.20.0.1:5173/
+
+ ERROR  unknown: Unexpected token (24:11)
+
+  22 |             format: format
+  23 |           })
+> 24 |           }.then(() => {
+     |            ^
+  25 |             $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+  26 |           })
+  27 |           
+
+
+ ERROR  10:13:09 AM [vite] Internal server error: unknown: Unexpected token (24:11)
+
+  22 |             format: format
+  23 |           })
+> 24 |           }.then(() => {
+     |            ^
+  25 |             $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+  26 |           })
+  27 |           
+  File: /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/src/pages/addpass.f7:24:11
+  34 |        $on('pageInit', () => {
+  35 |          function onScanSuccess(decodedText, decodedResult) {
+  36 |            // handle the scanned code as you like, for example:
+     |           ^
+  37 |            console.log(`Code matched = ${decodedText}`, decodedResult);
+  38 |            let text = decodedText
+      at instantiate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:653:32)
+      at constructor (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:947:12)
+      at Parser.raise (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3271:19)
+      at Parser.unexpected (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3301:16)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11269:16)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at Parser.parseExpressionBase (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10574:23)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12260:16)
+      at Parser.parseExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12691:23)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseFunctionBodyAndFinish (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11918:10)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13265:12
+      at Parser.withSmartMixTopicForbiddingContext (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12242:14)
+      at Parser.parseFunction (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13264:10)
+      at Parser.parseFunctionStatement (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12924:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12583:21)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseArrowExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11907:10)
+      at Parser.parseParenAndDistinguishExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11510:12)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11149:23)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12265:12)
+      at Parser.parseMaybeAssignAllowIn (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:17)
+      at Parser.parseExprListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12017:18)
+      at Parser.parseCallExpressionArguments (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11072:22)
+
+
+ ERROR  10:14:33 AM [vite] Internal server error: unknown: Unexpected token (24:11)
+
+  22 |             format: format
+  23 |           })
+> 24 |           }.then(() => {
+     |            ^
+  25 |             $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+  26 |           })
+  27 |           
+  File: /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/src/pages/addpass.f7:24:11
+  34 |        $on('pageInit', () => {
+  35 |          function onScanSuccess(decodedText, decodedResult) {
+  36 |            // handle the scanned code as you like, for example:
+     |           ^
+  37 |            console.log(`Code matched = ${decodedText}`, decodedResult);
+  38 |            let text = decodedText
+      at instantiate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:653:32)
+      at constructor (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:947:12)
+      at Parser.raise (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3271:19)
+      at Parser.unexpected (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3301:16)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11269:16)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at Parser.parseExpressionBase (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10574:23)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12260:16)
+      at Parser.parseExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12691:23)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseFunctionBodyAndFinish (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11918:10)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13265:12
+      at Parser.withSmartMixTopicForbiddingContext (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12242:14)
+      at Parser.parseFunction (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13264:10)
+      at Parser.parseFunctionStatement (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12924:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12583:21)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseArrowExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11907:10)
+      at Parser.parseParenAndDistinguishExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11510:12)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11149:23)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12265:12)
+      at Parser.parseMaybeAssignAllowIn (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:17)
+      at Parser.parseExprListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12017:18)
+      at Parser.parseCallExpressionArguments (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11072:22)
+
+
+ ERROR  10:14:57 AM [vite] Internal server error: unknown: Unexpected token (24:11)
+
+  22 |             format: format
+  23 |           })
+> 24 |           }.then(() => {
+     |            ^
+  25 |             $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+  26 |           })
+  27 |           
+  File: /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/src/pages/addpass.f7:24:11
+  34 |        $on('pageInit', () => {
+  35 |          function onScanSuccess(decodedText, decodedResult) {
+  36 |            // handle the scanned code as you like, for example:
+     |           ^
+  37 |            console.log(`Code matched = ${decodedText}`, decodedResult);
+  38 |            let text = decodedText
+      at instantiate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:653:32)
+      at constructor (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:947:12)
+      at Parser.raise (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3271:19)
+      at Parser.unexpected (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3301:16)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11269:16)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at Parser.parseExpressionBase (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10574:23)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12260:16)
+      at Parser.parseExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12691:23)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseFunctionBodyAndFinish (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11918:10)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13265:12
+      at Parser.withSmartMixTopicForbiddingContext (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12242:14)
+      at Parser.parseFunction (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13264:10)
+      at Parser.parseFunctionStatement (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12924:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12583:21)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseArrowExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11907:10)
+      at Parser.parseParenAndDistinguishExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11510:12)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11149:23)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12265:12)
+      at Parser.parseMaybeAssignAllowIn (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:17)
+      at Parser.parseExprListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12017:18)
+      at Parser.parseCallExpressionArguments (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11072:22)
+
+
+ ERROR  10:15:00 AM [vite] Internal server error: unknown: Unexpected token (24:11)
+
+  22 |             format: format
+  23 |           })
+> 24 |           }.then(() => {
+     |            ^
+  25 |             $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+  26 |           })
+  27 |           
+  File: /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/src/pages/addpass.f7:24:11
+  34 |        $on('pageInit', () => {
+  35 |          function onScanSuccess(decodedText, decodedResult) {
+  36 |            // handle the scanned code as you like, for example:
+     |           ^
+  37 |            console.log(`Code matched = ${decodedText}`, decodedResult);
+  38 |            let text = decodedText
+      at instantiate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:653:32)
+      at constructor (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:947:12)
+      at Parser.raise (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3271:19)
+      at Parser.unexpected (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:3301:16)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11269:16)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at Parser.parseExpressionBase (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10574:23)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12260:16)
+      at Parser.parseExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10570:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12691:23)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseFunctionBodyAndFinish (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11918:10)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13265:12
+      at Parser.withSmartMixTopicForbiddingContext (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12242:14)
+      at Parser.parseFunction (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13264:10)
+      at Parser.parseFunctionStatement (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12924:17)
+      at Parser.parseStatementContent (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12583:21)
+      at Parser.parseStatementLike (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12557:17)
+      at Parser.parseStatementListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12537:17)
+      at Parser.parseBlockOrModuleBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13129:61)
+      at Parser.parseBlockBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13122:10)
+      at Parser.parseBlock (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:13110:10)
+      at Parser.parseFunctionBody (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11932:24)
+      at Parser.parseArrowExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11907:10)
+      at Parser.parseParenAndDistinguishExpression (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11510:12)
+      at Parser.parseExprAtom (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11149:23)
+      at Parser.parseExprSubscripts (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10880:23)
+      at Parser.parseUpdate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10863:21)
+      at Parser.parseMaybeUnary (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10839:23)
+      at Parser.parseMaybeUnaryOrPrivate (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10677:61)
+      at Parser.parseExprOps (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10682:23)
+      at Parser.parseMaybeConditional (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10659:23)
+      at Parser.parseMaybeAssign (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10620:21)
+      at /home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:39
+      at Parser.allowInAnd (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12265:12)
+      at Parser.parseMaybeAssignAllowIn (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:10590:17)
+      at Parser.parseExprListItem (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:12017:18)
+      at Parser.parseCallExpressionArguments (/home/ubuntu/WheresMyFlight/repo/WheresMyFlight/node_modules/@babel/parser/lib/index.js:11072:22)
+
+
+> wheresmyflight@1.0.0 start
+> npm run dev
+
+
+> wheresmyflight@1.0.0 dev
+> cross-env NODE_ENV=development vite
+
+
+  VITE v4.3.1  ready in 817 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://10.0.0.160:5173/
+  ➜  Network: http://172.18.0.1:5173/
+  ➜  Network: http://172.19.0.1:5173/
+  ➜  Network: http://172.17.0.1:5173/
+  ➜  Network: http://172.23.0.1:5173/
+  ➜  Network: http://172.22.0.1:5173/
+  ➜  Network: http://172.20.0.1:5173/
