@@ -1,0 +1,90 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Bags</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="item-content item-input item-input-outline">
+            <div class="item-inner">
+                <div class="item-title item-label">Bag</div>
+                <div class="item-input-wrap input-dropdown-wrap">
+                <select name="bag" id="bagSelect" style="padding-left: 15px;">
+                </select>
+                </div>
+            </div>
+        </div>
+        <div id="timelines"></div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Databases, ID, Query } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const databases = new Databases(client);
+  
+    export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on("pageInit", () => {
+        let flightId = $f7route.path.replace("/flight/", "").replace("/bags", "");
+        databases.listDocuments('data', 'bags', [Query.equal('flightId', flightId)]).then(resp => {
+          let docs = resp.documents;
+          console.log(docs)
+          for (let i=0; i<docs.length; i++) {
+            console.log(i)
+            let doc = docs[i];
+            let timelineItem = `
+            <div id="${doc['id']}timeline" style="${i==0 ? 'display: block' : 'display: none'}">
+            <p class="block-title">${doc['name']}</p>
+              <div class="timeline">
+            `;
+            let status = JSON.parse(doc.status);
+            for (let j=0; j<status.length; j++) {
+              let statusItem = status[j];
+              timelineItem += `
+              <div class="timeline-item">
+                <div class="timeline-item-date" style='width: fit-content;'>${statusItem.time} - ${statusItem.airport}</div>
+                <div class="timeline-item-divider"></div>
+                <div class="timeline-item-content">
+                  <div class="timeline-item-inner">${statusItem.details}</div>
+                </div>
+              </div>
+              `;
+            }
+            timelineItem += `</div></div>`;
+            document.getElementById("timelines").innerHTML += timelineItem;
+            document.getElementById("bagSelect").innerHTML += `<option ${i == 0 ? 'selected' : ''} value="${doc['id']}">${doc['id']}</option>`;
+          }
+        })
+
+        document.getElementById("bagSelect").addEventListener("change", () => {
+          let bag = document.getElementById("bagSelect").value;
+          let timelines = document.getElementById('timelines').children;
+          for (let i=0; i<timelines.length; i++) {
+            let timeline = timelines[i];
+            if (timeline.id == `${bag}timeline`) {
+              timeline.style.display = "block";
+            } else {
+              timeline.style.display = "none";
+            }
+          }
+        })
+      });
+      return $render;
+    }
+  </script>

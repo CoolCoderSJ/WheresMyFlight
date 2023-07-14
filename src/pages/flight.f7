@@ -16,8 +16,8 @@
       <div class="block block-strong" style="z-index: 9999; height: 300px;">
         <div id="map" style="height: 300px;"></div>
       </div>
-      <div class="block">
-        <a href="${$f7route.path + '/passes'}" class="button button-fill" onclick="navigator.vibrate(25);">Boarding Passes</a>
+      <div class="block" id="btnsblock" style="display: flex; gap: 20px;">
+        <a href="${$f7route.path + '/passes'}" class="button button-fill" style="width: 100%" onclick="navigator.vibrate(25);">Boarding Passes</a>
       </div>
       <p class="block-title">General Info</p>
       <div class="block block-strong">
@@ -101,6 +101,7 @@
     $on('pageInit', () => {
       let flightId = $f7route.path.replace("/flight/", "")
       console.log(flightId)
+      if (flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`
 
       $('.delete-flight').on('click', function () {
         $f7.dialog.confirm('Are you sure you want to delete this flight?', function () {

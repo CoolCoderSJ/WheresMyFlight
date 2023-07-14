@@ -212,43 +212,6 @@
       });
     });
 
-    // Lifecycle
-    $onBeforeMount(() => {
-      console.log('onBeforeMount');
-    });
-    $onMounted(() => {
-      console.log('onMounted');
-    });
-    $onBeforeUnmount(() => {
-      console.log('onBeforeUnmount');
-    });
-    $onUnmounted(() => {
-      console.log('onUnmounted');
-    });
-
-    // Page Events
-    $on('pageMounted', (e, page) => {
-      console.log('pageMounted', page);
-    });
-    $on('pageInit', (e, page) => {
-      console.log('pageInit', page);
-    });
-    $on('pageBeforeIn', (e, page) => {
-      console.log('pageBeforeIn', page);
-    });
-    $on('pageAfterIn', (e, page) => {
-      console.log('pageAfterIn', page);
-    });
-    $on('pageBeforeOut', (e, page) => {
-      console.log('pageBeforeOut', page);
-    });
-    $on('pageAfterOut', (e, page) => {
-      console.log('pageAfterOut', page);
-    });
-    $on('pageBeforeRemove', (e, page) => {
-      console.log('pageBeforeRemove', page);
-    });
-
     // Return render function
     return $render;
   }

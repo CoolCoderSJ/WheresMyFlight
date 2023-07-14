@@ -37,7 +37,7 @@
   const functions = new Functions(client);
 
   
-  export default (props, {$update}) => {
+  export default (props, { $update, $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) => {
     const colorThief = new ColorThief();
 
     let data = localStorage.getItem("data");
@@ -220,6 +220,6 @@
             done();
         })
     }
-    return $render;
+  return $render;
   }
 </script>
