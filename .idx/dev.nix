@@ -2,6 +2,11 @@
 
   channel = "stable-23.11"; # or "unstable"
 
+  idx.workspace.onCreate = {
+    add-nix-channels = "nix-channel --add https://tadfisher.github.io/android-nixpkgs android-nixpkgs; nix-channel --update android-nixpkgs";
+    start-shell = "nix-shell /home/user/WheresMyFlight/sdk.nix";
+  };
+
   packages = [
     pkgs.jdk11
     pkgs.gradle_7
