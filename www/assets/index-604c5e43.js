@@ -272,7 +272,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
         <br></br>
     </div>
   </div>
-`}}_s.id="ac54397692";function Ks(){return function(n){var e=n.$,a=n.$h,t=n.$root,s=n.$f7,r=n.$f7route,i=n.$f7router,o=n.$theme,l=n.$update,c=n.$store;return a`
+`}}_s.id="aacd798844";function Ks(){return function(n){var e=n.$,a=n.$h,t=n.$root,s=n.$f7,r=n.$f7route,i=n.$f7router,o=n.$theme,l=n.$update,c=n.$store;return a`
 <div class="page">
   <div class="navbar">
     <div class="navbar-bg"></div>
@@ -293,7 +293,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
     </div>
   </div>
 </div>
-`}}Ks.id="31af210d8e";const{Client:iu,Databases:ou,ID:lu}=Appwrite,Qs=new iu;Qs.setEndpoint("https://appwrite.shuchir.dev/v1").setProject("wheresmyflight");const os=new ou(Qs);function en(n,{$:e,$f7:a,$on:t,$onBeforeMount:s,$onMounted:r,$onBeforeUnmount:i,$onUnmounted:o}){return t("pageInit",()=>{let l=a.calendar.create({inputEl:"#date"});e(".convert-form-to-data").on("click",function(){var c=a.form.convertToData("#form");a.dialog.preloader("Getting flight data...");let d=c.aircode,p=c.flightnum,u=c.date;console.log(c);let g=u.split("/")[2],f=u.split("/")[0],m=u.split("/")[1];axios({method:"get",url:`https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${d}/${p}/${g}/${f}/${m}/`)}`}).then(function(b){let h=b.data.data,v=[h.departureAirport.iata,h.arrivalAirport.iata],y=[h.departureAirport.name,h.arrivalAirport.name],C=[new Date(h.schedule.estimatedActualDeparture+"Z"),new Date(h.schedule.estimatedActualArrival+"Z")],w=[new Date(h.departureAirport.date+"Z"),new Date(h.arrivalAirport.date+"Z")],$=h.ticketHeader.carrier.fs,x=[h.departureAirport.gate,h.arrivalAirport.gate],M=h.additionalFlightInfo.equipment.name,A=h.ticketHeader.carrier.name,B=h.departureAirport.times.scheduled.timezone,S=v[0]+" ("+h.departureAirport.name+")",P=h.departureAirport.city,T=h.departureAirport.gate,I=h.departureAirport.terminal,R=h.arrivalAirport.times.scheduled.timezone,L=v[1]+" ("+h.arrivalAirport.name+")",F=h.arrivalAirport.city,O=h.arrivalAirport.gate,D=h.arrivalAirport.terminal,N,z,V;axios({method:"get",url:`https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${h.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${d}&flight=${p}&limit=${g}-${f}-${m}&rqid=5zddfm823lq`)}`}).then(ae=>{let le=ae.data.data;N=Math.round(le.miniTracker.totalKilometers*1.151)+"mi",z=Math.round(le.miniTracker.totalKilometers*1.151)+"mi",V=Math.round(le.miniTracker.kilometersFromDeparture*1.151)+"mi",console.log(N,z,V)}),console.log(N,z,V);let Y,J;h.positional.flexTrack.positions.length>0?(Y=Math.round(h.positional.flexTrack.positions[0].speedMph)+"mph",J=Math.round(h.positional.flexTrack.positions[0].altitudeFt)+"ft"):(Y="--",J="--");let Q="--",W=h.flightState,q=new Date(h.schedule.scheduledDeparture+"Z"),G=new Date(h.schedule.estimatedActualDeparture+"Z"),K=new Date(h.schedule.estimatedActualDeparture+"Z"),X=new Date(h.schedule.scheduledArrival+"Z"),_=new Date(h.schedule.estimatedActualArrival+"Z"),Z=new Date(h.schedule.estimatedActualArrival+"Z"),se=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=[h.positional.flexTrack.positions[ae].lat,h.positional.flexTrack.positions[ae].lon];se.push(le)}se=JSON.stringify(se);let fe=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=Math.round(h.positional.flexTrack.positions[ae].speedMph);fe.push(le)}fe=JSON.stringify(fe);let te=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=Math.round(h.positional.flexTrack.positions[ae].altitudeFt);te.push(le)}te=JSON.stringify(te),console.log(v,y,C,$,x),os.createDocument("data","flights",lu.unique(),{flightId:c.aircode+c.flightnum,airport:v,location:y,time:C,"iata-code":$,gate:x,scheduledTime:w,fullData:[M,A,B,S,P,T,I,R,L,F,O,D,N,z,V,Y,J,Q,W,q,G,K,X,_,Z,d,p,u],coordinates:se,speed:fe,altitude:te}).then(function(ae){a.dialog.close(),console.log(ae),os.listDocuments("data","flights").then(le=>{localStorage.setItem("data",JSON.stringify(le.documents)),console.log(le)}),a.views.main.router.navigate("/")},function(ae){console.log(ae)})})})}),function(l){var c=l.$,d=l.$h,p=l.$root,u=l.$f7,g=l.$f7route,f=l.$f7router,m=l.$theme,b=l.$update,h=l.$store;return d`
+`}}Ks.id="d5883e8bad";const{Client:iu,Databases:ou,ID:lu}=Appwrite,Qs=new iu;Qs.setEndpoint("https://appwrite.shuchir.dev/v1").setProject("wheresmyflight");const os=new ou(Qs);function en(n,{$:e,$f7:a,$on:t,$onBeforeMount:s,$onMounted:r,$onBeforeUnmount:i,$onUnmounted:o}){return t("pageInit",()=>{let l=a.calendar.create({inputEl:"#date"});e(".convert-form-to-data").on("click",function(){var c=a.form.convertToData("#form");a.dialog.preloader("Getting flight data...");let d=c.aircode,p=c.flightnum,u=c.date;console.log(c);let g=u.split("/")[2],f=u.split("/")[0],m=u.split("/")[1];axios({method:"get",url:`https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${d}/${p}/${g}/${f}/${m}/`)}`}).then(function(b){let h=b.data.data,v=[h.departureAirport.iata,h.arrivalAirport.iata],y=[h.departureAirport.name,h.arrivalAirport.name],C=[new Date(h.schedule.estimatedActualDeparture+"Z"),new Date(h.schedule.estimatedActualArrival+"Z")],w=[new Date(h.departureAirport.date+"Z"),new Date(h.arrivalAirport.date+"Z")],$=h.ticketHeader.carrier.fs,x=[h.departureAirport.gate,h.arrivalAirport.gate],M=h.additionalFlightInfo.equipment.name,A=h.ticketHeader.carrier.name,B=h.departureAirport.times.scheduled.timezone,S=v[0]+" ("+h.departureAirport.name+")",P=h.departureAirport.city,T=h.departureAirport.gate,I=h.departureAirport.terminal,R=h.arrivalAirport.times.scheduled.timezone,L=v[1]+" ("+h.arrivalAirport.name+")",F=h.arrivalAirport.city,O=h.arrivalAirport.gate,D=h.arrivalAirport.terminal,N,z,V;axios({method:"get",url:`https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${h.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${d}&flight=${p}&limit=${g}-${f}-${m}&rqid=5zddfm823lq`)}`}).then(ae=>{let le=ae.data.data;N=Math.round(le.miniTracker.totalKilometers*1.151)+"mi",z=Math.round(le.miniTracker.totalKilometers*1.151)+"mi",V=Math.round(le.miniTracker.kilometersFromDeparture*1.151)+"mi",console.log(N,z,V)}),console.log(N,z,V);let Y,J;h.positional.flexTrack.positions.length>0?(Y=Math.round(h.positional.flexTrack.positions[0].speedMph)+"mph",J=Math.round(h.positional.flexTrack.positions[0].altitudeFt)+"ft"):(Y="--",J="--");let Q="--",W=h.flightState,q=new Date(h.schedule.scheduledDeparture+"Z"),G=new Date(h.schedule.estimatedActualDeparture+"Z"),K=new Date(h.schedule.estimatedActualDeparture+"Z"),X=new Date(h.schedule.scheduledArrival+"Z"),_=new Date(h.schedule.estimatedActualArrival+"Z"),Z=new Date(h.schedule.estimatedActualArrival+"Z"),se=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=[h.positional.flexTrack.positions[ae].lat,h.positional.flexTrack.positions[ae].lon];se.push(le)}se=JSON.stringify(se);let fe=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=Math.round(h.positional.flexTrack.positions[ae].speedMph);fe.push(le)}fe=JSON.stringify(fe);let te=[];if(h.positional.flexTrack.positions)for(let ae=0;ae<h.positional.flexTrack.positions.length;ae++){let le=Math.round(h.positional.flexTrack.positions[ae].altitudeFt);te.push(le)}te=JSON.stringify(te),console.log(v,y,C,$,x),os.createDocument("data","flights",lu.unique(),{flightId:c.aircode+c.flightnum,airport:v,location:y,time:C,"iata-code":$,gate:x,scheduledTime:w,fullData:[M,A,B,S,P,T,I,R,L,F,O,D,N,z,V,Y,J,Q,W,q,G,K,X,_,Z,d,p,u],coordinates:se,speed:fe,altitude:te}).then(function(ae){a.dialog.close(),console.log(ae),os.listDocuments("data","flights").then(le=>{localStorage.setItem("data",JSON.stringify(le.documents)),console.log(le)}),a.views.main.router.navigate("/")},function(ae){console.log(ae)})})})}),function(l){var c=l.$,d=l.$h,p=l.$root,u=l.$f7,g=l.$f7route,f=l.$f7router,m=l.$theme,b=l.$update,h=l.$store;return d`
   <div class="page">
     <div class="navbar">
       <div class="navbar-bg"></div>
@@ -350,7 +350,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
       </div>
     </div>
   </div>
-`}}en.id="439808330c";en.style=`
+`}}en.id="da086aa1b8";en.style=`
   p {
     margin: 10px 0;
   }
@@ -439,7 +439,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
       </div>
     </div>
   </div>
-`}}tn.id="14744cbd83";tn.style=`
+`}}tn.id="6befc84a84";tn.style=`
   p {
     margin: 10px 0;
   }
@@ -494,7 +494,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
         </div>
       </div>
     </div>
-  `}}an.id="451bd7f7f5";an.style=`
+  `}}an.id="01de367c24";an.style=`
     p {
       margin: 10px 0;
     }
@@ -516,7 +516,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
         <div id="reader" width="600px"></div>
       </div>
     </div>
-  `}}nn.id="637ca23fc2";nn.style=`
+  `}}nn.id="fe60be6f9a";nn.style=`
     p {
       margin: 10px 0;
     }
@@ -559,7 +559,7 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
         <div id="timelines"></div>
       </div>
     </div>
-  `}}sn.id="3d22cb86b5";sn.style=`
+  `}}sn.id="8f41b9b591";sn.style=`
     p {
       margin: 10px 0;
     }
@@ -568,4 +568,4 @@ ${l.toString()}`)}return s&&(typeof s=="string"?o+=`?${s}`:Object.keys(s).length
     <!-- Your main view, should have "view-main" class -->
     <div class="view view-main view-init safe-areas" data-url="/"></div>
   </div>
-`}}ar.id="cd07d1616a";var cs=pe(),cf=new Pe({name:"WheresMyFlight",theme:"md",colors:{primary:"#007aff"},darkMode:!0,el:"#app",component:ar,id:"dev.shuchir.wheresmyflight",store:$u,routes:wu,serviceWorker:{path:"/service-worker.js"},input:{scrollIntoViewOnFocus:cs.cordova,scrollIntoViewCentered:cs.cordova},statusbar:{iosOverlaysWebView:!0,androidOverlaysWebView:!1},on:{init:function(){var n=this;n.device.cordova&&Je.init(n)}}});
+`}}ar.id="c2987914a6";var cs=pe(),cf=new Pe({name:"WheresMyFlight",theme:"md",colors:{primary:"#007aff"},darkMode:!0,el:"#app",component:ar,id:"dev.shuchir.wheresmyflight",store:$u,routes:wu,serviceWorker:{path:"/service-worker.js"},input:{scrollIntoViewOnFocus:cs.cordova,scrollIntoViewCentered:cs.cordova},statusbar:{iosOverlaysWebView:!0,androidOverlaysWebView:!1},on:{init:function(){var n=this;n.device.cordova&&Je.init(n)}}});
