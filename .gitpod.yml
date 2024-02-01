@@ -1,0 +1,4 @@
+tasks:
+  - before: npm install -g cordova && sudo apt -y install android-sdk && wget https://dl.google.com/android/repository/commandlinetools-linux-7302050_latest.zip && unzip commandlinetools-linux-7302050_latest.zip && rm commandlinetools-linux-7302050_latest.zip && sudo mkdir -p $ANDROID_HOME/cmdline-tools/latest && sudo mv cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/ && export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH && sudo rm -rf cmdline-tools && yes | sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses && sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;30.0.3" && sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-30"
+    init: npm install && npm run build
+    command: npm run start
