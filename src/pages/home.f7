@@ -63,10 +63,10 @@
     for (let i=0; i<docs.length; i++) {
       console.log(docs[i].time)
       let dep, schedDep, arr, schedArr
-      schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-      schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-      if (docs[i].time[0]) dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
-      if (docs[i].time[1]) arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split("2023 ")[1].replace(":00 GMT", "")
+      schedDep = new Date(Date.parse(docs[i].scheduledTime[0])).toUTCString().split(":00 GMT ")[0].split(" ")[4]
+      schedArr = new Date(Date.parse(docs[i].scheduledTime[1])).toUTCString().split(":00 GMT ")[0].split(" ")[4]
+      if (docs[i].time[0]) dep = new Date(Date.parse(docs[i].time[0])).toUTCString().split(":00 GMT ")[0].split(" ")[4]
+      if (docs[i].time[1]) arr = new Date(Date.parse(docs[i].time[1])).toUTCString().split(":00 GMT ")[0].split(" ")[4]
       if (docs[i].scheduledTime[0] && !docs[i].time[0]) { docs[i].time[0] = docs[i].scheduledTime[0]; dep = schedDep }
       if (docs[i].scheduledTime[1] && !docs[i].time[1]) { docs[i].time[1] = docs[i].scheduledTime[1]; arr = schedArr }
 
