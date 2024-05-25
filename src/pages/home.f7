@@ -48,6 +48,7 @@
       }).then(() => loadPage(localStorage.getItem("data")))
     }
     else {
+      console.log("data already saved")
       loadPage(data)
       databases.listDocuments('data', 'flights').then((resp) => {
       localStorage.setItem("data", JSON.stringify(resp.documents))
@@ -55,7 +56,10 @@
       })
     }
     function loadPage(data) {
+      console.log("load page called")
     window.addEventListener("load", () => {
+      console.log("load event listener called")
+      
     let docs = JSON.parse(data);
     docs.reverse()
     let flightslist = document.getElementById('flightslist');
