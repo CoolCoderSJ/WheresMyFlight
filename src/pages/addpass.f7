@@ -44,7 +44,8 @@
           databases.createDocument('data', 'passes', ID.unique(), {
             flightId: data.data.legs[i].operatingCarrierDesignator + parseInt(data.data.legs[i].flightNumber),
             data: decodedText,
-            format: format
+            format: format,
+            deltacode: data.data.legs[i].operatingCarrierDesignator == "DL" ? data.data.lengs[i].operatingCarrierPNR : Null
           })
           }
           $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
