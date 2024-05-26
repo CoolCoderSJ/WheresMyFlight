@@ -154,7 +154,7 @@
                 <div style="background: #fff;border-radius: 50%; width: 50px;height: 50px;">
               <img style="scale: 0.8; width: 100%; height: 100%; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].flightId}img" crossorigin="anonymous">
               </div>
-              <div class="card-header">${docs[i].flightId}</div>
+              <p class="big light">${docs[i].flightId}</p>
                 </div>
               <div class="card-row">
                 <p>${docs[i].location[0]}</p>

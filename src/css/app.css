@@ -39,6 +39,10 @@
   margin-top: 0;
 }
 
+.light {
+  font-weight: 500;
+}
+
 .card-content .card-row p {
   margin-bottom: 0;
 }
@@ -60,6 +64,7 @@
   display: flex;
   justify-content: space-between;
   color: white;
+  align-items: center;
 }
 
 .mt-0 {
