@@ -9,7 +9,7 @@
             <span class="if-not-md">Back</span>
           </a>
         </div>
-        <div class="title">Flight ${$f7route.path.replace("/flight/", "")}</div>
+        <div class="title" id="title">Flight ${$f7route.path.replace("/flight/", "")}</div>
       </div>
     </div>
     <div class="page-content">
@@ -100,34 +100,31 @@
   export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
       let flightId = $f7route.path.replace("/flight/", "")
-      console.log(flightId)
-      if (flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`
+      databases.getDocument('data', 'flights', flightId).then((response) => {
+        document.getElementById('title').innerHTML = `Flight ${response.flightId}`
+
+        console.log(response)
+      if (response.flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`
 
       $('.delete-flight').on('click', function () {
         $f7.dialog.confirm('Are you sure you want to delete this flight?', function () {
-          const promise = databases.listDocuments('data', 'flights', [Query.equal('flightId', flightId)]);
-          promise.then((resp) => {
-            const promise = databases.deleteDocument('data', 'flights', resp.documents[0]['$id']);
+          const promise = databases.deleteDocument('data', 'flights', flightId);
 
-            promise.then(function (response) {
-              $f7.dialog.alert('Flight deleted successfully!', function () {
-                databases.listDocuments('data', 'flights').then((resp) => {
-              localStorage.setItem("data", JSON.stringify(resp.documents))
-              console.log(resp)
-              })
-                $f7.views.main.router.navigate('/');
-              });
-            }, function (error) {
-              console.log(error);
+          promise.then(function (response) {
+            $f7.dialog.alert('Flight deleted successfully!', function () {
+              databases.listDocuments('data', 'flights').then((resp) => {
+            localStorage.setItem("data", JSON.stringify(resp.documents))
+            console.log(resp)
+            })
+              $f7.views.main.router.navigate('/');
             });
-          })
+          }, function (error) {
+            console.log(error);
+          });
         });
       });
 
-      const promise = databases.listDocuments('data', 'flights', [Query.equal('flightId', flightId)]);
-
-      promise.then(function (response) {
-          let flight = response.documents[0].fullData;
+          let flight = response.fullData;
           function initMap() {
           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -140,7 +137,7 @@
 
           var Lat = [];
           var Lng = [];
-          let coords = JSON.parse(response.documents[0].coordinates);
+          let coords = JSON.parse(response.coordinates);
           for (var i = 0; i < coords.length; i++) {
             Lng.push(coords[i][1]);
             Lat.push(coords[i][0]);
@@ -183,7 +180,7 @@
           }
           initMap();
 
-          let speedPoints = JSON.parse(response.documents[0].speed);
+          let speedPoints = JSON.parse(response.speed);
           let xaxisspeed = [];
           let yaxisspeed = [];
           for (var i = 0; i < speedPoints.length; i++) {
@@ -213,7 +210,7 @@
             ]
           });
 
-          let altPoints = JSON.parse(response.documents[0].altitude);
+          let altPoints = JSON.parse(response.altitude);
           let xaxisalt = [];
           let yaxisalt = [];
           for (var i = 0; i < altPoints.length; i++) {
@@ -296,10 +293,9 @@
                    else document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toString().split(":00")[0];
           else document.getElementById("actualarrtime").innerHTML = "N/A";
           
-      }, function (error) {
-          console.log(error); // Failure
-      });
     });
+      })
+
 
     // Lifecycle
     $onBeforeMount(() => {

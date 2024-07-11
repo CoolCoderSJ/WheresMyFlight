@@ -32,23 +32,43 @@
   
     export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
       $on('pageInit', () => {
+        let userId = localStorage.getItem("login");
+        let flightId = $f7route.path.split("/")[2]
+        console.log(flightId)
+
         function onScanSuccess(decodedText, decodedResult) {
           // handle the scanned code as you like, for example:
           console.log(`Code matched = ${decodedText}`, decodedResult);
           let text = decodedText
-          let format = decodedResult.result.format.formatName
           let data = bcbp.decode(text)
           console.log(data)
          
          for (let i=0; i<data.data.legs.length; i++) {
+          console.log("uploading pass...")
           databases.createDocument('data', 'passes', ID.unique(), {
-            flightId: data.data.legs[i].operatingCarrierDesignator + parseInt(data.data.legs[i].flightNumber),
+            flightId: flightId,
             data: decodedText,
-            format: format,
-            deltacode: data.data.legs[i].operatingCarrierDesignator == "DL" ? data.data.lengs[i].operatingCarrierPNR : Null
+            format: "AZTEC",
+            deltacode: data.data.legs[i].operatingCarrierDesignator == "DL" ? data.data.legs[i].operatingCarrierPNR : null
+          },
+        [
+          `read("user:${userId}")`, 
+          `write("user:${userId}")`
+        ])
+          .then((response) => {
+            console.log(response)
           })
+          .catch((error) => {
+            console.error(error);
+          });
           }
-          $f7.views.main.router.navigate('/flight/' + data.data.legs[0].operatingCarrierDesignator + data.data.legs[0].flightNumber + '/passes')
+          $f7.dialog.alert('Boarding pass uploaded successfully', 'Success', () => {
+            databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
+            localStorage.setItem("passes", JSON.stringify(resp.documents))
+            console.log(resp)
+            })
+            $f7.views.main.router.navigate('/flight/' + flightId + '/passes')
+          });
           
           
         }

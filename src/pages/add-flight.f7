@@ -75,6 +75,8 @@
         inputEl: '#date',
       });
 
+      let userId = localStorage.getItem("login");
+
       $('.convert-form-to-data').on('click', function () {
         var formData = $f7.form.convertToData('#form'); 
         $f7.dialog.preloader('Getting flight data...');
@@ -195,6 +197,10 @@
                 speed: speedPoints,
                 altitude: altPoints,
               },
+              [
+                `read("user:${userId}")`, 
+                `write("user:${userId}")`
+              ]
             );
 
             promise.then(function (response) {

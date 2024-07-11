@@ -34,7 +34,7 @@ var routes = [
     component: AddFlightPage,
   },
   {
-    path: '/add-pass',
+    path: '/add-pass/:flightId',
     component: AddPassPage,
   },
   {

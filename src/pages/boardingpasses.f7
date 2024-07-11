@@ -9,7 +9,7 @@
               <span class="if-not-md">Back</span>
             </a>
           </div>
-          <div class="title">Flight ${$f7route.path.replace("/flight/", "").replace("/passes", "")} Boarding Passes</div>
+          <div class="title" id="title">Boarding Passes</div>
         </div>
       </div>
       <div class="page-content ptr-content" @ptr:refresh=${loadMore}>
@@ -17,7 +17,7 @@
           <div class="preloader"></div>
           <div class="ptr-arrow"></div>
         </div>
-        <a href="/add-pass" class="button button-fill" style="margin: 20px;" onclick="navigator.vibrate(50);">Add Boarding Pass</a>
+        <a href="/add-pass" class="button button-fill" id="add_boarding" style="margin: 20px;" onclick="navigator.vibrate(50);">Add Boarding Pass</a>
         <div class="block block-strong">
             <div class="row"><p class="block-title">Confirmation Number</p><p id="conf"></p></div>
         </div>
@@ -43,6 +43,14 @@
       $on('pageInit', () => {
         const colorThief = new ColorThief();
         let flightId = $f7route.path.replace("/flight/", "").replace("/passes", "")
+        document.getElementById("add_boarding").setAttribute("href", `/add-pass/${flightId}`)
+        let flightCode = null;
+        databases.getDocument("data", "flights", flightId).then((data) => {
+          console.log(data)
+          document.getElementById("title").innerHTML = `Flight ${data.flightId} Boarding Passes`
+          console.log(`Flight ${data.flightId} Boarding Passes`)
+          flightCode = data.flightId
+        })
         console.log(flightId)
         let passes = localStorage.getItem("passes");
         if (!passes) {
@@ -59,10 +67,14 @@
             })
         }
             function loadPasses (passes) {
+              databases.getDocument("data", "flights", flightId).then((data) => {
+                let flightCode = data.flightId
                 let allpasses = JSON.parse(passes)
                 passes = []
                 for (let i=0; i<allpasses.length; i++) {
+                  console.log(allpasses[i].flightId, flightId)
                     if (allpasses[i].flightId == flightId) {
+                        console.log("PASS FOUND")
                         passes.push(allpasses[i])
                     }
                 }
@@ -71,7 +83,6 @@
                 console.log("data", data)
                 let legs = data.data.legs
                 for (let k=0; k<legs.length; k++) {
-                if (legs[k].operatingCarrierDesignator + parseInt(legs[k].flightNumber) != flightId) continue
                 let depAir = legs[k].departureAirport
                 let arrAir = legs[k].arrivalAirport
                 let seat = legs[k].seatNumber
@@ -82,7 +93,7 @@
                 let localdata = JSON.parse(localStorage.getItem("data"))
                 let flight
                 for (let j=0; j<localdata.length; j++) {
-                    if (localdata[j].flightId == flightId) {
+                    if (localdata[j].$id == flightId) {
                         flight = localdata[j]
                         break
                     }
@@ -129,7 +140,7 @@
         }, 1000)
         }
 }
-            
+})
         }
       });
   
