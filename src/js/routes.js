@@ -6,11 +6,16 @@ import FlightPage from "../pages/flight.f7";
 import BoardingPassesPage from "../pages/boardingpasses.f7";
 import AddPassPage from '../pages/addpass.f7';
 import BagsPage from '../pages/bags.f7';
+import LoginPage from '../pages/login.f7';
 
 var routes = [
   {
     path: '/',
     component: HomePage,
+  },
+  {
+    path: '/login',
+    component: LoginPage,
   },
   {
     path: "/flight/:flightId",

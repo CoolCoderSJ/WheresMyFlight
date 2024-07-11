@@ -16,6 +16,12 @@
         <div class="preloader"></div>
         <div class="ptr-arrow"></div>
       </div>
+      <div id="loggedOutContent" style="display: none;">
+        <div class="block">
+          <a href="/login" class="button button-fill" onclick="navigator.vibrate(25);">Login/Signup</a>
+        </div>
+      </div>
+      <div id="loggedInContent">
       <div class="block">
         <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
       </div>
@@ -24,6 +30,7 @@
         <div id="flightslist">
         </div>
         <br></br>
+      </div>
     </div>
   </div>
 </template>
@@ -39,6 +46,15 @@
   
   export default (props, { $update, $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) => {
     const colorThief = new ColorThief();
+
+    $on("pageInit", () => {
+      let login = localStorage.getItem("login");
+      if (!login) {
+        console.log("not logged in")
+        document.getElementById("loggedOutContent").style.display = "block";
+        document.getElementById("loggedInContent").style.display = "none";
+      }
+    })
 
     let data = localStorage.getItem("data");
     if (!data) {

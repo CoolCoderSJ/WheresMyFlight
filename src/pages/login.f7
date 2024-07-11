@@ -1,0 +1,114 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Login/Signup</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="block block-strong inset">
+          <form id="form">
+            <div class="list">
+                <p style="margin-left: 20px;">If you don't have an account, one will be made for you when you login.</p>
+              <ul>
+                <li class="item-content item-input item-input-outline">
+                    <div class="item-inner">
+                      <div class="item-title item-floating-label">Email</div>
+                      <div class="item-input-wrap">
+                        <input type="email" placeholder="Email" id="email" name="email" />
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+                  </li>
+
+                <li class="item-content item-input item-input-outline">
+                  <div class="item-inner">
+                    <div class="item-title item-floating-label">Password</div>
+                    <div class="item-input-wrap">
+                      <input type="password" placeholder="Password" id="password" name="password" />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </form>
+          <div class="block block-strong">
+            <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Account, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const account = new Account(client);
+  
+    export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on('pageInit', () => {
+        $('.convert-form-to-data').on('click', function (e) {
+          e.preventDefault();
+          const formData = $f7.form.convertToData('#form');
+          console.log(formData);
+          $f7.dialog.preloader('Logging in...');
+
+          if (!formData.email || !formData.password) {
+            $f7.dialog.close();
+            $f7.dialog.alert('Please fill in all fields.');
+            return;
+          }
+
+          if (formData.password.length < 8) {
+            $f7.dialog.close();
+            $f7.dialog.alert('Password must be at least 8 characters long.');
+            return;
+          }
+            
+        let accId = ""
+          try {
+            account.create(ID.unique(), formData.email, formData.password).then((response) => {
+              console.log(response);
+              accId = response.$id;
+              console.log(accId);
+            }).catch((error) => {
+              console.error(error);
+            });
+          }
+          catch (error) {
+            $f7.dialog.close();
+            $f7.dialog.alert(  `An error occurred: ${error}`);
+            console.error(error);
+          }
+        
+          account.createEmailPasswordSession(formData.email, formData.password).then((resp) => {
+            localStorage.setItem('login', resp.userId);
+            $f7.dialog.close(); 
+            $f7.views.main.router.navigate('/');
+          }).catch((error) => {
+            $f7.dialog.close();
+            $f7.dialog.alert(`An error occurred: ${error}`);
+            console.error(error);
+          });
+        });
+    })
+  
+      // Return render function
+      return $render;
+    }
+  </script>
