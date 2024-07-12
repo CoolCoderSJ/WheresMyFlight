@@ -8,6 +8,11 @@
         <div class="title-large">
           <div class="title-large-text">WheresMyFlight</div>
         </div>
+        <div class="right" style="margin-top: 18px;">
+          <a href="/settings" class="link icon-only">
+              <i class="icon"><span class="material-icons">settings</span></i>
+          </a>
+        </div>
       </div>
     </div>
     <!-- Scrollable page content-->

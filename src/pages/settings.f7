@@ -1,0 +1,123 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Settings</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="block block-strong inset">
+          <form id="form">
+            <div class="list">
+                <div class="block-title">Notifications</div>
+                <p style="margin-left: 20px;">SMS Notifications are only available for US and Canada phone numbers, ntfy can be used for all other scenarios.</p>
+              <ul>
+                <li class="item-content item-input item-input-outline">
+                    <div class="item-inner">
+                      <div class="item-title item-floating-label">ntfy Host</div>
+                      <div class="item-input-wrap">
+                        <input type="url" placeholder="ntfy api base" id="ntfyBase" name="ntfyBase" value="https://ntfy.sh/" />
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+                </li>
+
+                <li class="item-content item-input item-input-outline">
+                    <div class="item-inner">
+                      <div class="item-title item-floating-label">ntfy Topic Name</div>
+                      <div class="item-input-wrap">
+                        <input type="text" placeholder="ntfy topic name" id="ntfyTopic" name="ntfyTopic" />
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+                </li>
+              </ul>
+            </div>
+          </form>
+          <div class="block block-strong">
+            <a class="button button-fill saveNtfy" href="#" onclick="navigator.vibrate(25);">Save</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Account, ID, Databases } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    
+    const account = new Account(client);
+    const databases = new Databases(client);
+  
+    export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on('pageInit', () => {
+
+        $f7.dialog.preloader("Loading Settings...")
+        let userId = localStorage.getItem("login");
+        databases.getDocument('settings', 'prefs', userId)
+        .then((response) => {
+            console.log(response)
+            $("#ntfyBase").val(response.ntfyBase)
+            $("#ntfyTopic").val(response.ntfyTopic)
+            $f7.dialog.close()
+        })
+
+        $(".saveNtfy").on("click", function() {
+            let ntfyBase = $("#ntfyBase").val()
+            let ntfyTopic = $("#ntfyTopic").val()
+            
+            let userId = localStorage.getItem("login");
+            try {
+                databases.createDocument('settings', 'prefs', userId, {
+                    userId: userId,
+                    ntfyBase: ntfyBase,
+                    ntfyTopic: ntfyTopic
+                },
+                [
+                    `read("user:${userId}")`, 
+                    `write("user:${userId}")`
+                ])
+                .then((response) => {
+                    $f7.dialog.alert("Settings Saved!")
+                    console.log(response)
+                })
+                .catch((error) => {
+                    databases.updateDocument('settings', 'prefs', userId, {
+                    ntfyBase: ntfyBase,
+                    ntfyTopic: ntfyTopic
+                    },
+                    [
+                        `read("user:${userId}")`, 
+                        `write("user:${userId}")`
+                    ])
+                    .then((response) => {
+                        $f7.dialog.alert("Settings Saved!")
+                        console.log(response)
+                    })
+                });
+            } 
+            
+            catch (error) {
+                console.warn(error)
+            }
+        })
+    })
+  
+      // Return render function
+      return $render;
+    }
+  </script>
