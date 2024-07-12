@@ -21,7 +21,7 @@
               <ul>
                 <li class="item-content item-input item-input-outline">
                     <div class="item-inner">
-                      <div class="item-title item-floating-label">ntfy Host</div>
+                      <div class="item-title item-label">ntfy Host</div>
                       <div class="item-input-wrap">
                         <input type="url" placeholder="ntfy api base" id="ntfyBase" name="ntfyBase" value="https://ntfy.sh/" />
                         <span class="input-clear-button"></span>
@@ -31,7 +31,7 @@
 
                 <li class="item-content item-input item-input-outline">
                     <div class="item-inner">
-                      <div class="item-title item-floating-label">ntfy Topic Name</div>
+                      <div class="item-title item-label">ntfy Topic Name</div>
                       <div class="item-input-wrap">
                         <input type="text" placeholder="ntfy topic name" id="ntfyTopic" name="ntfyTopic" />
                         <span class="input-clear-button"></span>
@@ -45,6 +45,33 @@
             <a class="button button-fill saveNtfy" href="#" onclick="navigator.vibrate(25);">Save</a>
           </div>
         </div>
+
+
+        <div class="block block-strong inset grid grid-cols-2" style="align-items: center;">
+            <form id="form">
+              <div class="list">
+                  <div class="block-title">SMS Notifications</div>
+                <ul>
+                  <li class="item-content item-input item-input-outline">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Phone Number</div>
+                        <div class="item-input-wrap">
+                            <div style="display: flex; gap: 4px; align-items: center;">
+                                <span>+1</span>
+                                <input type="tel" validate required placeholder="XXXXXXXXXX" id="phoneNum" name="phoneNum" />
+                            </div>
+                          <span class="input-clear-button"></span>
+                        </div>
+                      </div>
+                  </li>
+  
+                </ul>
+              </div>
+            </form>
+            <div class="block block-strong" style="margin-top: 25px; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
+              <a class="button button-fill" id="savePhoneButton" href="#" onclick="navigator.vibrate(25);">Add</a>
+            </div>
+          </div>
       </div>
     </div>
   </template>
@@ -54,7 +81,7 @@
     }
   </style>
   <script>
-    const { Client, Account, ID, Databases } = Appwrite;
+    const { Client, Account, ID, Databases, Functions } = Appwrite;
     const client = new Client();
     client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
@@ -62,6 +89,7 @@
     
     const account = new Account(client);
     const databases = new Databases(client);
+    const functions = new Functions(client);
   
     export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
       $on('pageInit', () => {
@@ -115,8 +143,120 @@
                 console.warn(error)
             }
         })
+        
+        $("#savePhoneButton").on("click", () => {
+            let phoneNum = $("#phoneNum").val()
+            $f7.dialog.preloader("Saving Phone Number...")
+            let userId = localStorage.getItem("login");
+            try {
+                databases.createDocument('settings', 'phoneNumbers', userId+phoneNum, {
+                    userId: userId,
+                    phoneNumber: phoneNum
+                },
+                [
+                    `read("user:${userId}")`, 
+                    `write("user:${userId}")`
+                ])
+                .then((response) => {
+                    databases.updateDocument('settings', 'prefs', userId, {
+                      phoneNumbers: [response.$id]  
+                    })
+                    .then(() => {
+                        functions.createExecution(
+                            'send-verification',
+                            `{
+                            "phoneNum": "${phoneNum}",
+                            "userId": "${userId}"
+                            }`,
+                            true
+                        ).then(result => {
+                            let completed = false
+                            console.log("initial", result)
+                            setInterval(() => {
+                            if (!completed) {
+                            functions.getExecution("send-verification", result.$id).then(res => {
+                                console.log(res)
+                                if (res.status == "completed") {
+                                completed = true
+                                console.log("COMPLETED", res)
+                                $f7.dialog.close()
+                                $f7.dialog.alert("Phone Number Saved! Please verify it through settings.", () => {
+                                    location.reload()
+                                    $update();
+                                })
+                                }
+                                else if (res.status == "failed") {
+                                completed = true
+                                console.log("FAILED", res)
+                                }
+                            })
+                            }
+                            }, 500)
+                        })
+                        .catch(err => {
+                            console.error(err)
+                        })
+                    })
+                    .catch((error) => {
+                        databases.createDocument('settings', 'prefs', userId, {
+                            userId: userId,
+                            phoneNumbers: [response.$id]
+                        },
+                        [
+                            `read("user:${userId}")`, 
+                            `write("user:${userId}")`
+                        ]
+                    ).then(() => {
+                        functions.createExecution(
+                            'send-verification',
+                            `{
+                            "phoneNum": "${phoneNum}",
+                            "userId": "${userId}"
+                            }`,
+                            true
+                        ).then(result => {
+                            let completed = false
+                            console.log("initial", result)
+                            setInterval(() => {
+                            if (!completed) {
+                            functions.getExecution("send-verification", result.$id).then(res => {
+                                console.log(res)
+                                if (res.status == "completed") {
+                                completed = true
+                                console.log("COMPLETED", res)
+                                $f7.dialog.close()
+                                $f7.dialog.alert("Phone Number Saved! Please verify it through settings.", () => {
+                                    location.reload()
+                                    $update();
+                                })
+                                }
+                                else if (res.status == "failed") {
+                                completed = true
+                                console.log("FAILED", res)
+                                }
+                            })
+                            }
+                            }, 500)
+                        })
+                        .catch(err => {
+                            console.error(err)
+                        })
+                    })
+                    })
+                    console.log(response)
+                })
+                .catch((error) => {
+                    $f7.dialog.close()
+                    $f7.dialog.alert("Phone Number Already Exists!")
+                });
+            } 
+            
+            catch (error) {
+                console.warn(error)
+            }
+        })
     })
-  
+
       // Return render function
       return $render;
     }
