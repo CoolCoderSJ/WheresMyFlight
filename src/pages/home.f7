@@ -51,7 +51,7 @@
       <div id="tripslist"></div>
       <br></br>
 
-      <div class="block-title">Flights</div>
+      <div class="block-title">All Flights</div>
         <div class="block">
           <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
         </div>
@@ -75,14 +75,13 @@
   export default (props, { $update, $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) => {
     const colorThief = new ColorThief();
 
-    $on("pageInit", () => {
+    $onMounted(() => {
       let login = localStorage.getItem("login");
       if (!login) {
         console.log("not logged in")
         document.getElementById("loggedOutContent").style.display = "block";
         document.getElementById("loggedInContent").style.display = "none";
       }
-    })
 
     let data = localStorage.getItem("data");
     if (!data) {
@@ -99,13 +98,32 @@
       console.log(resp)
       })
     }
-    function loadPage(data) {
-      console.log("load page called")
-    window.addEventListener("load", () => {
-      console.log("load event listener called")
 
-    databases.listDocuments("data", "trips").then(trips => {
-      trips.documents.forEach(trip => {
+    let trips = localStorage.getItem("trips");
+    if (!trips) {
+      databases.listDocuments('data', 'trips').then((resp) => {
+      localStorage.setItem("trips", JSON.stringify(resp.documents))
+      console.log(resp)
+      }).then(() => loadTrips(localStorage.getItem("trips")))
+    }
+    else {
+      console.log("trips already saved")
+      loadTrips(trips)
+      databases.listDocuments('data', 'trips').then((resp) => {
+      localStorage.setItem("trips", JSON.stringify(resp.documents))
+      console.log(resp)
+      })
+    }
+
+    function loadTrips (trips) {
+      console.log(document.getElementById("tripslist"))
+      document.getElementById("tripslist").innerHTML = ""
+      
+      if (trips == "[]") return console.log("no trips")
+      trips = JSON.parse(trips)
+      console.log(trips)
+      trips.forEach(trip => {
+        console.log("TRIP", trip)
         document.getElementById("tripslist").innerHTML += `<div class="card demo-card-header-pic" onclick="navigator.vibrate(25);">
             <a href="/trip/${trip.$id}">
             <div class="card-content card-content-padding" style="padding: 25px;">
@@ -119,8 +137,14 @@
           </a>
           </div>`;
       });
-    })
       
+      console.log("load event listener called")
+    }
+
+    function loadPage(data) {
+      console.log("load page called")
+      console.log("load event listener called")
+
     let docs = JSON.parse(data);
     docs.reverse()
     let flightslist = document.getElementById('flightslist');
@@ -224,7 +248,7 @@
                   <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
               </div>
               <div class="card-row bottom-bar" style="background-color: black;">
-                  <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${docs[i].flightId} &bull; ${new Date(docs[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</p></div>
+                  <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${docs[i].flightId} &bull; <span style="font-weight: normal !important">${new Date(docs[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</span></p></div>
                   <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; width: 100%; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].$id}img" crossorigin="anonymous"></div>
               </div>
             </div>
@@ -269,9 +293,9 @@
           })
 
       }  
-    })
     }
 
+  });
 
     const loadMore = (e, done) => {        
         databases.listDocuments('data', 'flights').then((resp) => {
@@ -283,6 +307,43 @@
             done();
         })
     }
+
+    // Lifecycle
+    $onBeforeMount(() => {
+      console.log('onBeforeMount');
+    });
+    $onMounted(() => {
+      console.log('onMounted');
+    });
+    $onBeforeUnmount(() => {
+      console.log('onBeforeUnmount');
+    });
+    $onUnmounted(() => {
+      console.log('onUnmounted');
+    });
+
+    // Page Events
+    $on('pageMounted', (e, page) => {
+      console.log('pageMounted', page);
+    });
+    $on('pageInit', (e, page) => {
+      console.log('pageInit', page);
+    });
+    $on('pageBeforeIn', (e, page) => {
+      console.log('pageBeforeIn', page);
+    });
+    $on('pageAfterIn', (e, page) => {
+      console.log('pageAfterIn', page);
+    });
+    $on('pageBeforeOut', (e, page) => {
+      console.log('pageBeforeOut', page);
+    });
+    $on('pageAfterOut', (e, page) => {
+      console.log('pageAfterOut', page);
+    });
+    $on('pageBeforeRemove', (e, page) => {
+      console.log('pageBeforeRemove', page);
+    });
   return $render;
   }
 </script>

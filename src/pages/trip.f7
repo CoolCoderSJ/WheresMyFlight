@@ -56,14 +56,16 @@
           </ul>
         </div>
       </div>
-        <div id="flightslist">
+        <div id="flightslistTrip">
         </div>
         <br></br>
+        <a href="/add-flight" class="button button-fill" id="add_flight" style="margin: 20px;" onclick="navigator.vibrate(25);">Add Flight</a>
+        <a href="#" class="button button-fill color-red" id="delete_trip" style="margin: 20px;" onclick="navigator.vibrate(25);">Delete Trip</a>
     </div>
   </div>
 </template>
 <script>
-  const { Client, Databases, ID, Functions } = Appwrite;
+  const { Client, Databases, ID, Functions, Query } = Appwrite;
   const client = new Client();
   client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
@@ -80,7 +82,65 @@
       console.log("load event listener called 2")
 
     let tripId = $f7route.path.split("/")[2]
-    databases.getDocument("data", "trips", tripId).then(trip => {
+
+    $("#flightSelect").on("change", function() {
+      let selected = $("#flightSelect").val()
+      console.log(selected)
+      databases.updateDocument("data", "trips", tripId, {
+        flights: selected
+      }).then(() => {
+        $f7.dialog.alert("Flights updated successfully", "Success", () => {
+          databases.listDocuments("data", "trips").then((data) => {
+            localStorage.setItem("trips", JSON.stringify(data.documents))
+            $f7.views.main.router.refreshPage()
+          })
+        })
+      })
+    })
+
+    $("#delete_trip").on("click", function() {
+      $f7.dialog.confirm("Are you sure you want to delete this trip?", "Delete Trip", () => {
+        databases.updateDocument("data", "trips", tripId, {
+          flights: []
+        })
+        .then(() => {
+          databases.deleteDocument("data", "trips", tripId).then(() => {
+            databases.listDocuments("data", "trips").then((data) => {
+              localStorage.setItem("trips", JSON.stringify(data.documents))
+              $f7.dialog.alert("Trip deleted successfully", "Success", () => {
+                $f7.views.main.router.navigate("/")
+              })
+            })
+          })
+          .catch((err) => {
+            console.error(err)
+            $f7.dialog.alert("Error deleting trip", "Error")
+          })
+        })
+      })
+    })
+
+    let trips = localStorage.getItem("trips");
+    let trip
+
+    if (!trips) {
+        databases.listDocuments('data', 'trips', [Query.limit(100)]).then((resp) => {
+        localStorage.setItem("trips", JSON.stringify(resp.documents))
+        console.log(resp)
+        }).then(() => {
+            $f7.views.main.router.refreshPage()
+            $update();
+        })
+    }
+    else {
+        for (let i=0; i<JSON.parse(trips).length; i++) {
+          if (JSON.parse(trips)[i].$id == tripId) {
+            trip = JSON.parse(trips)[i]
+            break
+          }
+        }
+    }
+
       console.log(trip)
       $("#title").html(trip.name)
 
@@ -88,9 +148,29 @@
       console.log(flights)
       flights.reverse();
 
-      let flightslist = document.getElementById('flightslist');
+      let flightCodes = [];
+      for (let i=0; i<flights.length; i++) {
+        flightCodes.push(flights[i].flightId)
+      }
+
+      databases.listDocuments("data", "flights", [Query.limit(100)]).then(flights => {
+        flights.documents.forEach(flight => {
+          $("#flightSelect").append(`<option value="${flight.$id}" id="select${flight.$id}">${flight.flightId} - ${new Date(flight.scheduledTime[0]).toDateString().split(" ").splice(1,3).join(" ")}</option>`)
+        });
+      })
+      .then(() => {
+        for (let i=0; i<trip.flights.length; i++) {
+          console.log(`select${trip.flights[i].$id}`)
+          document.getElementById(`select${trip.flights[i].$id}`).selected = true;
+        }
+      })
+
+      $("#flightInner").html($("#flightInner").html() + `<div class="item-after" id="notifTargetAfter">${flightCodes.join(", ")}</div>`)
+
+      let flightslist = document.getElementById('flightslistTrip');
       flightslist.innerHTML = ""
       for (let i=0; i<flights.length; i++) {
+        console.log("FLIGHT", flights[i])
         console.log(flights[i].time)
         let dep, schedDep, arr, schedArr
         schedDep = new Date(Date.parse(flights[i].scheduledTime[0])).toUTCString().split(":00 GMT ")[0].split(" ")[4].slice(0, 5)
@@ -173,7 +253,7 @@
 
         console.log(flightslist)
         flightslist.innerHTML += `
-            <div class="card demo-card-header-pic flightCard" id="${flights[i].$id}card" onclick="navigator.vibrate(25);">
+            <div class="card demo-card-header-pic flightCard" id="trip_${flights[i].$id}card" onclick="navigator.vibrate(25);">
               <a href="/flight/${flights[i].$id}">
               <div class="card-content card-content-padding" style="padding-top: 5px;">
                 <div class="card-row">
@@ -189,8 +269,8 @@
                     <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
                 </div>
                 <div class="card-row bottom-bar" style="background-color: black;">
-                    <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${flights[i].flightId} &bull; ${new Date(flights[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</p></div>
-                    <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; width: 100%; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${flights[i]['iata-code']}.svg" id="${flights[i].$id}img" crossorigin="anonymous"></div>
+                    <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${flights[i].flightId} &bull; <span style="font-weight: normal !important">${new Date(flights[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</span></p></div>
+                    <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; width: 100%; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${flights[i]['iata-code']}.svg" id="trip_${flights[i].$id}img" crossorigin="anonymous"></div>
                 </div>
               </div>
             </a>
@@ -225,16 +305,15 @@
               return "#"+RR+GG+BB;
               }
 
-            let img = document.getElementById(flights[i].$id + "img")
+            let img = document.getElementById("trip_" + flights[i].$id + "img")
             img.addEventListener("load", ()=>{
               let color = colorThief.getColor(img);
               let hexcolor = rgbToHex(color[0], color[1], color[2])
               console.log(hexcolor)
-              document.getElementById(flights[i].$id+"card").setAttribute("style", "background-color: "+shadeColor(hexcolor, -0.9)+"8c !important;")
+              document.getElementById("trip_"+flights[i].$id+"card").setAttribute("style", "background-color: "+shadeColor(hexcolor, -0.9)+"8c !important;")
             })
 
         }
-    })  
     })
 
 

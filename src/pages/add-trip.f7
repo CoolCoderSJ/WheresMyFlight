@@ -95,9 +95,13 @@
             `read("user:${userId}")`, 
             `write("user:${userId}")`
           ]).then((response) => {
-            $f7.dialog.close();
-            $f7.dialog.alert('Trip created successfully', () => {
-              $f7.views.main.router.navigate('/trips/'+response.$id);
+            databases.listDocuments("data", "trips").then((data) => {
+              console.log(data)
+              localStorage.setItem("trips", JSON.stringify(data.documents))
+              $f7.dialog.close();
+              $f7.dialog.alert('Trip created successfully', () => {
+                $f7.views.main.router.navigate('/trip/'+response.$id);
+              });
             });
           }).catch((error) => {
             console.warn(error)
