@@ -1,0 +1,113 @@
+<template>
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">New Trip</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="block block-strong inset">
+          <form id="form">
+            <div class="list">
+              <ul>
+                <li class="item-content item-input item-input-outline">
+                  <div class="item-inner">
+                    <div class="item-title item-floating-label">Trip Name</div>
+                    <div class="item-input-wrap">
+                      <input type="text" placeholder="Trip Name" id="name" name="name" />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+                </li>
+
+                <div class="grid grid-cols-2">
+                    <li class="item-content item-input item-input-outline">
+                        <div class="item-inner">
+                          <div class="item-title item-floating-label">Start Date</div>
+                          <div class="item-input-wrap">
+                            <input type="text" placeholder="Start Date" id="start" name="start" />
+                            <span class="input-clear-button"></span>
+                          </div>
+                        </div>
+                    </li>
+
+                    <li class="item-content item-input item-input-outline">
+                    <div class="item-inner">
+                        <div class="item-title item-floating-label">End Date</div>
+                        <div class="item-input-wrap">
+                        <input type="text" placeholder="End Date" id="end" name="end" />
+                        <span class="input-clear-button"></span>
+                        </div>
+                    </div>
+                    </li>
+                </div>
+              </ul>
+            </div>
+          </form>
+          <div class="block block-strong">
+            <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Create</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Databases, ID } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const databases = new Databases(client);
+  
+    export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on('pageInit', () => {
+        let date = $f7.calendar.create({
+          inputEl: '#start',
+        });
+        let date2 = $f7.calendar.create({
+          inputEl: '#end',
+        });
+  
+        let userId = localStorage.getItem("login");
+  
+        $('.convert-form-to-data').on('click', function () {
+          var formData = $f7.form.convertToData('#form'); 
+          $f7.dialog.preloader('Creating...');
+
+          databases.createDocument("data", "trips", ID.unique(), {
+            name: formData.name,
+            start: new Date(formData.start),
+            end: new Date(formData.end),
+            userId: userId
+          }, [
+            `read("user:${userId}")`, 
+            `write("user:${userId}")`
+          ]).then((response) => {
+            $f7.dialog.close();
+            $f7.dialog.alert('Trip created successfully', () => {
+              $f7.views.main.router.navigate('/trips/'+response.$id);
+            });
+          }).catch((error) => {
+            console.warn(error)
+            $f7.dialog.close();
+            $f7.dialog.alert('Error creating trip');
+          });
+      });
+    });
+  
+      // Return render function
+      return $render;
+    }
+  </script>

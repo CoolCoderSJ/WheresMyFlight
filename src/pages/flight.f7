@@ -130,6 +130,14 @@
           document.getElementById("notifTargets").innerHTML += `<option value="sms:${number.phoneNumber}" id="sms:${number.phoneNumber}">sms: ${number.phoneNumber}</option>`
         });
       })
+      .then(() => {
+        databases.getDocument("data", "flights", flightId).then((response) => {
+          for (let i=0; i<response.notificationTargets.length; i++) {
+            document.getElementById(response.notificationTargets[i]).selected = true;
+          }
+          document.getElementById('notifTargetInner').innerHTML += `<div class="item-after" id="notifTargetAfter">${response.notificationTargets.join(", ")}</div>`
+        })
+      })
       .catch(() => {
         databases.createDocument("settings", "prefs", userId, {
           userId: userId,
@@ -147,12 +155,6 @@
 
       databases.getDocument('data', 'flights', flightId).then((response) => {
         document.getElementById('title').innerHTML = `Flight ${response.flightId}`
-        
-        for (let i=0; i<response.notificationTargets.length; i++) {
-          document.getElementById(response.notificationTargets[i]).selected = true;
-        }
-        document.getElementById('notifTargetInner').innerHTML += `<div class="item-after" id="notifTargetAfter">${response.notificationTargets.join(", ")}</div>`
-
         console.log(response)
       if (response.flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`
 

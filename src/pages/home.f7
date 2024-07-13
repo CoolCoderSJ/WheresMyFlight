@@ -1,6 +1,23 @@
 <template>
   <div class="page" data-name="home">
     <!-- Top Navbar -->
+     <style>
+      .bottom-bar {
+          background-color: black;
+          position: absolute;
+          left: 0;
+          right: 0;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          border-radius: 0 0 10px 10px;
+          padding-left: 20px;
+          padding-right: 20px;
+      }
+
+      .flightCard {
+        margin-bottom: 45px;
+      }
+     </style>
     <div class="navbar navbar-large">
       <div class="navbar-bg" style="background-color: #201c1c"></div>
       <div class="navbar-inner">
@@ -27,11 +44,17 @@
         </div>
       </div>
       <div id="loggedInContent">
+      <div class="block-title">Trips</div>
       <div class="block">
-        <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
+        <a href="/add-trip" class="button button-fill" onclick="navigator.vibrate(25);">New Trip</a>
       </div>
+      <div id="tripslist"></div>
+      <br></br>
 
       <div class="block-title">Flights</div>
+        <div class="block">
+          <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
+        </div>
         <div id="flightslist">
         </div>
         <br></br>
@@ -80,6 +103,23 @@
       console.log("load page called")
     window.addEventListener("load", () => {
       console.log("load event listener called")
+
+    databases.listDocuments("data", "trips").then(trips => {
+      trips.documents.forEach(trip => {
+        document.getElementById("tripslist").innerHTML += `<div class="card demo-card-header-pic" onclick="navigator.vibrate(25);">
+            <a href="/trip/${trip.$id}">
+            <div class="card-content card-content-padding" style="padding: 25px;">
+              <div class="card-row" style="justify-content: inherit; gap: 20px; align-items: center">
+              <p class="big light">${trip.name}</p>
+                </div>
+              <div class="card-row">
+                <p>${new Date(trip.start.split("+")[0]).toDateString().split(" ").splice(1,2).join(" ")} - ${new Date(trip.end.split("+")[0]).toDateString().split(" ").splice(1,2).join(" ")}</p>
+              </div>
+            </div>
+          </a>
+          </div>`;
+      });
+    })
       
     let docs = JSON.parse(data);
     docs.reverse()
@@ -168,15 +208,9 @@
 
       console.log(flightslist)
       flightslist.innerHTML += `
-          <div class="card demo-card-header-pic" id="${docs[i].$id}card" onclick="navigator.vibrate(25);">
+          <div class="card demo-card-header-pic flightCard" id="${docs[i].$id}card" onclick="navigator.vibrate(25);">
             <a href="/flight/${docs[i].$id}">
-            <div class="card-content card-content-padding">
-              <div class="card-row" style="margin-top: 20px; justify-content: inherit; gap: 20px; align-items: center">
-                <div style="background: #fff;border-radius: 50%; width: 50px;height: 50px;">
-              <img style="scale: 0.8; width: 100%; height: 100%; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].$id}img" crossorigin="anonymous">
-              </div>
-              <p class="big light">${docs[i].flightId}</p>
-                </div>
+            <div class="card-content card-content-padding" style="padding-top: 5px;">
               <div class="card-row">
                 <p>${docs[i].location[0]}</p>
                 <p>${docs[i].location[1]}</p>
@@ -185,9 +219,13 @@
                 <div class="airportrow"><p class="big">${docs[i].airport[0]}</p><p class="kindofbig" style="color: ${depDiffText == 'late' ? 'red' : '#90EE90'}">${dep} ${docs[i].fullData[2]}</p></div>
                 <div class="airportrow"><p class="kindofbig" style="color: ${arrDiffText == 'late' ? 'red' : '#90EE90'}">${arr} ${docs[i].fullData[7]}</p><p class="big">${docs[i].airport[1]}</p></div>
               </div>
-              <div class="card-row">
+              <div class="card-row" style="margin-bottom: 15px;">
                   <div class="airportrow"><p class="mt-0 mb-0">${terminals[0]} ${gates[0]}</p></div>
                   <div class="airportrow"><p class="mt-0 mb-0">${terminals[1]} ${gates[1]}</p></div>
+              </div>
+              <div class="card-row bottom-bar" style="background-color: black;">
+                  <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${docs[i].flightId} &bull; ${new Date(docs[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</p></div>
+                  <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; width: 100%; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].$id}img" crossorigin="anonymous"></div>
               </div>
             </div>
           </a>
@@ -240,7 +278,7 @@
         localStorage.setItem("data", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {
-          location.reload()
+          $f7.views.main.router.refreshPage()
             $update();
             done();
         })

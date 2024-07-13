@@ -8,6 +8,8 @@ import AddPassPage from '../pages/addpass.f7';
 import BagsPage from '../pages/bags.f7';
 import LoginPage from '../pages/login.f7';
 import SettingsPage from '../pages/settings.f7';
+import AddTripPage from '../pages/add-trip.f7';
+import TripPage from '../pages/trip.f7';
 
 var routes = [
   {
@@ -41,6 +43,14 @@ var routes = [
   {
     path: '/settings',
     component: SettingsPage,
+  },
+  {
+    path: '/add-trip',
+    component: AddTripPage,
+  },
+  {
+    path: '/trip/:tripId',
+    component: TripPage,
   },
   {
     path: '(.*)',

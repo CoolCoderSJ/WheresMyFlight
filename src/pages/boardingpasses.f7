@@ -150,7 +150,7 @@
         localStorage.setItem("passes", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {
-          location.reload()
+          $f7.views.main.router.refreshPage()
             $update();
             done();
         })
