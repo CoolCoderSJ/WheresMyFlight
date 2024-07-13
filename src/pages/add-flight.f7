@@ -210,7 +210,7 @@
                 localStorage.setItem("data", JSON.stringify(resp.documents))
                 console.log(resp)
                 })
-              $f7.views.main.router.navigate('/');
+              $f7.views.main.router.navigate(`/flight/${response.$id}`);
             }, function (error) {
               console.log(error);
             });

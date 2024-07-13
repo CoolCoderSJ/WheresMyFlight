@@ -77,6 +77,25 @@
         <div class="row"><p class="block-title">Gate</p><p id="destgate"></p></div>
         <div class="row"><p class="block-title">Terminal</p><p id="destterm"></p></div>
       </div>
+
+      <div class="block block-strong">
+        <div class="list list-strong-ios list-outline-ios list-dividers-ios" style="margin-top: 0; margin-bottom: 0;">
+          <ul>
+            <li>
+              <a class="item-link smart-select smart-select-init" data-open-in="sheet">
+                <select id="notifTargets" multiple>
+                  <option disabled>Select a target</option>
+                </select>
+                <div class="item-content">
+                  <div class="item-inner" id="notifTargetInner">
+                    <div class="item-title">Notification Targets</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     
       <div class="block block-strong">
         <a class="button button-fill delete-flight color-red" href="#">Delete Flight</a>
@@ -100,8 +119,39 @@
   export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
       let flightId = $f7route.path.replace("/flight/", "")
+      let userId = localStorage.getItem("login");
+
+      databases.getDocument("settings", "prefs", userId).then(resp => {
+        console.log(resp)
+        if (resp.ntfyTopic) {
+          document.getElementById("notifTargets").innerHTML += `<option value="ntfy:${resp.ntfyTopic}" id="ntfy:${resp.ntfyTopic}">ntfy: ${resp.ntfyTopic}</option>`
+        }
+        resp.phoneNumbers.forEach(number => {
+          document.getElementById("notifTargets").innerHTML += `<option value="sms:${number.phoneNumber}" id="sms:${number.phoneNumber}">sms: ${number.phoneNumber}</option>`
+        });
+      })
+      .catch(() => {
+        databases.createDocument("settings", "prefs", userId, {
+          userId: userId,
+        })
+      })
+
+      $("#notifTargets").on("change", function() {
+        let targets = $("#notifTargets").val();
+        console.log(targets)
+        document.getElementById('notifTargetAfter').innerHTML = targets.join(", ")
+        databases.updateDocument("data", "flights", flightId, {
+          notificationTargets: targets
+          })
+        })
+
       databases.getDocument('data', 'flights', flightId).then((response) => {
         document.getElementById('title').innerHTML = `Flight ${response.flightId}`
+        
+        for (let i=0; i<response.notificationTargets.length; i++) {
+          document.getElementById(response.notificationTargets[i]).selected = true;
+        }
+        document.getElementById('notifTargetInner').innerHTML += `<div class="item-after" id="notifTargetAfter">${response.notificationTargets.join(", ")}</div>`
 
         console.log(response)
       if (response.flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`

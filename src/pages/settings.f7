@@ -47,11 +47,12 @@
         </div>
 
 
-        <div class="block block-strong inset grid grid-cols-2" style="align-items: center;">
+        <div class="block block-strong inset" style="align-items: center;">
             <form id="form">
               <div class="list">
                   <div class="block-title">SMS Notifications</div>
-                <ul>
+                  <div id="phoneNums" style="padding-left: 20px;"></div>
+                <ul class="grid grid-cols-2">
                   <li class="item-content item-input item-input-outline">
                       <div class="item-inner">
                         <div class="item-title item-label">Phone Number</div>
@@ -64,13 +65,12 @@
                         </div>
                       </div>
                   </li>
-  
+                  <div class="block block-strong" style="margin-top: 13px; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
+                    <a class="button button-fill" id="savePhoneButton" href="#" onclick="navigator.vibrate(25);">Add</a>
+                  </div>
                 </ul>
               </div>
             </form>
-            <div class="block block-strong" style="margin-top: 25px; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
-              <a class="button button-fill" id="savePhoneButton" href="#" onclick="navigator.vibrate(25);">Add</a>
-            </div>
           </div>
       </div>
     </div>
@@ -94,6 +94,61 @@
     export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
       $on('pageInit', () => {
 
+        function verifyNumber(phoneNum) {
+            let code = String(document.getElementById(`verify${phoneNum}`).value)
+            let userId = localStorage.getItem("login");
+            $f7.dialog.preloader("Verifying Phone Number...")
+            databases.getDocument('settings', 'phoneVerification', userId+phoneNum)
+            .then(resp => {
+                if (code != resp.code) {
+                    $f7.dialog.close()
+                    $f7.dialog.alert("Verification Code Incorrect!")
+                    return
+                }
+                databases.updateDocument('settings', 'phoneNumbers', userId+phoneNum, {
+                    verified: true
+                })
+                .then(() => {
+                    databases.deleteDocument('settings', 'phoneVerification', userId+phoneNum)
+                    .then(() => {
+                        $f7.dialog.close()
+                        $f7.dialog.alert("Phone Number Verified!", () => {
+                            $f7.views.main.router.refreshPage();
+                        })
+                    })
+                })
+            })
+            .catch(err => {
+                $f7.dialog.close()
+                $f7.dialog.alert("Verification Code Incorrect!")
+            })
+        }
+
+        window.verifyNumber = verifyNumber
+
+        function deleteNumber(phoneNum) {
+            let userId = localStorage.getItem("login");
+            $f7.dialog.preloader("Deleting Phone Number...")
+            databases.deleteDocument('settings', 'phoneNumbers', userId+phoneNum)
+            .then(() => {
+                databases.deleteDocument('settings', 'phoneVerification', userId+phoneNum)
+                .then(() => {
+                    $f7.dialog.close()
+                    $f7.dialog.alert("Phone Number Deleted!", () => {
+                        $f7.views.main.router.refreshPage();
+                    })
+                })
+                .catch(() => {
+                    $f7.dialog.close()
+                    $f7.dialog.alert("Phone Number Deleted!", () => {
+                        $f7.views.main.router.refreshPage();
+                    })
+                })
+            })
+        }
+
+        window.deleteNumber = deleteNumber
+        
         $f7.dialog.preloader("Loading Settings...")
         let userId = localStorage.getItem("login");
         databases.getDocument('settings', 'prefs', userId)
@@ -101,6 +156,35 @@
             console.log(response)
             $("#ntfyBase").val(response.ntfyBase)
             $("#ntfyTopic").val(response.ntfyTopic)
+
+            if (response.phoneNumbers) {
+                $("#phoneNums").html(`<div class="block-title">Saved Numbers:</div>`)
+                response.phoneNumbers.forEach(phone => {
+                    document.getElementById("phoneNums").innerHTML += `<div class="grid grid-cols-4" style="width: fit-content; align-items: center;">
+                    <p style="margin-left: 15px;">+1&nbsp;${phone.phoneNumber} (${phone.verified ? 'Verified' : 'Not Verified'})</p>
+                    ${phone.verified ? '' : `<li class="item-content item-input item-input-outline">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Verification Code</div>
+                            <div class="item-input-wrap">
+                                <input type="number" validate required placeholder="XXXXXX" id="verify${phone.phoneNumber}" />
+                            <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="block block-strong" style="margin-top: 0; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
+                        <a class="button button-fill" href="#" onclick="navigator.vibrate(25); verifyNumber('${phone.phoneNumber}')">Verify</a>
+                    </div>`}
+
+                    <div>
+                        <div class="block block-strong" style="margin-top: 0; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
+                            <a class="button button-fill color-red" href="#" onclick="navigator.vibrate(25); deleteNumber('${phone.phoneNumber}')">Delete</a>
+                        </div>
+                    </div>
+                    </div>
+                    `
+                })
+                document.getElementById("phoneNums").innerHTML += "<br>"
+            }
             $f7.dialog.close()
         })
 
@@ -181,8 +265,7 @@
                                 console.log("COMPLETED", res)
                                 $f7.dialog.close()
                                 $f7.dialog.alert("Phone Number Saved! Please verify it through settings.", () => {
-                                    location.reload()
-                                    $update();
+                                    $f7.views.main.router.refreshPage();
                                 })
                                 }
                                 else if (res.status == "failed") {
@@ -226,8 +309,7 @@
                                 console.log("COMPLETED", res)
                                 $f7.dialog.close()
                                 $f7.dialog.alert("Phone Number Saved! Please verify it through settings.", () => {
-                                    location.reload()
-                                    $update();
+                                    $f7.views.main.router.refreshPage();
                                 })
                                 }
                                 else if (res.status == "failed") {
