@@ -237,14 +237,16 @@
           let coords = JSON.parse(response.coordinates);
           console.log(coords)
 
-          var path = L.polyline(
-              coords,
-              {"delay": 400, "weight": 2,"color": "black", "paused": true, "reverse": false}
-          ).addTo(map);
-          // 5. 
-          map.addLayer(path);
-          map.fitBounds(path.getBounds());
-          L.marker(coords[coords.length-1]).addTo(map)
+          if (coords.length > 0) {
+            var path = L.polyline(
+                coords,
+                {"delay": 400, "weight": 2,"color": "black", "paused": true, "reverse": false}
+            ).addTo(map);
+            // 5. 
+            map.addLayer(path);
+            map.fitBounds(path.getBounds());
+            L.marker(coords[coords.length-1]).addTo(map)
+          }
           }
 
           initMap();

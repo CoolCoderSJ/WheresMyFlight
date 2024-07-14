@@ -73,6 +73,9 @@
     $on('pageInit', () => {
       let date = $f7.calendar.create({
         inputEl: '#date',
+        minDate: new Date(new Date().setDate(new Date().getDate()-3)),
+        yearSelector: false,
+        yearPicker: false
       });
 
       let userId = localStorage.getItem("login");
@@ -87,6 +90,24 @@
         let yr = date.split("/")[2];
         let month = date.split("/")[0];
         let day = date.split("/")[1];
+
+        let origYr = date.split("/")[2];
+        let origMonth = String(Number(date.split("/")[0]-1));
+        let origDay = date.split("/")[1];
+
+        let selectedDate = new Date(date);
+        let now = new Date()
+        now.setHours(0)
+        now.setMinutes(0)
+        now.setSeconds(0)
+        now.setMilliseconds(0)
+        let diffDays = Math.abs(selectedDate - now) / 86400000;
+        if (diffDays > 2) {
+          yr = String(now.getFullYear());
+          month = String(now.getMonth() + 1);
+          day = String(now.getDate()+1);
+        }
+
         axios({
           method: 'get',
           url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/`)}`,
@@ -96,7 +117,23 @@
             let airport = [flight.departureAirport.iata, flight.arrivalAirport.iata];
             let location = [flight.departureAirport.name, flight.arrivalAirport.name];
             let time = [new Date(flight.schedule.estimatedActualDeparture+"Z"), new Date(flight.schedule.estimatedActualArrival+"Z")];
+            if (diffDays > 2) {
+              time[0].setFullYear(origYr);
+              time[0].setMonth(origMonth);
+              time[0].setDate(origDay);
+              time[1].setFullYear(origYr);
+              time[1].setMonth(origMonth);
+              time[1].setDate(origDay);
+            }
             let scheduledTime = [new Date(flight.departureAirport.date+"Z"), new Date(flight.arrivalAirport.date+"Z")];
+            if (diffDays > 2) {
+              scheduledTime[0].setFullYear(origYr);
+              scheduledTime[0].setMonth(origMonth);
+              scheduledTime[0].setDate(origDay);
+              scheduledTime[1].setFullYear(origYr);
+              scheduledTime[1].setMonth(origMonth);
+              scheduledTime[1].setDate(origDay);
+            }
             let iataCode = flight.ticketHeader.carrier.fs;
             let gate = [flight.departureAirport.gate, flight.arrivalAirport.gate];
 
@@ -171,6 +208,28 @@
             let estimatedArrivalTime = new Date(flight.schedule.estimatedActualArrival +"Z");
             let actualArrivalTime = new Date(flight.schedule.estimatedActualArrival +"Z");
 
+            if (diffDays > 2) {
+              scheduledDepartureTime.setFullYear(origYr);
+              scheduledDepartureTime.setMonth(origMonth);
+              scheduledDepartureTime.setDate(origDay);
+              estimatedDepartureTime.setFullYear(origYr);
+              estimatedDepartureTime.setMonth(origMonth);
+              estimatedDepartureTime.setDate(origDay);
+              actualDepartureTime.setFullYear(origYr);
+              actualDepartureTime.setMonth(origMonth);
+              actualDepartureTime.setDate(origDay);
+
+              scheduledArrivalTime.setFullYear(origYr);
+              scheduledArrivalTime.setMonth(origMonth);
+              scheduledArrivalTime.setDate(origDay);
+              estimatedArrivalTime.setFullYear(origYr);
+              estimatedArrivalTime.setMonth(origMonth);
+              estimatedArrivalTime.setDate(origDay);
+              actualArrivalTime.setFullYear(origYr);
+              actualArrivalTime.setMonth(origMonth);
+              actualArrivalTime.setDate(origDay);
+            }
+
             let coordinates = [];
             if (flight.positional.flexTrack.positions) {
             for (let i=0; i<flight.positional.flexTrack.positions.length;i++) {
@@ -214,9 +273,9 @@
                 gate: gate,
                 scheduledTime: scheduledTime,
                 fullData: [aircraft, airline, originTZ, originAirport, originCity, originGate, originTerminal, destinationTZ, destinationAirport, destinationCity, destinationGate, destinationTerminal, actualDist, plannedDist, takenDist, speed, altitude, fuel, status, scheduledDepartureTime, estimatedDepartureTime, actualDepartureTime, scheduledArrivalTime, estimatedArrivalTime, actualArrivalTime, aircode, flightnum, date],
-                coordinates: coordinates,
-                speed: speedPoints,
-                altitude: altPoints,
+                coordinates: diffDays < 2 ? coordinates : "[]",
+                speed: diffDays < 2 ? speedPoints : "[]",
+                altitude: diffDays < 2 ? altPoints : "[]",
                 runwayTimes: [depRun, arrRun],
                 userId: localStorage.getItem("login"),
                 flightDuration: flightDuration,
