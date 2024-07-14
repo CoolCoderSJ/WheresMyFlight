@@ -115,7 +115,6 @@
           .then(function (response) {
             let flight = response.data.data;
             let airport = [flight.departureAirport.iata, flight.arrivalAirport.iata];
-            let location = [flight.departureAirport.name, flight.arrivalAirport.name];
             let time = [new Date(flight.schedule.estimatedActualDeparture+"Z"), new Date(flight.schedule.estimatedActualArrival+"Z")];
             if (diffDays > 2) {
               time[0].setFullYear(origYr);
@@ -151,6 +150,8 @@
             let destinationCity = flight.arrivalAirport.city;
             let destinationGate = flight.arrivalAirport.gate;
             let destinationTerminal = flight.arrivalAirport.terminal;
+
+            let location = [originCity, destinationCity];
 
             let actualDist, plannedDist, takenDist, depRun, arrRun, flightDuration, baggageClaim;
 
