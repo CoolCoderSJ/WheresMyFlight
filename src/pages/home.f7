@@ -305,7 +305,7 @@
         localStorage.setItem("data", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {
-          $f7.views.main.router.refreshPage()
+          location.reload();
             $update();
             done();
         })
