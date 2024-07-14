@@ -19,6 +19,43 @@
       <div class="block" id="btnsblock" style="display: flex; gap: 20px;">
         <a href="${$f7route.path + '/passes'}" class="button button-fill" style="width: 100%" onclick="navigator.vibrate(25);">Boarding Passes</a>
       </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-item-date" id="timeline_gate_dep">21</div>
+          <div class="timeline-item-divider"></div>
+          <div class="timeline-item-content">
+            <div class="timeline-item-inner">Gate Departure</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-item-date" id="timeline_runway_dep">22</div>
+          <div class="timeline-item-divider"></div>
+          <div class="timeline-item-content">
+            <div class="timeline-item-inner">Runway Departure</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-item-date"></div>
+          <div class="timeline-item-divider"></div>
+          <div class="timeline-item-content">
+            <div class="timeline-item-inner" id="timeline_flighttime">Flight en-route for </div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-item-date" id="timeline_runway_arr">24</div>
+          <div class="timeline-item-divider"></div>
+          <div class="timeline-item-content">
+            <div class="timeline-item-inner">Runway Arrival</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-item-date" id="timeline_gate_arr">24</div>
+          <div class="timeline-item-divider"></div>
+          <div class="timeline-item-content">
+            <div class="timeline-item-inner">Gate Arrival</div>
+          </div>
+        </div>
+      </div>
       <p class="block-title">General Info</p>
       <div class="block block-strong">
         <div class="row"><p class="block-title">Aircraft</p><p id="aircraft"></p></div>
@@ -62,20 +99,23 @@
 
       <p class="block-title">Departure</p>
       <div class="block block-strong">
-        <div class="row"><p class="block-title">Scheduled Time</p><p id="scheddeptime"></p></div>
-        <div class="row"><p class="block-title">Estimated Time</p><p id="estdeptime"></p></div>
-        <div class="row"><p class="block-title">Actual Time</p><p id="actualdeptime"></p></div>
+        <div class="row"><p class="block-title">Scheduled Gate Time</p><p id="scheddeptime"></p></div>
+        <div class="row"><p class="block-title">Estimated Gate Time</p><p id="estdeptime"></p></div>
+        <div class="row"><p class="block-title">Actual Gate Time</p><p id="actualdeptime"></p></div>
+        <div class="row"><p class="block-title">Runway Time</p><p id="deprunway"></p></div>
         <div class="row"><p class="block-title">Gate</p><p id="origgate"></p></div>
         <div class="row"><p class="block-title">Terminal</p><p id="origterm"></p></div>
         </div>
 
     <p class="block-title">Arrival</p>
       <div class="block block-strong">
-        <div class="row"><p class="block-title">Scheduled Time</p><p id="schedarrtime"></p></div>
-        <div class="row"><p class="block-title">Estimated Time</p><p id="estarrtime"></p></div>
-        <div class="row"><p class="block-title">Actual Time</p><p id="actualarrtime"></p></div>
+        <div class="row"><p class="block-title">Scheduled Gate Time</p><p id="schedarrtime"></p></div>
+        <div class="row"><p class="block-title">Estimated Gate Time</p><p id="estarrtime"></p></div>
+        <div class="row"><p class="block-title">Actual Gate Time</p><p id="actualarrtime"></p></div>
+        <div class="row"><p class="block-title">Runway Time</p><p id="arrrunway"></p></div>
         <div class="row"><p class="block-title">Gate</p><p id="destgate"></p></div>
         <div class="row"><p class="block-title">Terminal</p><p id="destterm"></p></div>
+        <div class="row"><p class="block-title">Baggage Claim</p><p id="baggageClaim"></p></div>
       </div>
 
       <div class="block block-strong">
@@ -155,6 +195,12 @@
 
       databases.getDocument('data', 'flights', flightId).then((response) => {
         document.getElementById('title').innerHTML = `Flight ${response.flightId}`
+        document.getElementById("deprunway").innerHTML = response.runwayTimes[0]
+        document.getElementById("arrrunway").innerHTML = response.runwayTimes[1]
+        document.getElementById("baggageClaim").innerHTML = response.baggageClaim
+
+        let flightDuration = response.flightDuration
+
         console.log(response)
       if (response.flightId.startsWith("DL")) document.getElementById('btnsblock').innerHTML += `<a style="width: 100%" href="${$f7route.path + '/bags'}" class="button button-fill" onclick="navigator.vibrate(25);">Track Bags</a>`
 
@@ -292,30 +338,35 @@
           let adt = flight[21]
           let aat = flight[24]
 
-          if (sdt) if (sdt.includes("Z")) document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toString().split(":00")[0];
+          if (sdt) if (sdt.includes("Z")) document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("scheddeptime").innerHTML = new Date(Date.parse(flight[19])).toLocaleTimeString().split(":00")[0];
           else document.getElementById("scheddeptime").innerHTML = "N/A";
 
-          if (edt) if (edt.includes("Z")) document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toString().split(":00")[0];
+          if (edt) if (edt.includes("Z")) document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("estdeptime").innerHTML = new Date(Date.parse(flight[20])).toLocaleTimeString().split(":00")[0];
           else document.getElementById("estdeptime").innerHTML = "N/A";
 
-          if (sat) if (sat.includes("Z")) document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toString().split(":00")[0];
+          if (sat) if (sat.includes("Z")) document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("schedarrtime").innerHTML = new Date(Date.parse(flight[22])).toLocaleTimeString().split(":00")[0];
           else document.getElementById("schedarrtime").innerHTML = "N/A";
 
-          if (eat) if (eat.includes("Z")) document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toString().split(":00")[0];
+          if (eat) if (eat.includes("Z")) document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("estarrtime").innerHTML = new Date(Date.parse(flight[23])).toLocaleTimeString().split(":00")[0];
           else document.getElementById("estarrtime").innerHTML = "N/A";
 
-          if (adt) if (adt.includes("Z")) document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toString().split(":00")[0];
+          if (adt) if (adt.includes("Z")) document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("actualdeptime").innerHTML = new Date(Date.parse(flight[21])).toLocaleTimeString().split(":00")[0];
            else document.getElementById("actualdeptime").innerHTML = "N/A";
 
-          if (aat) if (aat.includes("Z")) document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toUTCString().split(":00 GMT")[0];
-                   else document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toString().split(":00")[0];
+          if (aat) if (aat.includes("Z")) document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toUTCString().split(":00 GMT")[0].split(" ")[4];
+                   else document.getElementById("actualarrtime").innerHTML = new Date(Date.parse(flight[24])).toLocaleTimeString().split(":00")[0];
           else document.getElementById("actualarrtime").innerHTML = "N/A";
           
+          document.getElementById("timeline_gate_dep").innerHTML = document.getElementById("scheddeptime").innerHTML;
+          document.getElementById("timeline_runway_dep").innerHTML = document.getElementById("deprunway").innerHTML;
+          document.getElementById("timeline_flighttime").innerHTML = `Flight en-route for ${flightDuration}`;
+          document.getElementById("timeline_runway_arr").innerHTML = document.getElementById("arrrunway").innerHTML;
+          document.getElementById("timeline_gate_arr").innerHTML = document.getElementById("schedarrtime").innerHTML;
     });
       })
 

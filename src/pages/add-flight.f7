@@ -115,7 +115,7 @@
             let destinationGate = flight.arrivalAirport.gate;
             let destinationTerminal = flight.arrivalAirport.terminal;
 
-            let actualDist, plannedDist, takenDist;
+            let actualDist, plannedDist, takenDist, depRun, arrRun, flightDuration, baggageClaim;
 
             axios({
               method: 'get',
@@ -127,8 +127,29 @@
               takenDist = Math.round(data.miniTracker.kilometersFromDeparture * 1.151) + "mi";
               console.log(actualDist, plannedDist, takenDist)
             })
-            
-            console.log(actualDist, plannedDist, takenDist)
+
+            .then(() => {
+            axios({
+              method: "get",
+              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api/extendedDetails/${aircode}/${flightnum}/${yr}/${month}/${day}/${flight.flightId}?rqid=t4u711r6ec`)}`
+            }).then(resp => {
+              console.log("DATA", resp.data)
+              let data = resp.data;
+              let depTimes = data.departureTimes;
+              if (depTimes.estimatedRunway) depRun = `${depTimes.estimatedRunway.time} ${depTimes.estimatedRunway.ampm} ${depTimes.estimatedRunway.timezone}`;
+              else if (depTimes.actualRunway) depRun = `${depTimes.actualRunway.time} ${depTimes.actualRunway.ampm} ${depTimes.actualRunway.timezone}`;
+              else depRun = "--";
+
+              let arrTimes = data.arrivalTimes;
+              if (arrTimes.estimatedRunway) arrRun = `${arrTimes.estimatedRunway.time} ${arrTimes.estimatedRunway.ampm} ${arrTimes.estimatedRunway.timezone}`;
+              else if (arrTimes.actualRunway) arrRun = `${arrTimes.actualRunway.time} ${arrTimes.actualRunway.ampm} ${arrTimes.actualRunway.timezone}`;
+              else arrRun = "--";
+
+              flightDuration = data.additionalFlightInfo.flightDuration.estimated;
+              baggageClaim = data.arrivalAirport.baggage;
+            })
+            .then(() => {
+              console.log(actualDist, plannedDist, takenDist)
             let speed, altitude
             if (flight.positional.flexTrack.positions.length > 0) {
              speed = Math.round(flight.positional.flexTrack.positions[0].speedMph) + "mph";
@@ -196,6 +217,10 @@
                 coordinates: coordinates,
                 speed: speedPoints,
                 altitude: altPoints,
+                runwayTimes: [depRun, arrRun],
+                userId: localStorage.getItem("login"),
+                flightDuration: flightDuration,
+                baggageClaim: baggageClaim
               },
               [
                 `read("user:${userId}")`, 
@@ -214,6 +239,8 @@
             }, function (error) {
               console.log(error);
             });
+            })
+            })
           });
       });
     });
