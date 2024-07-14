@@ -178,58 +178,29 @@
 
           let flight = response.fullData;
           function initMap() {
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
-            center: {
-              lat: 41.871314,
-              lng: -99.869580
-            },
-            mapTypeId: google.maps.MapTypeId.TERRAIN
-          });
+          var mapElem = document.getElementById('map');
+          var map = L.map(mapElem);
 
-          var Lat = [];
-          var Lng = [];
+          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+          var target = L.latLng('41.871314', '-99.869580');
+          map.setView(target, 4);
+
           let coords = JSON.parse(response.coordinates);
-          for (var i = 0; i < coords.length; i++) {
-            Lng.push(coords[i][1]);
-            Lat.push(coords[i][0]);
+          console.log(coords)
+
+          var path = L.polyline(
+              coords,
+              {"delay": 400, "weight": 2,"color": "black", "paused": true, "reverse": false}
+          ).addTo(map);
+          // 5. 
+          map.addLayer(path);
+          map.fitBounds(path.getBounds());
+          L.marker(coords[coords.length-1]).addTo(map)
           }
-          console.log(Lat, Lng)
-          var lineSymbol = {
-            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
-          };
 
-          var Poly = new Array();
-          for (var i = 0; i < Lat.length; i++) {
-            var pos = new google.maps.LatLng(Lat[i], Lng[i]);
-            Poly.push(pos);
-          }
-          var flowline = new google.maps.Polyline({
-            path: Poly,
-            geodesic: false,
-            strokeColor: "#DC143C",
-            strokeOpacity: .8,
-            strokeWeight: 2,
-            map: map
-          });
-
-          flowline.setMap(map);
-
-          const svgMarker = {
-            path: "M128,216,88,232V200l16-16V152L24,168V136l80-40V48a24,24,0,0,1,48,0V96l80,40v32l-80-16v32L168,200v32Z",
-            fillOpacity: 1,
-            strokeWeight: 0,
-            rotation: 0,
-            scale: 0.075,
-            anchor: new google.maps.Point(0, 0),
-          };
-
-          new google.maps.Marker({
-            position: { lat: Lat[0], lng: Lng[0] },
-            icon: svgMarker,
-            map: map,
-          });
-          }
           initMap();
 
           let speedPoints = JSON.parse(response.speed);
