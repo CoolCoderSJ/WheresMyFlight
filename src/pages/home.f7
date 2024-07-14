@@ -121,6 +121,7 @@
       
       if (trips == "[]") return console.log("no trips")
       trips = JSON.parse(trips)
+      trips.reverse()
       console.log(trips)
       trips.forEach(trip => {
         console.log("TRIP", trip)
