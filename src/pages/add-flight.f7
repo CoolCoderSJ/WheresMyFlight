@@ -48,9 +48,25 @@
               </li>
             </ul>
           </div>
+          <div class="list list-strong-ios list-outline-ios list-dividers-ios" style="margin-top: 0; margin-bottom: 0;">
+            <ul>
+              <li>
+                <a class="item-link smart-select smart-select-init" data-open-in="sheet">
+                  <select id="notifTargets" multiple>
+                    <option disabled>Select a target</option>
+                  </select>
+                  <div class="item-content">
+                    <div class="item-inner" id="notifTargetInner">
+                      <div class="item-title">Select Notification Targets</div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
         </form>
         <div class="block block-strong">
-          <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Get Data</a>
+          <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Add</a>
         </div>
       </div>
     </div>
@@ -71,14 +87,24 @@
 
   export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
+      let userId = localStorage.getItem("login");
+
+      databases.getDocument("settings", "prefs", userId).then(resp => {
+        console.log(resp)
+        if (resp.ntfyTopic) {
+          document.getElementById("notifTargets").innerHTML += `<option value="ntfy:${resp.ntfyTopic}" id="ntfy:${resp.ntfyTopic}">ntfy: ${resp.ntfyTopic}</option>`
+        }
+        resp.phoneNumbers.forEach(number => {
+          document.getElementById("notifTargets").innerHTML += `<option value="sms:${number.phoneNumber}" id="sms:${number.phoneNumber}">sms: ${number.phoneNumber}</option>`
+        });
+      })
+
       let date = $f7.calendar.create({
         inputEl: '#date',
         minDate: new Date(new Date().setDate(new Date().getDate()-3)),
         yearSelector: false,
         yearPicker: false
       });
-
-      let userId = localStorage.getItem("login");
 
       $('.convert-form-to-data').on('click', function () {
         var formData = $f7.form.convertToData('#form'); 
@@ -261,6 +287,8 @@
               altPoints = JSON.stringify(altPoints);
 
             console.log(airport, location, time, iataCode, gate);
+
+            let targets = $("#notifTargets").val();
             const promise = databases.createDocument(
               'data',
               'flights',
@@ -280,7 +308,8 @@
                 runwayTimes: [depRun, arrRun],
                 userId: localStorage.getItem("login"),
                 flightDuration: flightDuration,
-                baggageClaim: baggageClaim
+                baggageClaim: baggageClaim,
+                notificationTargets: targets
               },
               [
                 `read("user:${userId}")`, 

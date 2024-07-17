@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- Scrollable page content-->
-    <div class="page-content ptr-content" @ptr:refresh=${loadMore}>
+    <div class="page-content ptr-content" @ptr:refresh=${loadMore} style="overflow-x: hidden;">
       <div class="ptr-preloader">
         <div class="preloader"></div>
         <div class="ptr-arrow"></div>
@@ -44,17 +44,16 @@
         </div>
       </div>
       <div id="loggedInContent">
+        <div class="block" style="display: flex; gap: 16px;">
+          <a href="/add-flight" class="button button-fill" style="width: 100%;" onclick="navigator.vibrate(25);">Add Flight</a>
+          <a href="/add-trip" class="button button-fill" style="width: 100%;" onclick="navigator.vibrate(25);">New Trip</a>
+        </div>
+
       <div class="block-title">Trips</div>
-      <div class="block">
-        <a href="/add-trip" class="button button-fill" onclick="navigator.vibrate(25);">New Trip</a>
-      </div>
       <div id="tripslist"></div>
       <br></br>
 
       <div class="block-title">All Flights</div>
-        <div class="block">
-          <a href="/add-flight" class="button button-fill" onclick="navigator.vibrate(25);">Add Flight</a>
-        </div>
         <div id="flightslist">
         </div>
         <br></br>

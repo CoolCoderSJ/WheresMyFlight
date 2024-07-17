@@ -146,7 +146,7 @@
 
       let flights = trip.flights;
       console.log(flights)
-      flights.reverse();
+      // flights.reverse();
 
       let flightCodes = [];
       for (let i=0; i<flights.length; i++) {
@@ -255,6 +255,34 @@
         if (flights[i].baggageClaim) bstr = "Baggage Claim " + flights[i].baggageClaim
 
         console.log(flightslist)
+        let edt = new Date(Date.parse(flights[i].fullData[20]));
+        console.log(i, "EDT", edt)
+
+        if (i != 0) {
+          let prevEat = new Date(Date.parse(flights[i-1].fullData[23]));
+          let timeDiff = edt - prevEat;
+          console.log(i, "prevEat", prevEat)
+          console.log(i, "TIME DIFF", timeDiff)
+
+          if (timeDiff < 86400000) {
+            console.log(i, "TIME DIFF", timeDiff)
+            let hours = Math.floor(timeDiff / 3600000);
+            let minutes = Math.floor((timeDiff - (hours * 3600000)) / 60000);
+            console.log(i, "HOURS", hours)
+            console.log(i, "MINUTES", minutes)
+            
+            flightslist.innerHTML += `<p style="width: 100%; text-align: center; color: #d8d8d8; font-weight: 700;">${hours}h ${minutes}min layover</p>`
+          }
+          
+          else {
+            flightslist.innerHTML += `<div class="block-title" style="margin-top: 100px; margin-left: 20px;">${new Date(flights[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</div>`
+          }
+        }
+
+        else {
+          flightslist.innerHTML += `<div class="block-title" style="margin-left: 20px;">${new Date(flights[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</div>`
+        }
+        
         flightslist.innerHTML += `
             <div class="card demo-card-header-pic flightCard" id="trip_${flights[i].$id}card" onclick="navigator.vibrate(25);">
               <a href="/flight/${flights[i].$id}">
