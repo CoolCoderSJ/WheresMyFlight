@@ -252,7 +252,7 @@
               </div>
               <div class="card-row bottom-bar" style="background-color: black;">
                   <div class="airportrow"><p class="mt-0 mb-0" style="font-weight: bold;">${docs[i].flightId} &bull; <span style="font-weight: normal !important">${new Date(docs[i].scheduledTime[0].split("+")[0]).toDateString().split(" ").splice(1,3).join(" ")}</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: normal !important;">${bstr}</span></p></div>
-                  <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; width: 100%; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].$id}img" crossorigin="anonymous"></div>
+                  <div class="airportrow"><img class="mb-0 mt-0" style="scale: 0.8; height: 25px; object-fit: fill;" src="https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/${docs[i]['iata-code']}.svg" id="${docs[i].$id}img" crossorigin="anonymous"></div>
               </div>
             </div>
           </a>
