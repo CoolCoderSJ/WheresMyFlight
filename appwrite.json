@@ -20,6 +20,25 @@
                 "__pypackages__"
             ],
             "path": "functions/send-verification"
+        },
+        {
+            "$id": "seat-id",
+            "name": "seat-id",
+            "runtime": "python-3.9",
+            "execute": [
+                "users"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 60,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "ignore": [
+                "__pypackages__"
+            ],
+            "path": "functions/seat-id"
         }
     ]
 }

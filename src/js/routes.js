@@ -10,6 +10,7 @@ import LoginPage from '../pages/login.f7';
 import SettingsPage from '../pages/settings.f7';
 import AddTripPage from '../pages/add-trip.f7';
 import TripPage from '../pages/trip.f7';
+import SeatsPage from '../pages/seats.f7';
 
 var routes = [
   {
@@ -51,6 +52,10 @@ var routes = [
   {
     path: '/trip/:tripId',
     component: TripPage,
+  },
+  {
+    path: '/seats/:flightId',
+    component: SeatsPage,
   },
   {
     path: '(.*)',

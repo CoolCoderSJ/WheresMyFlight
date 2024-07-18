@@ -18,6 +18,7 @@
       </div>
       <div class="block" id="btnsblock" style="display: flex; gap: 20px;">
         <a href="${$f7route.path + '/passes'}" class="button button-fill" style="width: 100%" onclick="navigator.vibrate(25);">Boarding Passes</a>
+        <a href="${$f7route.path.replace('flight', 'seats')}" class="button button-fill" style="width: 100%" onclick="navigator.vibrate(25);">Seats</a>
       </div>
       <div class="timeline">
         <div class="timeline-item">

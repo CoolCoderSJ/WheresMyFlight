@@ -1,0 +1,55 @@
+<template>
+    <div class="page" style="overflow-y: hidden;">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
+          <div class="left">
+            <a href="#" class="link back">
+              <i class="icon icon-back"></i>
+              <span class="if-not-md">Back</span>
+            </a>
+          </div>
+          <div class="title">Seats</div>
+        </div>
+      </div>
+      <div class="page-content" id="pageContent" style="display: flex; justify-content: center;">
+        
+      </div>
+    </div>
+  </template>
+  <style>
+    p {
+      margin: 10px 0;
+    }
+  </style>
+  <script>
+    const { Client, Databases, ID, Query, Functions } = Appwrite;
+    const client = new Client();
+    client
+      .setEndpoint('https://appwrite.shuchir.dev/v1')
+      .setProject('wheresmyflight');
+    const databases = new Databases(client);
+    const functions = new Functions(client);
+
+    export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+      $on("pageInit", () => {
+        let flightId = $f7route.path.replace("/seats/", "");
+        let userId = localStorage.getItem('userId');
+
+        functions.createExecution(
+            'seat-id',
+            flightId,
+            false
+        ).then(result => {
+            console.log("initial", result)
+            let craftId = result.responseBody
+            $("#pageContent").html(`<iframe style="height: 100%" id="seat-map-iframe" title="Seat map" class="seat-map" data-uid="${craftId}" src="https://seatmaps.com/seatmaps/${craftId}.html?seatbar=hide" frameborder="0"></iframe>`)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+
+    });
+      return $render;
+    }
+  </script>
