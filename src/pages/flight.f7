@@ -246,7 +246,7 @@
             // 5. 
             map.addLayer(path);
             map.fitBounds(path.getBounds());
-            L.marker(coords[coords.length-1]).addTo(map)
+            L.marker(coords[0]).addTo(map)
           }
           }
 

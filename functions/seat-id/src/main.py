@@ -30,7 +30,13 @@ def main(context):
     context.log(r)
 
     data = r['routes']
-    if not data: return context.res.empty()
+    if not data: return context.res.json([])
 
     context.log("found")
-    return context.res.send(data[0]['aircrafts'][0]['planeId'])
+    d = []
+    for i in data[0]['aircrafts']:
+        d.append({
+            "planeId": i['planeId'],
+            "aircraft": i['name']
+        })
+    return context.res.json(d)

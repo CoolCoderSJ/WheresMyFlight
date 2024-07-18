@@ -12,8 +12,17 @@
           <div class="title">Seats</div>
         </div>
       </div>
-      <div class="page-content" id="pageContent" style="display: flex; justify-content: center;">
-        
+      <div class="page-content" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="item-content item-input item-input-outline" style="width: 300px;">
+            <div class="item-inner">
+                <div class="item-title item-label">Aircraft Type</div>
+                <div class="item-input-wrap input-dropdown-wrap">
+                <select name="craft" id="craftSelect" style="padding-left: 15px;">
+                </select>
+                </div>
+            </div>
+        </div>
+        <div id="pageContent" style="height: 100%;"></div>
       </div>
     </div>
   </template>
@@ -36,17 +45,30 @@
         let flightId = $f7route.path.replace("/seats/", "");
         let userId = localStorage.getItem('userId');
 
-        functions.createExecution(
+        databases.getDocument("data", "flights", flightId).then(flight => {
+            functions.createExecution(
             'seat-id',
             flightId,
             false
         ).then(result => {
             console.log("initial", result)
-            let craftId = result.responseBody
-            $("#pageContent").html(`<iframe style="height: 100%" id="seat-map-iframe" title="Seat map" class="seat-map" data-uid="${craftId}" src="https://seatmaps.com/seatmaps/${craftId}.html?seatbar=hide" frameborder="0"></iframe>`)
+            let resp = JSON.parse(result.responseBody)
+            for (let i=0; i<resp.length; i++) {
+                let craft = resp[i];
+                $("#craftSelect").append(`<option value="${craft.planeId}">${craft.aircraft}</option>`)
+            }
+            let craftId = $("#craftSelect").val();
+            if (resp.length > 0) $("#pageContent").html(`<iframe style="height: 100%" id="seat-map-iframe" title="Seat map" class="seat-map" data-uid="${craftId}" src="https://seatmaps.com/seatmaps/${craftId}.html?seatbar=hide" frameborder="0"></iframe>`)
+            else $("#pageContent").html(`<p>No seat map available. You can view all seatmaps for this airline <a class="link external" target="_blank" href="https://www.aerolopa.com/${flight.fullData[25]}">here</a></p>`)
+
+            $("#craftSelect").on("change", function() {
+                let craftId = $(this).val();
+                $("#pageContent").html(`<iframe style="height: 100%" id="seat-map-iframe" title="Seat map" class="seat-map" data-uid="${craftId}" src="https://seatmaps.com/seatmaps/${craftId}.html?seatbar=hide" frameborder="0"></iframe>`)
+            })
         })
         .catch(err => {
             console.error(err)
+        })
         })
 
     });
