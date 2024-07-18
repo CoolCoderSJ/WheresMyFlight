@@ -252,7 +252,7 @@
         else terminals[1] = "Terminal " + terminals[1]
 
         let bstr = ""
-        if (flights[i].baggageClaim) bstr = "Baggage Claim " + flights[i].baggageClaim
+        if (flights[i].baggageClaim) bstr = "Claim " + flights[i].baggageClaim
 
         console.log(flightslist)
         let edt = new Date(Date.parse(flights[i].fullData[20]));

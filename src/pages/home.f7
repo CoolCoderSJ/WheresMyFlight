@@ -231,7 +231,7 @@
       else terminals[1] = "Terminal " + terminals[1]
 
       let bstr = ""
-      if (docs[i].baggageClaim) bstr = "Baggage Claim " + docs[i].baggageClaim
+      if (docs[i].baggageClaim) bstr = "Claim " + docs[i].baggageClaim
 
       console.log(flightslist)
       flightslist.innerHTML += `
