@@ -124,12 +124,12 @@
                   <div class="airportrow"><p class="kindofbig">${seat}</p></div>
               </div><br>
               <div class="card-row" style="justify-content: center;">
-                  <canvas id="${i}canvas" style="padding: 10px; background: #fff; border-radius: 8px;"></canvas>
+                  <canvas id="${i}canvas${k}" style="padding: 10px; background: #fff; border-radius: 8px;"></canvas>
               </div>
             </div>
           </div>`
 
-        setTimeout(() => {bwipjs.toCanvas(`${i}canvas`, {
+        setTimeout(() => {bwipjs.toCanvas(`${i}canvas${k}`, {
                 bcid:        passes[i].format == "AZTEC" ? "azteccode" : passes[i].format,       // Barcode type
                 text:        passes[i].data,    // Text to encode
                 scale:       3,               // 3x scaling factor
