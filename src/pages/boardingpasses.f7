@@ -105,11 +105,6 @@
                 let passesContainer = document.getElementById("passes")
                 passesContainer.innerHTML += `<div class="card demo-card-header-pic" id="${i}card">
             <div class="card-content card-content-padding">
-                <br>
-                <div class="card-row">
-                  <div class="airportrow"><p class="mt-0 mb-0">${flight.location[0]}</p></div>
-                  <div class="airportrow"><p class="mt-0 mb-0">${flight.location[1]}</p></div>
-              </div>
               <div class="card-row">
                 <div class="airportrow"><p class="big">${depAir}</p></div>
                 <div class="airportrow"><p class="big">${arrAir}</p></div>
@@ -124,12 +119,12 @@
                   <div class="airportrow"><p class="kindofbig">${seat}</p></div>
               </div><br>
               <div class="card-row" style="justify-content: center;">
-                  <canvas id="${i}canvas" style="padding: 10px; background: #fff; border-radius: 8px;"></canvas>
+                  <canvas id="${i}canvas${k}" style="padding: 10px; background: #fff; border-radius: 8px;"></canvas>
               </div>
             </div>
           </div>`
 
-        setTimeout(() => {bwipjs.toCanvas(`${i}canvas`, {
+        setTimeout(() => {bwipjs.toCanvas(`${i}canvas${k}`, {
                 bcid:        passes[i].format == "AZTEC" ? "azteccode" : passes[i].format,       // Barcode type
                 text:        passes[i].data,    // Text to encode
                 scale:       3,               // 3x scaling factor

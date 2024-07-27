@@ -42,14 +42,20 @@
           let text = decodedText
           let data = bcbp.decode(text)
           console.log(data)
+
+          let deltacode;
+          for (let i=0; i<data.data.legs.length; i++) {
+            if (data.data.legs[i].operatingCarrierDesignator == "DL") {
+              deltacode = data.data.legs[i].operatingCarrierPNR
+            }
+          }
          
-         for (let i=0; i<data.data.legs.length; i++) {
           console.log("uploading pass...")
           databases.createDocument('data', 'passes', ID.unique(), {
             flightId: flightId,
             data: decodedText,
             format: "AZTEC",
-            deltacode: data.data.legs[i].operatingCarrierDesignator == "DL" ? data.data.legs[i].operatingCarrierPNR : null
+            deltacode: deltacode
           },
         [
           `read("user:${userId}")`, 
@@ -61,7 +67,7 @@
           .catch((error) => {
             console.error(error);
           });
-          }
+
           $f7.dialog.alert('Boarding pass uploaded successfully', 'Success', () => {
             databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
             localStorage.setItem("passes", JSON.stringify(resp.documents))
