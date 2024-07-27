@@ -9,7 +9,7 @@
               <span class="if-not-md">Back</span>
             </a>
           </div>
-          <div class="title" id="title">Boarding Passes</div>
+          <div class="title" id="bpass-title">Boarding Passes</div>
         </div>
       </div>
       <div class="page-content ptr-content" @ptr:refresh=${loadMore}>
@@ -47,7 +47,7 @@
         let flightCode = null;
         databases.getDocument("data", "flights", flightId).then((data) => {
           console.log(data)
-          document.getElementById("title").innerHTML = `Flight ${data.flightId} Boarding Passes`
+          document.getElementById("bpass-title").innerHTML = `Flight ${data.flightId} Boarding Passes`
           console.log(`Flight ${data.flightId} Boarding Passes`)
           flightCode = data.flightId
         })

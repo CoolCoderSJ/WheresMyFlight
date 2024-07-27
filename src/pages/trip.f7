@@ -27,7 +27,7 @@
             <span class="if-not-md">Back</span>
           </a>
         </div>
-        <div class="title" id="title"></div>
+        <div class="title" id="trip-title"></div>
       </div>
     </div>
     <!-- Scrollable page content-->
@@ -142,7 +142,7 @@
     }
 
       console.log(trip)
-      $("#title").html(trip.name)
+      $("#trip-title").html(trip.name)
 
       let flights = trip.flights;
       console.log(flights)
