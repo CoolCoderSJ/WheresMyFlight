@@ -228,8 +228,8 @@
           var mapElem = document.getElementById('map');
           var map = L.map(mapElem);
 
-          L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-              attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+            attribution: '© <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           }).addTo(map);
 
           var target = L.latLng('41.871314', '-99.869580');
@@ -241,13 +241,74 @@
           if (coords.length > 0) {
             var path = L.polyline(
                 coords,
-                {"delay": 400, "weight": 2,"color": "black", "paused": true, "reverse": false}
+                {"delay": 400, "weight": 2,"color": "#21de97", "paused": true, "reverse": false}
             ).addTo(map);
             // 5. 
             map.addLayer(path);
             map.fitBounds(path.getBounds());
             L.marker(coords[0]).addTo(map)
           }
+
+          let aircode = response['iata-code'];
+          let flightnum = response.flightId.slice(2);
+          let now = new Date();
+          let yr = now.getFullYear();
+          let month = now.getMonth() + 1;
+          let day = now.getDate() + 1;
+
+          let plan = [];
+          
+          try {
+            plan = JSON.parse(response.flightPlan);
+          }
+          catch {
+          }
+
+          if (!plan) plan = [];
+          console.log(plan)
+
+          if (plan.length > 0) {
+            var path = L.polyline(
+                plan,
+                {"delay": 400, "weight": 2,"color": "#4499ff", "paused": true, "reverse": false, "dashArray": [10, 15]}
+              ).addTo(map);
+              // 5. 
+              map.addLayer(path);
+          }
+
+          else {
+          axios({
+          method: 'get',
+          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/`)}`,
+          })
+          .then(function (response) {
+            console.log(response)
+            axios({
+              method: 'get',
+              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${response.data.data.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&flightPlan=true&rqid=0gjukufd01k`)}`,
+            }).then(resp => {
+              let data = resp.data.data;
+              console.log(data)
+              let flightPlan = data.flightPlan;
+              console.log(flightPlan)
+              
+              let plan = [];
+              for (let i=0; i<flightPlan.length; i++) {
+                let point = flightPlan[i];
+                plan.push([point.lat, point.lon])
+              }
+
+              var path = L.polyline(
+                plan,
+                {"delay": 400, "weight": 2,"color": "#4499ff", "paused": true, "reverse": false, "dashArray": [10, 15]}
+              ).addTo(map);
+              // 5. 
+              map.addLayer(path);
+
+            })
+          })
+          }
+
           }
 
           initMap();

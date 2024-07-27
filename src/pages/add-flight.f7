@@ -179,7 +179,7 @@
 
             let location = [originCity, destinationCity];
 
-            let actualDist, plannedDist, takenDist, depRun, arrRun, flightDuration, baggageClaim;
+            let actualDist, plannedDist, takenDist, depRun, arrRun, flightDuration, baggageClaim, plan;
 
             axios({
               method: 'get',
@@ -190,6 +190,17 @@
               plannedDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
               takenDist = Math.round(data.miniTracker.kilometersFromDeparture * 1.151) + "mi";
               console.log(actualDist, plannedDist, takenDist)
+
+              let flightPlan = data.flightPlan;
+              console.log(flightPlan)
+              
+              plan = [];
+              for (let i=0; i<flightPlan.length; i++) {
+                let point = flightPlan[i];
+                plan.push([point.lat, point.lon])
+              }
+              console.log(plan)
+              plan = JSON.stringify(plan);
             })
 
             .then(() => {
@@ -309,7 +320,8 @@
                 userId: localStorage.getItem("login"),
                 flightDuration: flightDuration,
                 baggageClaim: baggageClaim,
-                notificationTargets: targets
+                notificationTargets: targets,
+                flightPlan: plan
               },
               [
                 `read("user:${userId}")`, 
