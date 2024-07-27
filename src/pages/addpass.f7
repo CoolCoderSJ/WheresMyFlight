@@ -43,10 +43,10 @@
           let data = bcbp.decode(text)
           console.log(data)
 
-          let deltacode;
+          let confcode;
           for (let i=0; i<data.data.legs.length; i++) {
-            if (data.data.legs[i].operatingCarrierDesignator == "DL") {
-              deltacode = data.data.legs[i].operatingCarrierPNR
+            if (data.data.legs[i].operatingCarrierDesignator == "DL" || data.data.legs[i].operatingCarrierDesignator == "UA") {
+              confcode = data.data.legs[i].operatingCarrierPNR
             }
           }
          
@@ -55,7 +55,7 @@
             flightId: flightId,
             data: decodedText,
             format: "AZTEC",
-            deltacode: deltacode
+            confcode: confcode
           },
         [
           `read("user:${userId}")`, 
