@@ -85,7 +85,7 @@
     .setProject('wheresmyflight');
   const databases = new Databases(client);
 
-  export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+  export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
     $on('pageInit', () => {
       let userId = localStorage.getItem("login");
 
@@ -329,14 +329,37 @@
               ]
             );
 
+            databases.listDocuments('data', 'flights').then((resp) => {
+              localStorage.setItem("data", JSON.stringify(resp.documents))
+              console.log(resp)
+            })
+
             promise.then(function (response) {
-              $f7.dialog.close();
-              console.log(response);
-              databases.listDocuments('data', 'flights').then((resp) => {
-                localStorage.setItem("data", JSON.stringify(resp.documents))
-                console.log(resp)
-                })
-              $f7.views.main.router.navigate(`/flight/${response.$id}`);
+              console.log($f7route.path)
+              if (!$f7route.path.endsWith("add-flight")) {
+                  let tripId = $f7route.path.split("/")[2];
+                  databases.getDocument("data", "trips", tripId).then((data) => {
+                    databases.updateDocument("data", "trips", tripId, {
+                      flights: [...data.flights, response.$id]
+                    }).then((response) => {
+                      databases.listDocuments("data", "trips").then((data) => {
+                        console.log(data)
+                        localStorage.setItem("trips", JSON.stringify(data.documents))
+                        $f7.dialog.close();
+                        $f7.dialog.alert('Saved successfully', () => {
+                          $f7.views.main.router.navigate('/trip/'+response.$id);
+                        });
+                      });
+                    });
+                  });
+                }
+              
+                else {
+                  $f7.dialog.close();
+                console.log(response);
+                $f7.views.main.router.navigate(`/flight/${response.$id}`);
+                }
+
             }, function (error) {
               console.log(error);
             });

@@ -86,9 +86,35 @@
         let userId = localStorage.getItem("login");
   
         $('.convert-form-to-data').on('click', function () {
+          if ($f7route.path.startsWith("/trip/edit")) {
+            var formData = $f7.form.convertToData('#form'); 
+            $f7.dialog.preloader('Editing...');
+
+            databases.updateDocument("data", "trips", $f7route.path.split("/")[3], {
+              name: formData.name,
+              start: new Date(formData.dates.split(" - ")[0]),
+              end: new Date(formData.dates.split(" - ")[1]),
+              userId: userId
+            }).then((response) => {
+              databases.listDocuments("data", "trips").then((data) => {
+                console.log(data)
+                localStorage.setItem("trips", JSON.stringify(data.documents))
+                $f7.dialog.close();
+                $f7.dialog.alert('Saved successfully', () => {
+                  $f7.views.main.router.navigate('/trip/'+response.$id);
+                });
+              });
+            }).catch((error) => {
+              console.warn(error)
+              $f7.dialog.close();
+              $f7.dialog.alert('Error creating trip');
+            });
+
+          }
+
+          else {
           var formData = $f7.form.convertToData('#form'); 
           $f7.dialog.preloader('Creating...');
-
 
           databases.createDocument("data", "trips", ID.unique(), {
             name: formData.name,
@@ -112,6 +138,8 @@
             $f7.dialog.close();
             $f7.dialog.alert('Error creating trip');
           });
+
+        }
       });
     });
   

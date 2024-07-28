@@ -38,6 +38,10 @@ var routes = [
     component: AddFlightPage,
   },
   {
+    path: '/add-flight/:tripId',
+    component: AddFlightPage,
+  },
+  {
     path: '/add-pass/:flightId',
     component: AddPassPage,
   },

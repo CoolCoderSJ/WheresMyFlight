@@ -59,7 +59,7 @@
         <div id="flightslistTrip">
         </div>
         <br></br>
-        <a href="/add-flight" class="button button-tonal" id="add_flight" style="margin: 20px;" onclick="navigator.vibrate(25);">Add Flight</a>
+        <a href="/add-flight/${$f7route.path.replace('/trip/', '')}" class="button button-tonal" id="add_flight" style="margin: 20px;" onclick="navigator.vibrate(25);">Add Flight</a>
         
         <div style="display: flex; width: 100%;">
           <a href="/trip/edit/${$f7route.path.replace('/trip/', '')}" class="button button-tonal" style="margin: 20px; width: 100%; margin-top: 5px; margin-right: 8px;" onclick="navigator.vibrate(25);">Edit</a>
