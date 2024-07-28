@@ -9,7 +9,7 @@
               <span class="if-not-md">Back</span>
             </a>
           </div>
-          <div class="title">New Trip</div>
+          <div class="title" id="newTripTitle">New Trip</div>
         </div>
       </div>
       <div class="page-content">
@@ -19,7 +19,7 @@
               <ul>
                 <li class="item-content item-input item-input-outline">
                   <div class="item-inner">
-                    <div class="item-title item-floating-label">Trip Name</div>
+                    <div class="item-title item-label">Trip Name</div>
                     <div class="item-input-wrap">
                       <input type="text" placeholder="Trip Name" id="name" name="name" />
                       <span class="input-clear-button"></span>
@@ -27,32 +27,20 @@
                   </div>
                 </li>
 
-                <div class="grid grid-cols-2">
-                    <li class="item-content item-input item-input-outline">
-                        <div class="item-inner">
-                          <div class="item-title item-floating-label">Start Date</div>
-                          <div class="item-input-wrap">
-                            <input type="text" placeholder="Start Date" id="start" name="start" />
-                            <span class="input-clear-button"></span>
-                          </div>
-                        </div>
-                    </li>
-
-                    <li class="item-content item-input item-input-outline">
+                <li class="item-content item-input item-input-outline">
                     <div class="item-inner">
-                        <div class="item-title item-floating-label">End Date</div>
-                        <div class="item-input-wrap">
-                        <input type="text" placeholder="End Date" id="end" name="end" />
+                      <div class="item-title item-label">Dates</div>
+                      <div class="item-input-wrap">
+                        <input type="text" placeholder="Dates" id="dates" name="dates" />
                         <span class="input-clear-button"></span>
-                        </div>
+                      </div>
                     </div>
-                    </li>
-                </div>
+                </li>
               </ul>
             </div>
           </form>
           <div class="block block-strong">
-            <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Create</a>
+            <a id="mainBtn" class="button button-tonal convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Create</a>
           </div>
         </div>
       </div>
@@ -71,14 +59,29 @@
       .setProject('wheresmyflight');
     const databases = new Databases(client);
   
-    export default function (props, { $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
+    export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
       $on('pageInit', () => {
         let date = $f7.calendar.create({
-          inputEl: '#start',
+          inputEl: '#dates',
+          rangePicker: true,
         });
-        let date2 = $f7.calendar.create({
-          inputEl: '#end',
-        });
+
+
+        if ($f7route.path.startsWith("/trip/edit")) {
+          let tripId = $f7route.path.split("/")[3];
+          databases.getDocument("data", "trips", tripId).then((data) => {
+            console.log(data)
+            document.getElementById("name").value = data.name;
+
+            let start = new Date(data.start);
+            let end = new Date(data.end);
+
+            date.setValue([start, end]);
+
+            document.getElementById("mainBtn").innerHTML = "Update";
+            document.getElementById("newTripTitle").innerHTML = "Edit Trip";
+          });
+        }
   
         let userId = localStorage.getItem("login");
   
@@ -86,10 +89,11 @@
           var formData = $f7.form.convertToData('#form'); 
           $f7.dialog.preloader('Creating...');
 
+
           databases.createDocument("data", "trips", ID.unique(), {
             name: formData.name,
-            start: new Date(formData.start),
-            end: new Date(formData.end),
+            start: new Date(formData.dates.split(" - ")[0]),
+            end: new Date(formData.dates.split(" - ")[1]),
             userId: userId
           }, [
             `read("user:${userId}")`, 
@@ -99,7 +103,7 @@
               console.log(data)
               localStorage.setItem("trips", JSON.stringify(data.documents))
               $f7.dialog.close();
-              $f7.dialog.alert('Trip created successfully', () => {
+              $f7.dialog.alert('Saved successfully', () => {
                 $f7.views.main.router.navigate('/trip/'+response.$id);
               });
             });

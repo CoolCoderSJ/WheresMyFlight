@@ -54,6 +54,10 @@ var routes = [
     component: TripPage,
   },
   {
+    path: '/trip/edit/:tripId',
+    component: AddTripPage,
+  },
+  {
     path: '/seats/:flightId',
     component: SeatsPage,
   },

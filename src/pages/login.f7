@@ -41,7 +41,7 @@
             </div>
           </form>
           <div class="block block-strong">
-            <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Login</a>
+            <a class="button button-tonal convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Login</a>
           </div>
         </div>
       </div>

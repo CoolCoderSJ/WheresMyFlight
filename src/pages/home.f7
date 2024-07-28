@@ -19,7 +19,7 @@
       }
      </style>
     <div class="navbar navbar-large">
-      <div class="navbar-bg" style="background-color: #201c1c"></div>
+      <div class="navbar-bg" style="background-color: #151515"></div>
       <div class="navbar-inner">
         <div class="title sliding">WheresMyFlight</div>
         <div class="title-large">
@@ -40,13 +40,13 @@
       </div>
       <div id="loggedOutContent" style="display: none;">
         <div class="block">
-          <a href="/login" class="button button-fill" onclick="navigator.vibrate(25);">Login/Signup</a>
+          <a href="/login" class="button button-tonal" onclick="navigator.vibrate(25);">Login/Signup</a>
         </div>
       </div>
       <div id="loggedInContent">
         <div class="block" style="display: flex; gap: 16px;">
-          <a href="/add-flight" class="button button-fill" style="width: 100%;" onclick="navigator.vibrate(25);">Add Flight</a>
-          <a href="/add-trip" class="button button-fill" style="width: 100%;" onclick="navigator.vibrate(25);">New Trip</a>
+          <a href="/add-flight" class="button button-tonal" style="width: 100%;" onclick="navigator.vibrate(25);">Add Flight</a>
+          <a href="/add-trip" class="button button-tonal" style="width: 100%;" onclick="navigator.vibrate(25);">New Trip</a>
         </div>
 
       <div class="block-title">Trips</div>

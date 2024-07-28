@@ -66,7 +66,7 @@
           </div>
         </form>
         <div class="block block-strong">
-          <a class="button button-fill convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Add</a>
+          <a class="button button-tonal convert-form-to-data" href="#" onclick="navigator.vibrate(25);">Add</a>
         </div>
       </div>
     </div>

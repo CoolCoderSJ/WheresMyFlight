@@ -99,3 +99,7 @@
   margin-right: 15px; 
   border-radius: 6px;
 }
+
+:root {
+  --f7-page-bg-color: #151515;
+}

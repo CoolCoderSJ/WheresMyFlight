@@ -42,7 +42,7 @@
             </div>
           </form>
           <div class="block block-strong">
-            <a class="button button-fill saveNtfy" href="#" onclick="navigator.vibrate(25);">Save</a>
+            <a class="button button-tonal saveNtfy" href="#" onclick="navigator.vibrate(25);">Save</a>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
                       </div>
                   </li>
                   <div class="block block-strong" style="margin-top: 13px; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
-                    <a class="button button-fill" id="savePhoneButton" href="#" onclick="navigator.vibrate(25);">Add</a>
+                    <a class="button button-tonal" id="savePhoneButton" href="#" onclick="navigator.vibrate(25);">Add</a>
                   </div>
                 </ul>
               </div>
@@ -160,7 +160,7 @@
             if (response.phoneNumbers) {
                 $("#phoneNums").html(`<div class="block-title">Saved Numbers:</div>`)
                 response.phoneNumbers.forEach(phone => {
-                    document.getElementById("phoneNums").innerHTML += `<div class="grid grid-cols-4" style="width: fit-content; align-items: center;">
+                    document.getElementById("phoneNums").innerHTML += `<div class="grid grid-cols-4" style="width: 100%; align-items: center;">
                     <p style="margin-left: 15px;">+1&nbsp;${phone.phoneNumber} (${phone.verified ? 'Verified' : 'Not Verified'})</p>
                     ${phone.verified ? '' : `<li class="item-content item-input item-input-outline">
                         <div class="item-inner">
@@ -172,12 +172,12 @@
                         </div>
                     </li>
                     <div class="block block-strong" style="margin-top: 0; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
-                        <a class="button button-fill" href="#" onclick="navigator.vibrate(25); verifyNumber('${phone.phoneNumber}')">Verify</a>
+                        <a class="button button-tonal" href="#" onclick="navigator.vibrate(25); verifyNumber('${phone.phoneNumber}')">Verify</a>
                     </div>`}
 
                     <div>
                         <div class="block block-strong" style="margin-top: 0; padding-top: 0; height: fit-content; margin-bottom: 0; padding-bottom: 0;">
-                            <a class="button button-fill color-red" href="#" onclick="navigator.vibrate(25); deleteNumber('${phone.phoneNumber}')">Delete</a>
+                            <a class="button button-tonal color-red" href="#" style="width: fit-content; padding-left: 10px; padding-right: 10px;" onclick="navigator.vibrate(25); deleteNumber('${phone.phoneNumber}')"><i class="icon" style="height: 24px"><span class="material-icons">delete</span></i></a>
                         </div>
                     </div>
                     </div>
