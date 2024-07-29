@@ -1,99 +1,43 @@
 # WheresMyFlight
 
-## Framework7 CLI Options
+WheresMyFlight is a cross-platform application that allows users to track their flights in real-time. The application is built using framework7 and compiled using Apache cordova. The app uses internal Flightstats/Cirium APIs, United APIs, Delta APIs, and seatmaps.com for its functionality.
 
-Framework7 app created with following options:
+## Usage
+- iOS: The app can be found on the app store [here](https://apple.com) (not yet published)
+- Android: The app is not on the Play Store, but can be downloaded using the APK file found in the releases tab.
+- Web: The app can be accessed [here](https://flights.shuchir.dev) in the browser as well. It is not required to install the app.
 
-```
-{
-  "cwd": "C:\\Users\\shuch\\WheresMyFlight",
-  "type": [
-    "pwa",
-    "cordova"
-  ],
-  "name": "WheresMyFlight",
-  "framework": "core",
-  "template": "single-view",
-  "bundler": "vite",
-  "cssPreProcessor": false,
-  "theming": {
-    "customColor": true,
-    "color": "#007aff",
-    "darkMode": true,
-    "iconFonts": true
-  },
-  "customBuild": false,
-  "pkg": "dev.shuchir.wheresmyflight",
-  "cordova": {
-    "folder": "cordova",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "plugins": [
-      "cordova-plugin-keyboard",
-      "cordova-plugin-splashscreen"
-    ]
-  }
-}
-```
+## Features
+- Track flights in real-time
+  - Get live updates on the flight's status via text messages or ntfy push notifications.
+- Rich flight information
+  - View a flight's gate times, runway times, terminal/gate numbers, baggage carousel number, speed, altitude, live position, distance, and more from the app. 
+- Live positional tracking
+  - See exactly where your plane is and how much it has left to go.
+- Boarding passes
+  - Convert paper boarding passes to digital ones (tested) and store them in the app. Alternatively, you can import your digital boarding passes from your flight's app using just a screenshot. 
+- Seatmaps
+  - View the seatmap of your flight and see rich details for each seat before you board.
+- Itinerary
+  - View your entire trip's itinerary in one place- See flight details as well as layover times automatically when you create a trip.
+- Offline Access
+  - Lost internet connection? No problem! The app stores all your flight data offline and syncs it when you're back online.
+- Multiple Notification Targets
+  - Keep family members in the loop by sending them updates on your flight's status as well.
+- Track your bags
+  - Get notified when your bags are loaded onto the plane and when they are unloaded, as well as when they reach the baggage carousel. Only for Delta and United flights.
 
-## Install Dependencies
+## Development
+- The frontend, this repository, is built using Framework7 and compiled using Apache Cordova. It communicates with a custom server as well as an Appwrite instance for user data.
+- The backend, the server, is built using Python. More info can be found [here](https://github.com/CoolCoderSJ/WMF-Server).
 
-First of all we need to install dependencies, run in terminal
-```
-npm install
-```
+The server is currently not setup for self-hosting. Please contact me if you would like to self-host.
 
-## NPM Scripts
-
-* 🔥 `start` - run development server
-* 🔧 `dev` - run development server
-* 🔧 `build` - build web app for production
-* 📱 `build-cordova` - build cordova app
-* 📱 `build-cordova-ios` - build cordova iOS app
-* 📱 `cordova-ios` - run dev build cordova iOS app
-* 📱 `build-cordova-android` - build cordova Android app
-* 📱 `cordova-android` - run dev build cordova Android app
-
-## Vite
-
-There is a [Vite](https://vitejs.dev) bundler setup. It compiles and bundles all "front-end" resources. You should work only with files located in `/src` folder. Vite config located in `vite.config.js`.
-
-## PWA
-
-This is a PWA. Don't forget to check what is inside of your `service-worker.js`. It is also recommended that you disable service worker (or enable "Update on reload") in browser dev tools during development.
-
-## Cordova
-
-Cordova project located in `cordova` folder. You shouldn't modify content of `cordova/www` folder. Its content will be correctly generated when you call `npm run cordova-build-prod`.
-## Assets
-
-Assets (icons, splash screens) source images located in `assets-src` folder. To generate your own icons and splash screen images, you will need to replace all assets in this directory with your own images (pay attention to image size and format), and run the following command in the project directory:
-
-```
-framework7 assets
-```
-
-Or launch UI where you will be able to change icons and splash screens:
-
-```
-framework7 assets --ui
-```
-
-
-
-## Documentation & Resources
-
-* [Framework7 Core Documentation](https://framework7.io/docs/)
-
-
-
-* [Framework7 Icons Reference](https://framework7.io/icons/)
-* [Community Forum](https://forum.framework7.io)
-
-## Support Framework7
-
-Love Framework7? Support project by donating or pledging on:
-- Patreon: https://patreon.com/framework7
-- OpenCollective: https://opencollective.com/framework7
+## Screenshots
+![image](https://sharex.shuchir.dev/u/WdnrG4.png)
+![image](https://sharex.shuchir.dev/u/C5B6tc.png)
+![image](https://sharex.shuchir.dev/u/txgeoM.png)
+![image](https://sharex.shuchir.dev/u/Gvj2X3.png)
+![image](https://sharex.shuchir.dev/u/zJR1Ao.png)
+![image](https://sharex.shuchir.dev/u/C6Exs3.png)
+![image](https://sharex.shuchir.dev/u/9DIeqk.png)
