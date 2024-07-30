@@ -10,7 +10,7 @@
     "dev": "cross-env NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production vite build && npx workbox generateSW workbox-config.js && echo flights.shuchir.dev >> www/CNAME",
     "build-cordova": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova build",
-    "build-cordova-ios": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova build ios",
+    "build-cordova-ios": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js",
     "cordova-ios": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova emulate ios --target iPhone-15",
     "build-cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova build android",
     "cordova-android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && cd cordova && cordova run android",
