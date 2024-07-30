@@ -229,8 +229,7 @@
           var map = L.map(mapElem);
 
           L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-            attribution: '',
-            ext: 'png'
+            attribution: ''
           }).addTo(map);
 
           var target = L.latLng('41.871314', '-99.869580');
