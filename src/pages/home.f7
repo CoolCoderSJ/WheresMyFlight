@@ -133,6 +133,7 @@
         if (sessId || login) window.location.reload();
       })
 
+      if (!$f7.device.cordova) {
       functions.createExecution(
           'get-vercel',
           '',
@@ -154,6 +155,7 @@
           })
           }
       })
+    }
 
     function loadTrips (trips) {
       console.log(document.getElementById("tripslist"))
