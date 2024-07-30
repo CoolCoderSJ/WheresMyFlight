@@ -228,9 +228,16 @@
           var mapElem = document.getElementById('map');
           var map = L.map(mapElem);
 
+          if ($f7.device.cordova) {
           L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
             attribution: ''
           }).addTo(map);
+          }
+          else {
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: ''
+          }).addTo(map);
+          }
 
           var target = L.latLng('41.871314', '-99.869580');
           map.setView(target, 4);

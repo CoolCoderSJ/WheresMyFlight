@@ -62,19 +62,28 @@
   </div>
 </template>
 <script>
-  const { Client, Databases, ID, Functions } = Appwrite;
+  const { Client, Databases, ID, Functions, Account } = Appwrite;
   const client = new Client();
   client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
       .setProject('wheresmyflight');
   const databases = new Databases(client);
   const functions = new Functions(client);
+  const account = new Account(client);
 
   
   export default (props, { $update, $, $f7, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) => {
     const colorThief = new ColorThief();
 
     $onMounted(() => {
+      let sessId = localStorage.getItem("sessId");
+      let l = localStorage.getItem("login");
+      if (!sessId && l) {
+        console.log("no sessId")
+        localStorage.clear();
+        return window.location.reload();
+      }
+
       let login = localStorage.getItem("login");
       if (!login) {
         console.log("not logged in")
@@ -113,6 +122,46 @@
       console.log(resp)
       })
     }
+
+    account.getSession(sessId).then(resp => {
+        console.log(resp)
+      }).catch(err => {
+        console.log(err);
+        let vid = localStorage.getItem("vid");
+        localStorage.clear();
+        localStorage.setItem("vid", vid);
+        if (sessId || login) window.location.reload();
+      })
+
+      functions.createExecution(
+          'get-vercel',
+          '',
+          false
+      ).then(result => {
+          console.log("vercel", result)
+          let vid = result.responseBody;
+          let localVid = localStorage.getItem("vid");
+          if (vid != localVid) {
+            $f7.dialog.alert("A new version of WheresMyFlight is available. Click OK to update.", () => {
+              let login = localStorage.getItem("login");
+              fetch("/", { headers: { "Clear-Site-Data": '"cache", "storage"' }}).then(() => {
+                localStorage.setItem("vid", vid);
+                if (login) localStorage.setItem("login", login);
+                databases.listDocuments('data', 'flights').then((resp) => {
+                localStorage.setItem("data", JSON.stringify(resp.documents))
+                console.log(resp)
+                }).then(() => {
+                  databases.listDocuments('data', 'trips').then((resp) => {
+                  localStorage.setItem("trips", JSON.stringify(resp.documents))
+                  console.log(resp)
+                  }).then(() => {
+                    window.location.reload();
+                  })
+                })
+            })
+          })
+          }
+      })
 
     function loadTrips (trips) {
       console.log(document.getElementById("tripslist"))

@@ -39,6 +39,23 @@
                 "__pypackages__"
             ],
             "path": "functions/seat-id"
+        },
+        {
+            "$id": "get-vercel",
+            "name": "get-vercel",
+            "runtime": "python-3.9",
+            "execute": ["any"],
+            "events": [],
+            "schedule": "",
+            "timeout": 60,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "ignore": [
+                "__pypackages__"
+            ],
+            "path": "functions/get-vercel"
         }
     ]
 }

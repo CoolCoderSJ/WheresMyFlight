@@ -98,6 +98,7 @@
         
           account.createEmailPasswordSession(formData.email, formData.password).then((resp) => {
             localStorage.setItem('login', resp.userId);
+            localStorage.setItem('sessId', resp.$id);
             $f7.dialog.close(); 
             $f7.views.main.router.navigate('/');
           }).catch((error) => {
