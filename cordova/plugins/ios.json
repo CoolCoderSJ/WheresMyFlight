@@ -1,0 +1,18 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-keyboard": {
+      "PACKAGE_NAME": "dev.shuchir.wheresmyflight"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "dev.shuchir.wheresmyflight"
+    }
+  },
+  "dependent_plugins": {}
+}

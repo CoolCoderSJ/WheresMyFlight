@@ -1,0 +1,53 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {
+      "*-Info.plist": {
+        "parents": {
+          "CFBundleAllowMixedLocalizations": [
+            {
+              "xml": "<true />",
+              "count": 2
+            }
+          ]
+        }
+      },
+      "config.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<feature name=\"Keyboard\"><param name=\"ios-package\" onload=\"true\" value=\"CDVKeyboard\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "installed_plugins": {
+    "cordova-plugin-keyboard": {
+      "PACKAGE_NAME": "dev.shuchir.wheresmyflight"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "dev.shuchir.wheresmyflight"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "id": "cordova-plugin-keyboard.keyboard",
+      "file": "plugins/cordova-plugin-keyboard/www/keyboard.js",
+      "pluginId": "cordova-plugin-keyboard",
+      "clobbers": [
+        "window.Keyboard"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "cordova-plugin-keyboard": "1.2.0",
+    "cordova-plugin-splashscreen": "6.0.2"
+  }
+}

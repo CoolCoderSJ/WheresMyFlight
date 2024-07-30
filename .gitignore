@@ -33,8 +33,3 @@ node_modules/
 # Misc
 .DS_Store
 Thumbs.db
-
-# Cordova
-cordova/platforms/
-cordova/plugins/
-cordova/www/
