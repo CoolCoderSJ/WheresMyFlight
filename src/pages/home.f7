@@ -21,7 +21,7 @@
     <div class="navbar navbar-large">
       <div class="navbar-bg" style="background-color: #151515"></div>
       <div class="navbar-inner">
-        <div class="title sliding">WheresMyFlight - test</div>
+        <div class="title sliding">WheresMyFlight - test 2</div>
         <div class="title-large">
           <div class="title-large-text">WheresMyFlight</div>
         </div>
@@ -144,8 +144,13 @@
           if (vid != localVid) {
             $f7.dialog.alert("A new version of WheresMyFlight is available. Click OK to update.", () => {
               localStorage.setItem("vid", vid);
-              document.querySelector("head").innerHTML += `<meta http-equiv="Clear-Site-Data" content="cache, storage">`
-              window.location.reload();
+              if ('serviceWorker' in navigator) {
+                caches.keys().then(function(cacheNames) {
+                  cacheNames.forEach(function(cacheName) {
+                    caches.delete(cacheName);
+                  });
+                }).then(() => window.location.reload());
+              }
           })
           }
       })
