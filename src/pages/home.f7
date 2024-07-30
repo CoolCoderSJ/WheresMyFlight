@@ -21,7 +21,7 @@
     <div class="navbar navbar-large">
       <div class="navbar-bg" style="background-color: #151515"></div>
       <div class="navbar-inner">
-        <div class="title sliding">WheresMyFlight - s</div>
+        <div class="title sliding">WheresMyFlight - p</div>
         <div class="title-large">
           <div class="title-large-text">WheresMyFlight</div>
         </div>
@@ -143,22 +143,8 @@
           let localVid = localStorage.getItem("vid");
           if (vid != localVid) {
             $f7.dialog.alert("A new version of WheresMyFlight is available. Click OK to update.", () => {
-              let login = localStorage.getItem("login");
-              fetch("/", { headers: { "Clear-Site-Data": '"cache", "storage"' }}).then(() => {
-                localStorage.setItem("vid", vid);
-                if (login) localStorage.setItem("login", login);
-                databases.listDocuments('data', 'flights').then((resp) => {
-                localStorage.setItem("data", JSON.stringify(resp.documents))
-                console.log(resp)
-                }).then(() => {
-                  databases.listDocuments('data', 'trips').then((resp) => {
-                  localStorage.setItem("trips", JSON.stringify(resp.documents))
-                  console.log(resp)
-                  }).then(() => {
-                    window.location.reload();
-                  })
-                })
-            })
+              localStorage.setItem("vid", vid);
+              window.location.reload(true);
           })
           }
       })
