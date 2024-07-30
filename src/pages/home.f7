@@ -144,7 +144,7 @@
           if (vid != localVid) {
             $f7.dialog.alert("A new version of WheresMyFlight is available. Click OK to update.", () => {
               localStorage.setItem("vid", vid);
-              window.location.reload(true);
+              document.querySelector("head").innerHTML += `<meta http-equiv="Clear-Site-Data" content="cache, storage">`
           })
           }
       })
