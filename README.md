@@ -2,10 +2,20 @@
 
 WheresMyFlight is a cross-platform application that allows users to track their flights in real-time. The application is built using framework7 and compiled using Apache cordova. The app uses internal Flightstats/Cirium APIs, United APIs, Delta APIs, and seatmaps.com for its functionality.
 
+## Repos
+Unfortunately this project is currently not a monorepo.
+| Project       | Repo Link                                                                   |
+|---------------|-----------------------------------------------------------------------------|
+| Frontend      | [CoolCoderSJ/WheresMyFlight](https://github.com/CoolCoderSJ/WheresMyFlight) |
+| Update Server | [CoolCoderSJ/WMF-Server](https://github.com/CoolCoderSJ/WMF-Server)         |
+| Demo Website  | [CoolCoderSJ/WMF-Website](https://github.com/CoolCoderSJ/WMF-Website)       |
+| Wear OS       | [CoolCoderSJ/WMFWear](https://github.com/CoolCoderSJ/WMFWear)               |
+
 ## Usage
 - iOS: The app can be found on the app store [here](https://apple.com) (not yet published)
 - Android: The app is not on the Play Store, but can be downloaded using the APK file found in the releases tab.
 - Web: The app can be accessed [here](https://flights.shuchir.dev) in the browser as well. It is not required to install the app.
+- WearOS: The apk can be downloaded from the releases tab and can be installed via ADB.
 
 ## Features
 - Track flights in real-time
