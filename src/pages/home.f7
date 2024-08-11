@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-  const { Client, Databases, ID, Functions, Account } = Appwrite;
+  const { Client, Databases, ID, Functions, Account, Query } = Appwrite;
   const client = new Client();
   client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
@@ -93,7 +93,7 @@
 
     let data = localStorage.getItem("data");
     if (!data) {
-      databases.listDocuments('data', 'flights').then((resp) => {
+      databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
       localStorage.setItem("data", JSON.stringify(resp.documents))
       console.log(resp)
       }).then(() => loadPage(localStorage.getItem("data")))
@@ -101,15 +101,16 @@
     else {
       console.log("data already saved")
       loadPage(data)
-      databases.listDocuments('data', 'flights').then((resp) => {
+      databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
       localStorage.setItem("data", JSON.stringify(resp.documents))
-      console.log(resp)
+      console.log("dbdata", resp)
       })
+      .then(() => loadPage(localStorage.getItem("data")))
     }
 
     let trips = localStorage.getItem("trips");
     if (!trips) {
-      databases.listDocuments('data', 'trips').then((resp) => {
+      databases.listDocuments('data', 'trips', [Query.limit(1000)]).then((resp) => {
       localStorage.setItem("trips", JSON.stringify(resp.documents))
       console.log(resp)
       }).then(() => loadTrips(localStorage.getItem("trips")))
@@ -117,10 +118,11 @@
     else {
       console.log("trips already saved")
       loadTrips(trips)
-      databases.listDocuments('data', 'trips').then((resp) => {
+      databases.listDocuments('data', 'trips', [Query.limit(1000)]).then((resp) => {
       localStorage.setItem("trips", JSON.stringify(resp.documents))
       console.log(resp)
       })
+      .then(() => loadTrips(localStorage.getItem("trips")))
     }
 
     account.getSession(sessId).then(resp => {
@@ -142,6 +144,12 @@
           console.log("vercel", result)
           let vid = result.responseBody;
           let localVid = localStorage.getItem("vid");
+
+          if (!localVid) {
+            localStorage.setItem("vid", vid);
+            localVid = vid;
+          }
+
           if (vid != localVid) {
             $f7.dialog.alert("A new version of WheresMyFlight is available. Click OK to update.", () => {
               localStorage.setItem("vid", vid);
@@ -344,7 +352,7 @@
   });
 
     const loadMore = (e, done) => {        
-        databases.listDocuments('data', 'flights').then((resp) => {
+        databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
         localStorage.setItem("data", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {

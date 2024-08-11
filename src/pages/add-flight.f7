@@ -78,7 +78,7 @@
   }
 </style>
 <script>
-  const { Client, Databases, ID } = Appwrite;
+  const { Client, Databases, ID, Query } = Appwrite;
   const client = new Client();
   client
     .setEndpoint('https://appwrite.shuchir.dev/v1')
@@ -133,10 +133,64 @@
           month = String(now.getMonth() + 1);
           day = String(now.getDate()+1);
         }
+        let options = { month: "short" };
+        let shortM = new Intl.DateTimeFormat("en-US", options).format(now);
+
+        let adjustedDay = day;
+        if (day.length == 1) adjustedDay = "0" + day;
 
         axios({
           method: 'get',
-          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/`)}`,
+          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/other-days/${aircode}/${flightnum}`)}`,
+        })
+        .then(resp => {
+          let data = resp.data.data;
+          for (let i=0; i<data.length; i++) {
+            if (data[i].date1 == `${adjustedDay}-${shortM}`) {
+              let fopt = data[i].flights;
+              console.log(fopt)
+                if (fopt.length == 1) {
+                  let flightId = fopt[0].url.split("=")[4];
+                  contFlight(flightId);
+                }
+                else {
+                  $f7.dialog.close();
+                  let options = [];
+                  for (let i=0; i<fopt.length; i++) {
+                    let flight = fopt[i];
+                    console.log("opt", flight)
+                    options.push(`<option value="${flight.url.split("=")[4]}">${flight.departureAirport.iata} - ${flight.arrivalAirport.iata}</option>`);
+                  }
+                  console.log(options)
+                  let select = `<div class="item-input-wrap input-dropdown-wrap" style="border: 1px solid #656c84; border-radius: 4px;"><select id="flightSelect" style="width: 100%; height: 100%; padding: 10px;">${options.join("")}</select></div>`;
+                  $f7.dialog.create({
+                    title: "Select a flight",
+                    text: select,
+                    buttons: [
+                      {
+                        text: "Cancel",
+                        onClick: function() {
+                          $f7.dialog.close();
+                        }
+                      },
+                      {
+                        text: "Select",
+                        onClick: function() {
+                          let flightId = document.getElementById("flightSelect").value;
+                          contFlight(flightId);
+                        }
+                      }
+                    ]
+                  }).open();
+                }
+            }
+          }
+        })
+
+        const contFlight = (flightId) => {
+          axios({
+          method: 'get',
+          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}`)}`,
         })
           .then(function (response) {
             let flight = response.data.data;
@@ -183,7 +237,7 @@
 
             axios({
               method: 'get',
-              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flight.flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&flightPlan=true&rqid=0gjukufd01k`)}`,
+              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&flightPlan=true&rqid=0gjukufd01k`)}`,
             }).then(resp => {
               let data = resp.data.data;
               actualDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
@@ -206,7 +260,7 @@
             .then(() => {
             axios({
               method: "get",
-              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api/extendedDetails/${aircode}/${flightnum}/${yr}/${month}/${day}/${flight.flightId}?rqid=t4u711r6ec`)}`
+              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api/extendedDetails/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}?rqid=t4u711r6ec`)}`
             }).then(resp => {
               console.log("DATA", resp.data)
               let data = resp.data;
@@ -329,7 +383,7 @@
               ]
             );
 
-            databases.listDocuments('data', 'flights').then((resp) => {
+            databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
               localStorage.setItem("data", JSON.stringify(resp.documents))
               console.log(resp)
             })
@@ -342,7 +396,7 @@
                     databases.updateDocument("data", "trips", tripId, {
                       flights: [...data.flights, response.$id]
                     }).then((response) => {
-                      databases.listDocuments("data", "trips").then((data) => {
+                      databases.listDocuments("data", "trips", [Query.limit(1000)]).then((data) => {
                         console.log(data)
                         localStorage.setItem("trips", JSON.stringify(data.documents))
                         $f7.dialog.close();
@@ -357,7 +411,15 @@
                 else {
                   $f7.dialog.close();
                 console.log(response);
-                $f7.views.main.router.navigate(`/flight/${response.$id}`);
+                $f7.dialog.confirm('Flight added successfully. Add another flight?', () => {
+                  $f7.views.main.router.navigate('/add-flight');
+                  $("#aircode").val("");
+                  $("#flightnum").val("");
+                  $("#date").val("");
+
+                }, () => {
+                  $f7.views.main.router.navigate('/');
+                });
                 }
 
             }, function (error) {
@@ -366,6 +428,7 @@
             })
             })
           });
+        }
       });
     });
 

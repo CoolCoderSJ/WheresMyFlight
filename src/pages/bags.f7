@@ -42,7 +42,7 @@
     export default function (props, { $, $f7, $f7route, $on, $onBeforeMount, $onMounted, $onBeforeUnmount, $onUnmounted }) {
       $on("pageInit", () => {
         let flightId = $f7route.path.replace("/flight/", "").replace("/bags", "");
-        databases.listDocuments('data', 'bags', [Query.equal('flightId', flightId)]).then(resp => {
+        databases.listDocuments('data', 'bags', [Query.equal('flightId', flightId), Query.limit(1000)]).then(resp => {
           let docs = resp.documents;
           console.log(docs)
           for (let i=0; i<docs.length; i++) {

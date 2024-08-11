@@ -94,7 +94,7 @@
         flights: selected
       }).then(() => {
         $f7.dialog.alert("Flights updated successfully", "Success", () => {
-          databases.listDocuments("data", "trips").then((data) => {
+          databases.listDocuments("data", "trips", [Query.limit(1000)]).then((data) => {
             localStorage.setItem("trips", JSON.stringify(data.documents))
             $f7.views.main.router.refreshPage()
           })
@@ -109,7 +109,7 @@
         })
         .then(() => {
           databases.deleteDocument("data", "trips", tripId).then(() => {
-            databases.listDocuments("data", "trips").then((data) => {
+            databases.listDocuments("data", "trips", [Query.limit(1000)]).then((data) => {
               localStorage.setItem("trips", JSON.stringify(data.documents))
               $f7.dialog.alert("Trip deleted successfully", "Success", () => {
                 $f7.views.main.router.navigate("/")
@@ -157,7 +157,7 @@
         flightCodes.push(flights[i].flightId)
       }
 
-      databases.listDocuments("data", "flights", [Query.limit(100)]).then(flights => {
+      databases.listDocuments("data", "flights", [Query.limit(1000)]).then(flights => {
         flights.documents.forEach(flight => {
           $("#flightSelect").append(`<option value="${flight.$id}" id="select${flight.$id}">${flight.flightId} - ${new Date(flight.scheduledTime[0]).toDateString().split(" ").splice(1,3).join(" ")}</option>`)
         });
@@ -353,7 +353,7 @@
 
 
     const loadMore = (e, done) => {        
-        databases.listDocuments('data', 'flights').then((resp) => {
+        databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
         localStorage.setItem("data", JSON.stringify(resp.documents))
         console.log(resp)
         }).then(() => {

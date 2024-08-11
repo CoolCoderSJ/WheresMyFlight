@@ -52,7 +52,7 @@
     }
   </style>
   <script>
-    const { Client, Databases, ID } = Appwrite;
+    const { Client, Databases, ID, Query } = Appwrite;
     const client = new Client();
     client
       .setEndpoint('https://appwrite.shuchir.dev/v1')
@@ -96,7 +96,7 @@
               end: new Date(formData.dates.split(" - ")[1]),
               userId: userId
             }).then((response) => {
-              databases.listDocuments("data", "trips").then((data) => {
+              databases.listDocuments("data", "trips", [Query.limit(1000)]).then((data) => {
                 console.log(data)
                 localStorage.setItem("trips", JSON.stringify(data.documents))
                 $f7.dialog.close();
@@ -125,7 +125,7 @@
             `read("user:${userId}")`, 
             `write("user:${userId}")`
           ]).then((response) => {
-            databases.listDocuments("data", "trips").then((data) => {
+            databases.listDocuments("data", "trips", [Query.limit(1000)]).then((data) => {
               console.log(data)
               localStorage.setItem("trips", JSON.stringify(data.documents))
               $f7.dialog.close();

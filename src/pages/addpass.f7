@@ -69,7 +69,7 @@
           });
 
           $f7.dialog.alert('Boarding pass uploaded successfully', 'Success', () => {
-            databases.listDocuments('data', 'passes', [Query.limit(100)]).then((resp) => {
+            databases.listDocuments('data', 'passes', [Query.limit(1000)]).then((resp) => {
             localStorage.setItem("passes", JSON.stringify(resp.documents))
             console.log(resp)
             })

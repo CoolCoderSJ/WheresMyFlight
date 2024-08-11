@@ -211,7 +211,7 @@
 
           promise.then(function (response) {
             $f7.dialog.alert('Flight deleted successfully!', function () {
-              databases.listDocuments('data', 'flights').then((resp) => {
+              databases.listDocuments('data', 'flights', [Query.limit(1000)]).then((resp) => {
             localStorage.setItem("data", JSON.stringify(resp.documents))
             console.log(resp)
             })
