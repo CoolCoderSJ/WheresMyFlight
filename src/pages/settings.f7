@@ -187,6 +187,21 @@
             }
             $f7.dialog.close()
         })
+        .catch(err => {
+            databases.createDocument('settings', 'prefs', userId, {
+                userId: userId,
+                ntfyBase: "https://ntfy.sh/",
+                ntfyTopic: ""
+            },
+            [
+                `read("user:${userId}")`, 
+                `write("user:${userId}")`
+            ])
+            .then(() => {
+                $f7.dialog.close()
+                $f7.views.main.router.refreshPage();
+            })
+        })
 
         $(".saveNtfy").on("click", function() {
             let ntfyBase = $("#ntfyBase").val()
