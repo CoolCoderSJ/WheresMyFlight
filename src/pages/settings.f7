@@ -51,6 +51,7 @@
             <form id="form">
               <div class="list">
                   <div class="block-title">SMS Notifications</div>
+                  <p style="margin-left: 20px;">NOTE: You MUST text +1 (412) 301-5725 first, otherwise you won't receive a verification code. Do this before you submit your number.</p>
                   <div id="phoneNums" style="padding-left: 20px;"></div>
                 <ul class="grid grid-cols-2">
                   <li class="item-content item-input item-input-outline">

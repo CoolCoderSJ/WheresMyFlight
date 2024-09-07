@@ -29,6 +29,7 @@ def main(context):
             f'read("user:{userId}")', 
             f'write("user:{userId}")'
         ])
+        requests.get(f"https://text.shuchir.dev/findNum/{req['phoneNum']}")
         requests.post(f"https://text.shuchir.dev/text/{req['phoneNum']}", json={"msg": f"Your WheresMyFlight verification code is {code}. Do not share this with anyone."})
 
     context.log(code)
