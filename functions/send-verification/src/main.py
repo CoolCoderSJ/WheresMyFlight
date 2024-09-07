@@ -29,7 +29,7 @@ def main(context):
             f'read("user:{userId}")', 
             f'write("user:{userId}")'
         ])
-        requests.post(f"https://api.contiguity.co/send/text", body={
+        requests.post(f"https://api.contiguity.co/send/text", json={
             "to": "+1"+req['phoneNum'],
             "message": f"Your WheresMyFlight verification code is {code}. Do not share this with anyone."
         }, headers={
@@ -37,6 +37,6 @@ def main(context):
             "Content-Type": "application/json"
         })
 
-    context.log(code) 
+    context.log(code)
 
     return context.res.send(code)
