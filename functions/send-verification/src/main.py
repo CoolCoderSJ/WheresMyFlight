@@ -29,9 +29,14 @@ def main(context):
             f'read("user:{userId}")', 
             f'write("user:{userId}")'
         ])
-        requests.get(f"https://text.shuchir.dev/findNumber/{req['phoneNum']}")
-        requests.post(f"https://text.shuchir.dev/text/{req['phoneNum']}", json={"msg": f"Your WheresMyFlight verification code is {code}. Do not share this with anyone."})
+        requests.post(f"https://api.contiguity.co/send/text", body={
+            "to": "+1"+req['phoneNum'],
+            "message": f"Your WheresMyFlight verification code is {code}. Do not share this with anyone."
+        }, headers={
+            "Authorization": f"Token {os.environ['CONTIGUITY_KEY']}",
+            "Content-Type": "application/json"
+        })
 
-    context.log(code)
+    context.log(code) 
 
     return context.res.send(code)
