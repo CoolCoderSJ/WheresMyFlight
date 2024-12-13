@@ -141,7 +141,7 @@
 
         axios({
           method: 'get',
-          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/other-days/${aircode}/${flightnum}`)}`,
+          url: `https://corsproxy.io?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/other-days/${aircode}/${flightnum}`)}`,
         })
         .then(resp => {
           let data = resp.data.data;
@@ -190,7 +190,7 @@
         const contFlight = (flightId) => {
           axios({
           method: 'get',
-          url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}`)}`,
+          url: `https://corsproxy.io?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flight-tracker/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}`)}`,
         })
           .then(function (response) {
             let flight = response.data.data;
@@ -237,7 +237,7 @@
 
             axios({
               method: 'get',
-              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&flightPlan=true&rqid=0gjukufd01k`)}`,
+              url: `https://corsproxy.io?url=${encodeURIComponent(`https://www.flightstats.com/v2/api-next/flick/${flightId}?guid=34b64945a69b9cac:5ae30721:13ca699d305:XXXX&airline=${aircode}&flight=${flightnum}&flightPlan=true&rqid=0gjukufd01k`)}`,
             }).then(resp => {
               let data = resp.data.data;
               actualDist = Math.round(data.miniTracker.totalKilometers * 1.151) + "mi";
@@ -260,7 +260,7 @@
             .then(() => {
             axios({
               method: "get",
-              url: `https://corsproxy.io?${encodeURIComponent(`https://www.flightstats.com/v2/api/extendedDetails/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}?rqid=t4u711r6ec`)}`
+              url: `https://corsproxy.io?url=${encodeURIComponent(`https://www.flightstats.com/v2/api/extendedDetails/${aircode}/${flightnum}/${yr}/${month}/${day}/${flightId}?rqid=t4u711r6ec`)}`
             }).then(resp => {
               console.log("DATA", resp.data)
               let data = resp.data;
